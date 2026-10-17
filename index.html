@@ -90,28 +90,22 @@
       width: 100%;
       max-width: 500px;
       display: flex;
-      gap: 10px;
       margin-top: 15px;
     }
 
     .btn {
-      flex: 1;
-      padding: 14px;
+      width: 100%;
+      padding: 16px;
       border: none;
       border-radius: 12px;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: all 0.2s;
     }
 
     .btn-primary {
       background: var(--primary);
-      color: white;
-    }
-
-    .btn-success {
-      background: var(--success-green);
       color: white;
     }
 
@@ -196,9 +190,7 @@
   </div>
 
   <div class="controls">
-    <button id="capture-btn" class="btn btn-primary" onclick="capturePhoto()">📸 التقاط صورة</button>
-    <button id="retake-btn" class="btn btn-primary" style="display:none;" onclick="retakePhoto()">🔄 إعادة التقاط</button>
-    <button id="send-btn" class="btn btn-success" style="display:none;" onclick="processAndSend()">🚀 تحليل وإرسال</button>
+    <button id="main-btn" class="btn btn-primary" onclick="handleMainAction()">📸 التقاط وتحليل فوري</button>
   </div>
 
   <div id="result-box" class="result-box">
@@ -236,7 +228,9 @@
     let video = document.getElementById('video');
     let canvas = document.getElementById('canvas');
     let capturedImg = document.getElementById('captured-image');
+    let mainBtn = document.getElementById('main-btn');
     let imageBase64 = null;
+    let isCaptured = false;
 
     window.onload = function() {
       document.getElementById('gemini-key').value = localStorage.getItem('gemini_key') || '';
@@ -256,6 +250,15 @@
       });
     }
 
+    function handleMainAction() {
+      if (!isCaptured) {
+        capturePhoto();
+        processAndSend();
+      } else {
+        resetToCamera();
+      }
+    }
+
     function capturePhoto() {
       canvas.width = video.videoWidth || 640;
       canvas.height = video.videoHeight || 480;
@@ -268,20 +271,17 @@
       video.style.display = 'none';
       capturedImg.style.display = 'block';
 
-      document.getElementById('capture-btn').style.display = 'none';
-      document.getElementById('retake-btn').style.display = 'block';
-      document.getElementById('send-btn').style.display = 'block';
+      isCaptured = true;
+      mainBtn.innerText = '🔄 التقاط سؤال جديد';
     }
 
-    function retakePhoto() {
+    function resetToCamera() {
       video.style.display = 'block';
       capturedImg.style.display = 'none';
-      
-      document.getElementById('capture-btn').style.display = 'block';
-      document.getElementById('retake-btn').style.display = 'none';
-      document.getElementById('send-btn').style.display = 'none';
       document.getElementById('result-box').style.display = 'none';
       imageBase64 = null;
+      isCaptured = false;
+      mainBtn.innerText = '📸 التقاط وتحليل فوري';
     }
 
     function openSettings() {
@@ -321,7 +321,7 @@
 
       try {
         let base64Data = imageBase64.split(',')[1];
-        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`;
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
         
         let response = await fetch(url, {
           method: 'POST',
