@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>المجيب السريع للاختبارات</title>
+  <style>
+    :root {
+      --bg-color: #080c14;
+      --card-bg: #0f172a;
+      --inner-card: #030712;
+      --primary: #2563eb;
+      --accent-blue: #38bdf8;
+      --text-main: #ffffff;
+      --text-sub: #94a3b8;
+      --border-color: #1e293b;
+      --success-green: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 18px;
+      color: var(--text-main);
+    }
+
+    .icon-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .camera-container {
+      width: 100%;
+      max-width: 500px;
+      background: var(--inner-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video, canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #captured-image {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .controls {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-success {
+      background: var(--success-green);
+      color: white;
+    }
+
+    .result-box {
+      width: 100%;
+      max-width: 500px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 15px;
+      margin-top: 15px;
+      min-height: 80px;
+      font-size: 14px;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 450px;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .modal-content h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      background: var(--inner-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>المجيب السريع للاختبارات</h1>
+    <button class="icon-btn" onclick="openSettings()">⚙️ الإعدادات</button>
+  </header>
+
+  <div class="camera-container">
+    <video id="video" autoplay playsinline></video>
+    <img id="captured-image" alt="Captured">
+    <canvas id="canvas" style="display:none;"></canvas>
+  </div>
+
+  <div class="controls">
+    <button id="capture-btn" class="btn btn-primary" onclick="capturePhoto()">📸 التقاط صورة</button>
+    <button id="retake-btn" class="btn btn-primary" style="display:none;" onclick="retakePhoto()">🔄 إعادة التقاط</button>
+    <button id="send-btn" class="btn btn-success" style="display:none;" onclick="processAndSend()">🚀 تحليل وإرسال</button>
+  </div>
+
+  <div id="result-box" class="result-box">
+    <div id="status-text" style="color: var(--accent-blue);">في انتظار الصورة...</div>
+    <div id="response-content" style="margin-top: 10px; white-space: pre-wrap;"></div>
+  </div>
+
+  <div id="settings-modal" class="modal">
+    <div class="modal-content">
+      <h2>⚙️ إعدادات المفاتيح والتليجرام</h2>
+      
+      <div class="input-group">
+        <label>مفتاح Gemini API Key:</label>
+        <input type="password" id="gemini-key" placeholder="AIzaSy...">
+      </div>
+
+      <div class="input-group">
+        <label>توكن بوت التليجرام (Telegram Bot Token):</label>
+        <input type="password" id="telegram-token" placeholder="123456789:ABCdef...">
+      </div>
+
+      <div class="input-group">
+        <label>معرف المحادثة (Chat ID):</label>
+        <input type="text" id="telegram-chat-id" placeholder="123456789">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="saveSettings()">حفظ</button>
+        <button class="btn" style="background:#334155; color:white;" onclick="closeSettings()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let video = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+    let capturedImg = document.getElementById('captured-image');
+    let imageBase64 = null;
+
+    window.onload = function() {
+      document.getElementById('gemini-key').value = localStorage.getItem('gemini_key') || '';
+      document.getElementById('telegram-token').value = localStorage.getItem('telegram_token') || '';
+      document.getElementById('telegram-chat-id').value = localStorage.getItem('telegram_chat_id') || '';
+      startCamera();
+    };
+
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' } 
+      }).then(s => {
+        video.srcObject = s;
+      }).catch(err => {
+        console.error("Camera error:", err);
+        alert("يرجى إعطاء صلاحية الكاميرا للمتصفح.");
+      });
+    }
+
+    function capturePhoto() {
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      let ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      imageBase64 = canvas.toDataURL('image/jpeg', 0.85);
+      capturedImg.src = imageBase64;
+      
+      video.style.display = 'none';
+      capturedImg.style.display = 'block';
+
+      document.getElementById('capture-btn').style.display = 'none';
+      document.getElementById('retake-btn').style.display = 'block';
+      document.getElementById('send-btn').style.display = 'block';
+    }
+
+    function retakePhoto() {
+      video.style.display = 'block';
+      capturedImg.style.display = 'none';
+      
+      document.getElementById('capture-btn').style.display = 'block';
+      document.getElementById('retake-btn').style.display = 'none';
+      document.getElementById('send-btn').style.display = 'none';
+      document.getElementById('result-box').style.display = 'none';
+      imageBase64 = null;
+    }
+
+    function openSettings() {
+      document.getElementById('settings-modal').style.display = 'flex';
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-modal').style.display = 'none';
+    }
+
+    function saveSettings() {
+      localStorage.setItem('gemini_key', document.getElementById('gemini-key').value.trim());
+      localStorage.setItem('telegram_token', document.getElementById('telegram-token').value.trim());
+      localStorage.setItem('telegram_chat_id', document.getElementById('telegram-chat-id').value.trim());
+      alert('تم حفظ الإعدادات بنجاح!');
+      closeSettings();
+    }
+
+    async function processAndSend() {
+      let geminiKey = localStorage.getItem('gemini_key');
+      let tgToken = localStorage.getItem('telegram_token');
+      let tgChatId = localStorage.getItem('telegram_chat_id');
+
+      if (!geminiKey) {
+        alert('يرجى إدخال مفتاح Gemini API في الإعدادات أولاً.');
+        openSettings();
+        return;
+      }
+
+      let resultBox = document.getElementById('result-box');
+      let statusText = document.getElementById('status-text');
+      let responseContent = document.getElementById('response-content');
+
+      resultBox.style.display = 'block';
+      statusText.innerText = '⏳ جاري تحليل السؤال عبر Gemini AI...';
+      responseContent.innerText = '';
+
+      try {
+        let base64Data = imageBase64.split(',')[1];
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
+        
+        let response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { text: "أجب عن هذا السؤال الموضح في الصورة بإجابة مباشرة ودقيقة ومختصرة باللغة العربية." },
+                { inline_data: { mime_type: "image/jpeg", data: base64Data } }
+              ]
+            }]
+          })
+        });
+
+        let data = await response.json();
+        if (data.error) throw new Error(data.error.message || 'خطأ في الاستجابة');
+
+        let answer = data.candidates[0].content.parts[0].text;
+        statusText.innerText = '✅ الإجابة:';
+        responseContent.innerText = answer;
+
+        if (tgToken && tgChatId) {
+          statusText.innerText += ' (جاري الإرسال لتليجرام...)';
+          await sendToTelegram(tgToken, tgChatId, imageBase64, answer);
+          statusText.innerText = '✅ تم التحليل وإرسال النتائج إلى تليجرام!';
+        }
+
+      } catch (err) {
+        console.error(err);
+        statusText.innerText = '❌ حدث خطأ:';
+        responseContent.innerText = err.message;
+      }
+    }
+
+    async function sendToTelegram(token, chatId, base64Img, text) {
+      try {
+        let byteString = atob(base64Img.split(',')[1]);
+        let ab = new ArrayBuffer(byteString.length);
+        let ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+        let blob = new Blob([ab], { type: 'image/jpeg' });
+
+        let formData = new FormData();
+        formData.append('chat_id', chatId);
+        formData.append('photo', blob, 'photo.jpg');
+        formData.append('caption', `📝 الإجابة:\n\n${text}`);
+
+        await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+          method: 'POST',
+          body: formData
+        });
+      } catch (e) {
+        console.error('Telegram Error:', e);
+      }
+    }
+  </script>
+</body>
+</html>
