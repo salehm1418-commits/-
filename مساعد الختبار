@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>المجيب السريع للاختبارات</title>
+    <style>
+        :root {
+            --bg-color: #080c14;
+            --card-bg: #0f172a;
+            --inner-card: #030712;
+            --primary: #2563eb;
+            --accent-blue: #38bdf8;
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
+            --border-color: #1e293b;
+            --success-green: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .api-btn {
+            background: transparent;
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .settings-box {
+            background-color: var(--card-bg);
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .settings-box.hidden { display: none; }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        input[type="text"] {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            direction: ltr;
+        }
+
+        .save-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background-color: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .action-btn:active { transform: scale(0.98); }
+
+        .result-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .result-header-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .result-status {
+            color: var(--success-green);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .result-body {
+            background-color: var(--inner-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.6;
+            text-align: right;
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⚡ المجيب السريع للاختبارات</h1>
+        <button class="api-btn" onclick="toggleSettings()">⚙️ الإعدادات والتليجرام</button>
+    </header>
+
+    <div id="settingsBox" class="settings-box hidden">
+        <div class="input-field">
+            <label>مفتاح Gemini API:</label>
+            <input type="text" id="apiKeyInput" placeholder="AIzaSy...">
+        </div>
+        <div class="input-field">
+            <label>رمز بوت تليجرام (Bot Token):</label>
+            <input type="text" id="tgTokenInput" value="8933690243:AAFUkd3IIxvRJEmUYOmUALyyXg6IILa0KfI">
+        </div>
+        <div class="input-field">
+            <label>معرّف حسابك في تليجرام (Chat ID):</label>
+            <input type="text" id="tgChatIdInput" value="725112493">
+        </div>
+        <button class="save-btn" onclick="saveSettings()">حفظ الإعدادات</button>
+    </div>
+
+    <div class="camera-container">
+        <video id="webcam" autoplay playsinline webkit-playsinline muted></video>
+    </div>
+
+    <button id="answerBtn" class="action-btn" onclick="captureAndAnswer()">
+        ⚡ إجابة سريعة (ضغطة واحدة)
+    </button>
+
+    <div class="result-card">
+        <div class="result-header">
+            <div class="result-header-title">
+                <span>☑</span>
+                <span>الخيار والإجابة الصحيحة:</span>
+            </div>
+            <div id="statusBadge" class="result-status">جاهز</div>
+        </div>
+        
+        <div id="resultOutput" class="result-body">
+            وجه الكاميرا واضغط الزر وسيرسل السؤال والإجابة لتليجرام تلقائياً...
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script>
+        let video = document.getElementById('webcam');
+        let canvas = document.getElementById('canvas');
+        let isProcessing = false;
+
+        window.onload = () => {
+            const savedKey = localStorage.getItem('gemini_api_key');
+            const savedTgToken = localStorage.getItem('tg_bot_token') || '8933690243:AAFUkd3IIxvRJEmUYOmUALyyXg6IILa0KfI';
+            const savedTgChatId = localStorage.getItem('tg_chat_id') || '725112493';
+
+            if (savedKey) document.getElementById('apiKeyInput').value = savedKey;
+            document.getElementById('tgTokenInput').value = savedTgToken;
+            document.getElementById('tgChatIdInput').value = savedTgChatId;
+
+            localStorage.setItem('tg_bot_token', savedTgToken);
+            localStorage.setItem('tg_chat_id', savedTgChatId);
+
+            if (!savedKey) {
+                document.getElementById('settingsBox').classList.remove('hidden');
+            }
+            startCamera();
+        };
+
+        function toggleSettings() {
+            document.getElementById('settingsBox').classList.toggle('hidden');
+        }
+
+        function saveSettings() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            const token = document.getElementById('tgTokenInput').value.trim();
+            const chatId = document.getElementById('tgChatIdInput').value.trim();
+
+            if (key) localStorage.setItem('gemini_api_key', key);
+            if (token) localStorage.setItem('tg_bot_token', token);
+            if (chatId) localStorage.setItem('tg_chat_id', chatId);
+
+            alert('تم حفظ الإعدادات بنجاح!');
+            document.getElementById('settingsBox').classList.add('hidden');
+        }
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment',
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    }
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Camera Error: ", err);
+            }
+        }
+
+        async function sendToTelegram(base64Image, answerText) {
+            const botToken = localStorage.getItem('tg_bot_token') || '8933690243:AAFUkd3IIxvRJEmUYOmUALyyXg6IILa0KfI';
+            const chatId = localStorage.getItem('tg_chat_id') || '725112493';
+
+            if (!botToken || !chatId) return;
+
+            const byteCharacters = atob(base64Image);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'image/jpeg' });
+
+            const formData = new FormData();
+            formData.append('chat_id', chatId);
+            formData.append('photo', blob, 'question.jpg');
+            formData.append('caption', `⚡ **إجابة السؤال:**\n\n${answerText}`);
+
+            try {
+                await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch (e) {
+                console.error("فشل إرسال التليجرام:", e);
+            }
+        }
+
+        async function captureAndAnswer() {
+            if (isProcessing) return;
+
+            const apiKey = localStorage.getItem('gemini_api_key');
+            if (!apiKey) {
+                alert('يرجى إدخال مفتاح Gemini API أولاً!');
+                document.getElementById('settingsBox').classList.remove('hidden');
+                return;
+            }
+
+            isProcessing = true;
+            const btn = document.getElementById('answerBtn');
+            const statusBadge = document.getElementById('statusBadge');
+            const output = document.getElementById('resultOutput');
+
+            btn.innerHTML = '<div class="spinner"></div><span>جاري القراءة والإرسال...</span>';
+            statusBadge.innerText = "جاري المعالجة";
+            statusBadge.style.color = "#f59e0b";
+            output.innerText = "انتظر لحظة...";
+
+            canvas.width = video.videoWidth || 1280;
+            canvas.height = video.videoHeight || 720;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+            const base64Image = imageDataUrl.split(',')[1];
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [
+                                {
+                                    text: "أنت مساعد إجابة سريع للاختبارات. حدد الخيار الصحيح بوضوح واكتبه بنفس هذا النمط بالضبط: 'الخيار (حرف الخيار). نص الخيار الصحيح'."
+                                },
+                                {
+                                    inline_data: {
+                                        mime_type: "image/jpeg",
+                                        data: base64Image
+                                    }
+                                }
+                            ]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const answer = data.candidates[0].content.parts[0].text;
+                    output.innerText = answer;
+                    statusBadge.innerText = "تمت الإجابة والإرسال 📲";
+                    statusBadge.style.color = "#10b981";
+
+                    sendToTelegram(base64Image, answer);
+                } else {
+                    output.innerText = "لم نتمكن من التعرف على السؤال، حاول التقريب أكثر.";
+                    statusBadge.innerText = "خطأ القراءة";
+                    statusBadge.style.color = "#ef4444";
+                }
+            } catch (err) {
+                output.innerText = "حدث خطأ في الاتصال بالسيرفر. تحقق من مفتاح API والإنترنت.";
+                statusBadge.innerText = "فشل الاتصال";
+                statusBadge.style.color = "#ef4444";
+            } finally {
+                isProcessing = false;
+                btn.innerHTML = '⚡ إجابة سريعة (ضغطة واحدة)';
+            }
+        }
+    </script>
+</body>
+</html>
