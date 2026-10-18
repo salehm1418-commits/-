@@ -32,7 +32,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 15px;
+      padding: 12px;
     }
 
     header {
@@ -41,11 +41,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     h1 {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--text-main);
     }
 
@@ -59,15 +59,17 @@
       font-size: 13px;
     }
 
+    /* تكبير شاشة الكاميرا لتستغل أقصى ارتفاع ممكن في الجوال */
     .camera-container {
       width: 100%;
       max-width: 500px;
+      height: 62vh;
+      min-height: 380px;
       background: var(--inner-card);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
+      border-radius: 18px;
       overflow: hidden;
       position: relative;
-      aspect-ratio: 4/3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -90,14 +92,14 @@
       width: 100%;
       max-width: 500px;
       display: flex;
-      margin-top: 15px;
+      margin-top: 12px;
     }
 
     .btn {
       width: 100%;
       padding: 16px;
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
@@ -116,7 +118,7 @@
       border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 15px;
-      margin-top: 15px;
+      margin-top: 12px;
       min-height: 80px;
       font-size: 14px;
       line-height: 1.6;
@@ -321,7 +323,7 @@
 
       try {
         let base64Data = imageBase64.split(',')[1];
-        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`;
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
         
         let response = await fetch(url, {
           method: 'POST',
