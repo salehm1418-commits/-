@@ -3,618 +3,139 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>المجيب السريع للاختبارات</title>
 <style>
-:root {
-  --bg:#080c14;
-  --card:#0f172a;
-  --inner:#030712;
-  --blue:#2563eb;
-  --cyan:#38bdf8;
-  --border:#1e293b;
-}
-* {
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:system-ui,-apple-system,sans-serif;
-}
-body {
-  background:var(--bg);
-  color:white;
-  min-height:100vh;
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-header {
-  width:100%;
-  max-width:500px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-h1 {font-size:17px}
-button {cursor:pointer}
-.icon-btn {
-  background:var(--card);
-  border:1px solid var(--border);
-  color:white;
-  padding:9px 13px;
-  border-radius:10px;
-}
-.camera-container {
-  width:100%;
-  max-width:500px;
-  height:62vh;
-  min-height:350px;
-  background:var(--inner);
-  border:1px solid var(--border);
-  border-radius:18px;
-  overflow:hidden;
-}
-video,#captured-image {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-#captured-image {display:none}
-#canvas {display:none}
-.controls {
-  width:100%;
-  max-width:500px;
-  margin-top:12px;
-}
-.btn {
-  width:100%;
-  padding:16px;
-  border:0;
-  border-radius:14px;
-  font-size:16px;
-  font-weight:700;
-}
-.primary {
-  background:var(--blue);
-  color:white;
-}
-.secondary {
-  background:#334155;
-  color:white;
-}
-.btn:disabled {
-  opacity:.55;
-  cursor:wait;
-}
-.result-box {
-  display:none;
-  width:100%;
-  max-width:500px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:18px;
-  margin-top:12px;
-}
-#status {
-  color:var(--cyan);
-  font-size:17px;
-  font-weight:700;
-}
-#timer {
-  color:#94a3b8;
-  font-size:14px;
-  margin-top:7px;
-}
-#answer {
-  color:white;
-  font-size:26px;
-  font-weight:800;
-  line-height:1.6;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  margin-top:12px;
-}
-.action-row {
-  display:flex;
-  gap:8px;
-  margin-top:14px;
-}
-.action-row .btn {font-size:14px}
-#cancel-btn,#retry-btn {display:none}
-.modal {
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.85);
-  z-index:100;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-.modal-content {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:16px;
-  width:100%;
-  max-width:450px;
-  padding:20px;
-}
-.modal-content h2 {
-  font-size:18px;
-  margin-bottom:15px;
-}
-label {
-  display:block;
-  font-size:13px;
-  color:#94a3b8;
-  margin-bottom:6px;
-}
-input {
-  width:100%;
-  padding:12px;
-  border-radius:9px;
-  border:1px solid var(--border);
-  background:var(--inner);
-  color:white;
-}
+:root{--bg:#080c14;--card:#0f172a;--inner:#030712;--blue:#2563eb;--cyan:#38bdf8;--border:#1e293b}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+body{background:var(--bg);color:white;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+header{width:100%;max-width:500px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+h1{font-size:17px}.icon-btn{background:var(--card);border:1px solid var(--border);color:white;padding:9px 13px;border-radius:10px;cursor:pointer}
+.camera-container{width:100%;max-width:500px;height:62vh;min-height:350px;background:var(--inner);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+video,#captured-image{width:100%;height:100%;object-fit:cover}#captured-image,#canvas{display:none}
+.controls{width:100%;max-width:500px;margin-top:12px}.btn{width:100%;padding:16px;border:0;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer}.primary{background:var(--blue);color:white}
+.result-box{display:none;width:100%;max-width:500px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-top:12px}
+#status{color:var(--cyan);font-size:17px;font-weight:700}#answer{color:white;font-size:26px;font-weight:800;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:12px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-content{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:450px;padding:20px}.modal-content h2{font-size:18px;margin-bottom:15px}
+label{display:block;font-size:13px;color:#94a3b8;margin-bottom:6px}input{width:100%;padding:12px;border-radius:9px;border:1px solid var(--border);background:var(--inner);color:white}
+.modal-actions{display:flex;gap:10px;margin-top:20px}.modal-actions .btn{font-size:14px}.secondary{background:#334155;color:white}
 </style>
 </head>
 <body>
-
-<header>
-  <h1>المجيب السريع للاختبارات</h1>
-  <button class="icon-btn" onclick="openSettings()">
-    ⚙️ الإعدادات
-  </button>
-</header>
-
-<div class="camera-container">
-  <video id="video" autoplay playsinline></video>
-  <img id="captured-image" alt="السؤال">
-  <canvas id="canvas"></canvas>
-</div>
-
-<div class="controls">
-  <button id="main-btn" class="btn primary"
-    onclick="mainAction()">
-    📸 التقاط وتحليل فوري
-  </button>
-</div>
-
-<div id="result-box" class="result-box">
-  <div id="status">جاهز للتحليل</div>
-  <div id="timer"></div>
-  <div id="answer"></div>
-
-  <div class="action-row">
-    <button id="cancel-btn" class="btn secondary"
-      onclick="cancelAnalysis()">
-      ⏹ إلغاء الانتظار
-    </button>
-    <button id="retry-btn" class="btn secondary"
-      onclick="retryAnalysis()">
-      🔄 إعادة المحاولة بنفس الصورة
-    </button>
-  </div>
-</div>
-
-<div id="settings-modal" class="modal">
-  <div class="modal-content">
-    <h2>⚙️ إعدادات Gemini</h2>
-    <label>مفتاح Gemini API Key</label>
-    <input type="password" id="gemini-key"
-      placeholder="AIzaSy...">
-
-    <div class="action-row">
-      <button class="btn primary" onclick="saveSettings()">
-        حفظ
-      </button>
-      <button class="btn secondary"
-        onclick="closeSettings()">
-        إلغاء
-      </button>
-    </div>
-  </div>
-</div>
-
+<header><h1>المجيب السريع للاختبارات</h1><button class="icon-btn" onclick="openSettings()">⚙️ الإعدادات</button></header>
+<div class="camera-container"><video id="video" autoplay playsinline></video><img id="captured-image" alt="السؤال المصور"><canvas id="canvas"></canvas></div>
+<div class="controls"><button id="main-btn" class="btn primary" onclick="mainAction()">📸 التقاط وتحليل فوري</button></div>
+<div id="result-box" class="result-box"><div id="status">جاري التحليل...</div><div id="answer"></div></div>
+<div id="settings-modal" class="modal"><div class="modal-content"><h2>⚙️ إعدادات Gemini</h2><label for="gemini-key">مفتاح Gemini API Key</label><input type="password" id="gemini-key" placeholder="AIzaSy..." autocomplete="off"><div class="modal-actions"><button class="btn primary" onclick="saveSettings()">حفظ</button><button class="btn secondary" onclick="closeSettings()">إلغاء</button></div></div></div>
 <script>
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const photo = document.getElementById('captured-image');
-const mainBtn = document.getElementById('main-btn');
-const resultBox = document.getElementById('result-box');
-const statusEl = document.getElementById('status');
-const timerEl = document.getElementById('timer');
-const answerEl = document.getElementById('answer');
-const cancelBtn = document.getElementById('cancel-btn');
-const retryBtn = document.getElementById('retry-btn');
-
-const MODEL = 'gemini-3.8-flash';
-
-let imageBase64 = null;
-let isCaptured = false;
-let running = false;
-let controller = null;
-let timerInterval = null;
-let startedAt = 0;
-let retryAfter = 0;
-let requestId = 0;
-
-window.addEventListener('load', () => {
-  document.getElementById('gemini-key').value =
-    localStorage.getItem('gemini_key') || '';
-  startCamera();
+const video=document.getElementById('video');
+const canvas=document.getElementById('canvas');
+const photo=document.getElementById('captured-image');
+const mainBtn=document.getElementById('main-btn');
+const resultBox=document.getElementById('result-box');
+const statusEl=document.getElementById('status');
+const answerEl=document.getElementById('answer');
+const MODEL='gemini-3.8-flash';
+let imageBase64=null;
+let isCaptured=false;
+let activeController=null;
+let generation=0;
+window.addEventListener('load',()=>{
+ document.getElementById('gemini-key').value=localStorage.getItem('gemini_key')||'';
+ startCamera();
 });
-
-async function startCamera() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{
-        facingMode:'environment',
-        width:{ideal:1280},
-        height:{ideal:720}
-      },
-      audio:false
-    });
-    video.srcObject = stream;
-    await video.play();
-  } catch(e) {
-    console.error(e);
-    alert('يرجى السماح باستخدام الكاميرا.');
+async function startCamera(){
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}},audio:false});
+  video.srcObject=stream;
+  await video.play();
+ }catch(e){console.error(e);alert('يرجى السماح باستخدام الكاميرا.');}
+}
+function mainAction(){
+ if(isCaptured){resetCamera();return;}
+ if(!video.videoWidth){alert('انتظر حتى تعمل الكاميرا.');return;}
+ capturePhoto();analyze();
+}
+function capturePhoto(){
+ const scale=Math.min(1,1280/Math.max(video.videoWidth,video.videoHeight));
+ canvas.width=Math.round(video.videoWidth*scale);
+ canvas.height=Math.round(video.videoHeight*scale);
+ canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+ imageBase64=canvas.toDataURL('image/jpeg',0.75);
+ photo.src=imageBase64;
+ video.style.display='none';photo.style.display='block';
+ isCaptured=true;
+ mainBtn.textContent='🔄 التقاط سؤال جديد';
+}
+function resetCamera(){
+ generation++;
+ if(activeController){activeController.abort();activeController=null;}
+ video.style.display='block';photo.style.display='none';
+ resultBox.style.display='none';answerEl.textContent='';
+ imageBase64=null;isCaptured=false;
+ mainBtn.textContent='📸 التقاط وتحليل فوري';
+}
+function openSettings(){document.getElementById('settings-modal').style.display='flex';}
+function closeSettings(){document.getElementById('settings-modal').style.display='none';}
+function saveSettings(){
+ localStorage.setItem('gemini_key',document.getElementById('gemini-key').value.trim());
+ closeSettings();alert('تم حفظ المفتاح.');
+}
+function cleanAnswer(text){return text.replace(/\*\*/g,'').replace(/[`*_]/g,'').trim();}
+function parseWait(message){
+ const m=message.match(/Please retry in\s+((?:\d+h)?(?:\d+m)?(?:\d+(?:\.\d+)?s)?)/i);
+ if(!m)return '';
+ const v=m[1];const h=Number(v.match(/(\d+)h/)?.[1]||0);
+ const min=Number(v.match(/(\d+)m/)?.[1]||0);
+ const s=Number(v.match(/(\d+(?:\.\d+)?)s/)?.[1]||0);
+ const total=Math.ceil(h*3600+min*60+s);
+ if(!total)return '';
+ if(total>=3600)return Math.ceil(total/3600)+' ساعة تقريبًا';
+ if(total>=60)return Math.ceil(total/60)+' دقيقة تقريبًا';
+ return total+' ثانية';
+}
+async function analyze(){
+ const key=localStorage.getItem('gemini_key');
+ resultBox.style.display='block';
+ answerEl.textContent='';
+ if(!key){statusEl.textContent='⚠️ أدخل مفتاح Gemini من الإعدادات';openSettings();return;}
+ const myGeneration=++generation;
+ const controller=new AbortController();activeController=controller;
+ statusEl.textContent='⏳ جاري تحليل السؤال...';
+ try{
+  const url='https://generativelanguage.googleapis.com/v1beta/models/'+MODEL+':generateContent?key='+encodeURIComponent(key);
+  const response=await fetch(url,{
+   method:'POST',signal:controller.signal,
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({contents:[{parts:[
+    {text:'اقرأ السؤال والخيارات في الصورة. أجب فقط بحرف الخيار الصحيح والكلمة أو العبارة المقابلة له في سطر واحد دون شرح أو تنسيق Markdown. إذا لم يتضح السؤال فقل: الصورة غير واضحة.'},
+    {inline_data:{mime_type:'image/jpeg',data:imageBase64.split(',')[1]}}
+   ]}]})
+  });
+  const data=await response.json();
+  if(myGeneration!==generation)return;
+  if(!response.ok||data.error){const err=new Error(data.error?.message||'فشل الاتصال');err.status=response.status;throw err;}
+  const answer=data.candidates?.[0]?.content?.parts?.filter(p=>typeof p.text==='string').map(p=>p.text).join('\n');
+  if(!answer)throw new Error('لم تصل إجابة');
+  statusEl.textContent='✅ الإجابة:';
+  answerEl.textContent=cleanAnswer(answer);
+ }catch(err){
+  if(myGeneration!==generation||err.name==='AbortError')return;
+  console.error(err);
+  statusEl.textContent='❌ تعذر تحليل السؤال';
+  const message=err.message||'';
+  if(err.status===429||/quota exceeded|resource.exhausted/i.test(message)){
+   const wait=parseWait(message);
+   answerEl.textContent='انتهت حصة Gemini المتاحة حاليًا.'+(wait?' حاول بعد '+wait+'.':' حاول بعد تجدد الحصة.');
+  }else if(err.status===503||/high demand|overloaded|unavailable/i.test(message)){
+   answerEl.textContent='خوادم Gemini مشغولة حاليًا. حاول بعد قليل.';
+  }else{
+   answerEl.textContent='تعذر التحليل. تحقق من الاتصال أو المفتاح ثم حاول بسؤال جديد.';
   }
-}
-
-function mainAction() {
-  if(running) return;
-
-  if(!isCaptured) {
-    if(!video.videoWidth) {
-      alert('انتظر حتى تعمل الكاميرا.');
-      return;
-    }
-    capturePhoto();
-    analyze();
-  } else {
-    resetCamera();
-  }
-}
-
-function capturePhoto() {
-  const maxSide = 1280;
-  const scale = Math.min(
-    1,
-    maxSide / Math.max(video.videoWidth,video.videoHeight)
-  );
-
-  canvas.width = Math.round(video.videoWidth * scale);
-  canvas.height = Math.round(video.videoHeight * scale);
-
-  canvas.getContext('2d').drawImage(
-    video,0,0,canvas.width,canvas.height
-  );
-
-  imageBase64 = canvas.toDataURL('image/jpeg',0.75);
-  photo.src = imageBase64;
-
-  video.style.display = 'none';
-  photo.style.display = 'block';
-
-  isCaptured = true;
-  mainBtn.textContent = '🔄 التقاط سؤال جديد';
-}
-
-function resetCamera() {
-  if(running) return;
-
-  video.style.display = 'block';
-  photo.style.display = 'none';
-  resultBox.style.display = 'none';
-
-  imageBase64 = null;
-  isCaptured = false;
-  mainBtn.textContent = '📸 التقاط وتحليل فوري';
-}
-
-function openSettings() {
-  document.getElementById('settings-modal').style.display =
-    'flex';
-}
-
-function closeSettings() {
-  document.getElementById('settings-modal').style.display =
-    'none';
-}
-
-function saveSettings() {
-  const key = document.getElementById('gemini-key').value.trim();
-  localStorage.setItem('gemini_key',key);
-  closeSettings();
-  alert('تم حفظ المفتاح.');
-}
-
-function startTimer() {
-  startedAt = performance.now();
-  timerEl.textContent = '⏱ 0.0 ثانية';
-
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    const elapsed = (performance.now()-startedAt)/1000;
-    timerEl.textContent =
-      '⏱ ' + elapsed.toFixed(1) + ' ثانية';
-  },100);
-}
-
-function stopTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-
-  if(startedAt) {
-    const elapsed = (performance.now()-startedAt)/1000;
-    timerEl.textContent =
-      '⏱ استغرق ' + elapsed.toFixed(1) + ' ثانية';
-  }
-}
-
-function cleanAnswer(text) {
-  return text
-    .replace(/\*\*/g,'')
-    .replace(/[`*_]/g,'')
-    .trim();
-}
-
-function showAnswer(text) {
-  answerEl.textContent = cleanAnswer(text);
-}
-
-function retryAnalysis() {
-  if(running || !imageBase64) return;
-
-  if(Date.now() < retryAfter) {
-    const seconds = Math.ceil(
-      (retryAfter-Date.now())/1000
-    );
-    statusEl.textContent =
-      '⏳ انتظر ' + seconds + ' ثانية';
-    return;
-  }
-
-  analyze();
-}
-
-function cancelAnalysis() {
-  if(!running) return;
-
-  requestId++;
-  controller?.abort();
-  controller = null;
-  running = false;
-
-  stopTimer();
-  statusEl.textContent = '⏹ تم إلغاء الانتظار';
-  cancelBtn.style.display = 'none';
-  retryBtn.style.display = 'block';
-  mainBtn.disabled = false;
-}
-
-function parseWait(message) {
-  const match = message.match(
-    /Please retry in\s+((?:\d+h)?(?:\d+m)?(?:\d+(?:\.\d+)?s)?)/i
-  );
-
-  if(!match) return 0;
-
-  const value = match[1];
-  const h = Number(value.match(/(\d+)h/)?.[1] || 0);
-  const m = Number(value.match(/(\d+)m/)?.[1] || 0);
-  const s = Number(value.match(/(\d+(?:\.\d+)?)s/)?.[1] || 0);
-
-  return Math.ceil(h*3600+m*60+s);
-}
-
-async function analyze() {
-  const key = localStorage.getItem('gemini_key');
-
-  if(!key) {
-    alert('أدخل مفتاح Gemini من الإعدادات.');
-    openSettings();
-    return;
-  }
-
-  if(running || !imageBase64) return;
-
-  if(Date.now() < retryAfter) {
-    const seconds = Math.ceil(
-      (retryAfter-Date.now())/1000
-    );
-    resultBox.style.display = 'block';
-    statusEl.textContent = '⏳ انتظر قبل المحاولة';
-    answerEl.textContent =
-      'الوقت المتبقي: ' + seconds + ' ثانية';
-    retryBtn.style.display = 'block';
-    return;
-  }
-
-  const myRequest = ++requestId;
-  controller = new AbortController();
-  running = true;
-
-  resultBox.style.display = 'block';
-  statusEl.textContent = '⏳ جاري تحليل السؤال...';
-  answerEl.textContent = '';
-  retryBtn.style.display = 'none';
-  cancelBtn.style.display = 'block';
-  mainBtn.disabled = true;
-  startTimer();
-
-  try {
-    const url =
-      'https://generativelanguage.googleapis.com/v1beta/models/'
-      + MODEL
-      + ':streamGenerateContent?alt=sse&key='
-      + encodeURIComponent(key);
-
-    const response = await fetch(url,{
-      method:'POST',
-      signal:controller.signal,
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{
-          parts:[
-            {
-              text:'اقرأ السؤال والخيارات في الصورة. أجب بحرف الخيار الصحيح والكلمة أو العبارة المقابلة له فقط. لا تكتب شرحًا ولا Markdown. إذا لم تكن الصورة واضحة فقل: الصورة غير واضحة.'
-            },
-            {
-              inline_data:{
-                mime_type:'image/jpeg',
-                data:imageBase64.split(',')[1]
-              }
-            }
-          ]
-        }],
-        generationConfig:{
-          maxOutputTokens:256,
-          temperature:0
-        }
-      })
-    });
-
-    if(!response.ok) {
-      const errorData = await response.json().catch(()=>({}));
-      const err = new Error(
-        errorData.error?.message || 'فشل الاتصال'
-      );
-      err.status = response.status;
-      err.retryHeader = response.headers.get('Retry-After');
-      throw err;
-    }
-
-    if(!response.body) {
-      throw new Error('المتصفح لا يدعم قراءة البث.');
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-
-    let buffer = '';
-    let fullText = '';
-    let receivedAny = false;
-
-    while(true) {
-      const {done,value} = await reader.read();
-
-      if(myRequest !== requestId) {
-        await reader.cancel();
-        return;
-      }
-
-      if(done) break;
-
-      buffer += decoder.decode(value,{stream:true});
-      buffer = buffer.replace(/\r\n/g,'\n');
-
-      let boundary;
-
-      while((boundary = buffer.indexOf('\n\n')) !== -1) {
-        const event = buffer.slice(0,boundary);
-        buffer = buffer.slice(boundary+2);
-
-        const dataLines = event.split('\n')
-          .filter(line=>line.startsWith('data:'))
-          .map(line=>line.slice(5).trim());
-
-        if(!dataLines.length) continue;
-
-        const raw = dataLines.join('\n');
-        if(raw === '[DONE]') continue;
-
-        let json;
-        try {
-          json = JSON.parse(raw);
-        } catch {
-          continue;
-        }
-
-        if(json.error) {
-          throw new Error(json.error.message || 'خطأ في البث');
-        }
-
-        const chunk = json.candidates?.[0]?.content?.parts
-          ?.filter(part=>typeof part.text==='string')
-          .map(part=>part.text)
-          .join('') || '';
-
-        if(chunk) {
-          receivedAny = true;
-          fullText += chunk;
-          statusEl.textContent = '✅ الإجابة:';
-          showAnswer(fullText);
-        }
-      }
-    }
-
-    if(!receivedAny) {
-      throw new Error('لم تصل إجابة من Gemini.');
-    }
-
-    statusEl.textContent = '✅ الإجابة:';
-    showAnswer(fullText);
-    retryAfter = 0;
-
-  } catch(err) {
-    if(myRequest !== requestId) return;
-
-    console.error(err);
-    statusEl.textContent = '❌ تعذر تحليل السؤال';
-
-    const message = err.message || '';
-
-    if(err.name === 'AbortError') {
-      statusEl.textContent = '⏹ تم إلغاء الانتظار';
-      retryBtn.style.display = 'block';
-
-    } else if(
-      err.status === 429 ||
-      /quota exceeded|resource.exhausted/i.test(message)
-    ) {
-      const wait = parseWait(message);
-      if(wait > 0) {
-        retryAfter = Date.now()+wait*1000;
-      }
-
-      answerEl.textContent = wait > 0
-        ? 'انتهت الحصة المتاحة. حاول بعد ' +
-          Math.ceil(wait/60) + ' دقيقة تقريبًا.'
-        : 'وصلت إلى حد الاستخدام المتاح لمفتاح Gemini.';
-
-      retryBtn.style.display = 'none';
-
-    } else if(
-      err.status === 503 ||
-      /high demand|overloaded|unavailable/i.test(message)
-    ) {
-      retryAfter = Date.now()+15000;
-      answerEl.textContent =
-        'خوادم Gemini مشغولة حاليًا. انتظر 15 ثانية ثم حاول مجددًا.';
-      retryBtn.style.display = 'block';
-
-    } else {
-      answerEl.textContent =
-        'تعذر إكمال التحليل. تحقق من الاتصال ثم حاول مجددًا.';
-      retryBtn.style.display = 'block';
-    }
-
-  } finally {
-    if(myRequest === requestId) {
-      stopTimer();
-      running = false;
-      controller = null;
-      mainBtn.disabled = false;
-      cancelBtn.style.display = 'none';
-    }
-  }
+ }finally{
+  if(myGeneration===generation)activeController=null;
+ }
 }
 </script>
 </body>
