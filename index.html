@@ -11,6 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="لقطة AI | حل الأسئلة بالكاميرا">
 <meta property="og:description" content="صوّر السؤال واحصل على إجابة مختصرة بمساعدة الذكاء الاصطناعي.">
+<meta property="og:url" content="https://salehm1418-commits.github.io/-/">
 <meta property="og:image" content="https://salehm1418-commits.github.io/-/share.png">
 <link rel="icon" href="logo.png" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
@@ -61,7 +62,7 @@ header {
 .identity img {
   width:58px;
   height:58px;
-  object-fit:cover;
+  object-fit:contain;
   border-radius:15px;
   border:1px solid #284a65;
 }
@@ -141,13 +142,17 @@ main {
   border-radius:18px;
   overflow:hidden;
 }
+
+/* عرض إطار الكاميرا كاملاً بدون قص */
 video,#photo {
   display:block;
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;
+  background:#000;
 }
 #photo {display:none}
+
 .camera-note {
   position:absolute;
   bottom:12px;
@@ -250,7 +255,6 @@ video,#photo {
   font-weight:800;
 }
 .modal-actions .secondary {background:#334155}
-
 @media(max-width:370px) {
   .identity img {width:49px;height:49px}
   .identity h1 {font-size:19px}
@@ -261,7 +265,6 @@ video,#photo {
 </head>
 
 <body>
-
 <header>
   <div class="headline">
     <div class="identity">
@@ -271,7 +274,7 @@ video,#photo {
         <p>صوّر السؤال وشاهد الإجابة</p>
       </div>
     </div>
-    <button class="key-settings" onclick="openSettings()" aria-label="إدارة المفاتيح" title="إدارة المفاتيح">🔑</button>
+    <button class="key-settings" onclick="openSettings()" aria-label="إدارة المفاتيح">🔑</button>
   </div>
 
   <div class="modes">
