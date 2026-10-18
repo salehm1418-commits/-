@@ -1,259 +1,337 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080c14">
-<title>المجيب السريع</title>
+
+<title>لقطة AI | حل الأسئلة بالكاميرا</title>
+<meta name="description" content="لقطة AI — صوّر سؤالك واحصل على إجابة مختصرة بمساعدة الذكاء الاصطناعي.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="لقطة AI | حل الأسئلة بالكاميرا">
+<meta property="og:description" content="وجّه الكاميرا نحو السؤال، التقط الصورة، وشاهد الإجابة بسهولة.">
+<meta property="og:url" content="https://salehm1418-commits.github.io/-/">
+<meta property="og:image" content="https://salehm1418-commits.github.io/-/share.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
 <style>
 :root {
-  color-scheme: dark;
-  --bg:#080c14;
-  --panel:#101827;
-  --line:#273449;
   --blue:#2563eb;
   --green:#059669;
-  --text:#f8fafc;
-  --muted:#94a3b8;
+  --bg:#080c14;
+  --card:#0f172a;
+  --border:#263449;
 }
-* { box-sizing:border-box; }
-html,body { margin:0; min-height:100%; }
+* {box-sizing:border-box}
+
 body {
+  margin:0;
   background:var(--bg);
-  color:var(--text);
+  color:#fff;
   font-family:system-ui,-apple-system,sans-serif;
 }
-button,input { font:inherit; }
-button { cursor:pointer; }
-button:disabled { opacity:.35;cursor:not-allowed; }
-header {
-  position:sticky;
-  top:0;
-  z-index:50;
-  background:rgba(8,12,20,.98);
-  border-bottom:1px solid var(--line);
-  padding:calc(env(safe-area-inset-top) + 9px) 10px 9px;
-}
+
+button,input {font:inherit}
+button {cursor:pointer;color:white}
+
 .top {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:20;
+  background:#0f172af5;
+  border-bottom:1px solid var(--border);
+  padding:calc(env(safe-area-inset-top) + 9px) 12px 10px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:6px;
+  gap:8px;
+  flex-wrap:wrap;
 }
-.brand {
-  font-size:14px;
-  font-weight:800;
-  white-space:nowrap;
-}
-.tools { display:flex;align-items:center;gap:5px; }
-.small {
-  border:1px solid var(--line);
-  background:#1e293b;
-  color:white;
-  border-radius:9px;
-  padding:9px;
-}
-.modebar {
+
+.logo {
   display:flex;
   align-items:center;
   gap:6px;
-  margin-top:9px;
+  white-space:nowrap;
 }
-.mode {
-  flex:1;
-  border:1px solid var(--line);
-  border-radius:10px;
-  background:#172033;
-  color:#cbd5e1;
-  padding:10px;
-  font-weight:750;
+
+.logo img {
+  width:27px;
+  height:27px;
+  border-radius:7px;
 }
-.mode.active {
-  background:var(--blue);
-  color:white;
-  border-color:var(--blue);
+
+.top h1 {
+  font-size:14px;
+  margin:0;
+  white-space:nowrap;
 }
-.keyrow {
-  display:none;
-  gap:6px;
+
+.top-actions {
+  display:flex;
   align-items:center;
-  margin-top:9px;
+  gap:7px;
 }
-.keyrow.show { display:flex; }
-.keyrow span { color:var(--muted);font-size:12px; }
-.keynum {
-  flex:1;
-  padding:9px 0;
-  border:1px solid var(--line);
+
+.small {
+  border:1px solid #334155;
+  background:#1e293b;
+  border-radius:10px;
+  padding:8px 9px;
+  font-size:14px;
+}
+
+.controls {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.controls .toggle {
+  padding:8px 9px;
+  border:1px solid #334155;
   border-radius:9px;
-  background:#172033;
-  color:white;
-  font-weight:bold;
+  background:#1e293b;
+  font-size:12px;
+  font-weight:700;
 }
-.keynum.active {
+
+.controls .toggle.active,
+.number.active {
   background:var(--blue);
   border-color:var(--blue);
 }
-main { padding:10px 10px 28px; }
+
+.numbers {
+  display:flex;
+  gap:3px;
+}
+
+.number {
+  min-width:26px;
+  padding:7px 3px;
+  border:1px solid #334155;
+  border-radius:7px;
+  background:#1e293b;
+  font-size:12px;
+}
+
+.number:disabled {
+  opacity:.3;
+  cursor:not-allowed;
+}
+
+main {
+  max-width:520px;
+  margin:auto;
+  padding:calc(env(safe-area-inset-top) + 102px) 12px 28px;
+}
+
 .camera {
-  position:relative;
   width:100%;
   height:62dvh;
-  min-height:300px;
-  background:#020617;
-  border:1px solid var(--line);
-  border-radius:16px;
+  min-height:320px;
+  background:#030712;
+  border:1px solid var(--border);
+  border-radius:17px;
   overflow:hidden;
 }
-video,#photo {
+
+.camera video,
+.camera img {
   width:100%;
   height:100%;
   object-fit:cover;
-  display:block;
 }
-#photo { display:none; }
-.cameraHint {
-  position:absolute;
-  inset:auto 12px 12px;
-  background:#020617aa;
-  border-radius:10px;
-  padding:8px;
-  text-align:center;
-  font-size:12px;
-  color:#cbd5e1;
-  pointer-events:none;
+
+.camera img,
+#canvas {
+  display:none;
 }
+
 #captureBtn {
   display:block;
   width:100%;
   margin-top:12px;
+  background:var(--blue);
   border:0;
   border-radius:13px;
-  background:var(--blue);
-  color:white;
-  padding:17px 12px;
+  padding:17px;
   font-size:18px;
-  font-weight:800;
+  font-weight:750;
 }
-#captureBtn.new { background:var(--green); }
-.status {
-  margin:12px 0 0;
-  color:var(--muted);
-  text-align:center;
-  font-size:13px;
-}
-.answer {
+
+.result {
+  display:none;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
   margin-top:12px;
-  border:1px solid var(--line);
-  background:var(--panel);
-  border-radius:15px;
-  padding:18px 12px;
-  min-height:85px;
-  text-align:center;
+  padding:17px;
+}
+
+#status {
+  color:#38bdf8;
+  font-size:17px;
+  font-weight:700;
+}
+
+#answer {
   font-size:26px;
-  line-height:1.6;
   font-weight:800;
+  line-height:1.6;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
+  margin-top:10px;
 }
+
 .overlay {
   position:fixed;
   inset:0;
-  z-index:100;
+  z-index:50;
+  background:#000c;
   display:none;
   align-items:center;
   justify-content:center;
-  background:#000b;
   padding:16px;
 }
-.overlay.show { display:flex; }
-.modal {
-  width:min(100%,420px);
-  max-height:85dvh;
-  overflow:auto;
-  background:#111b2b;
-  border:1px solid var(--line);
-  border-radius:18px;
+
+.panel {
+  background:#101b30;
+  border:1px solid var(--border);
+  border-radius:17px;
   padding:18px;
+  width:min(100%,440px);
+  max-height:85dvh;
+  overflow-y:auto;
 }
-.modal h2 { margin:0 0 12px;font-size:20px; }
-.modal p { color:var(--muted);font-size:13px; }
-.field { margin:12px 0; }
-.field label {
+
+.panel h2 {
+  margin:0 0 14px;
+  font-size:19px;
+}
+
+.muted {
+  color:#a8b5c7;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.panel label {
   display:block;
-  margin-bottom:5px;
+  margin:11px 0 5px;
   color:#cbd5e1;
   font-size:13px;
 }
-.field input {
+
+.panel input {
   width:100%;
-  background:#080c14;
-  color:white;
+  background:#060d19;
   border:1px solid #334155;
-  border-radius:10px;
+  color:#fff;
   padding:12px;
+  border-radius:9px;
   direction:ltr;
 }
-.actions { display:flex;gap:8px;margin-top:16px; }
-.actions button {
+
+.panel-footer {
+  display:flex;
+  gap:8px;
+  margin-top:16px;
+}
+
+.panel-footer button {
   flex:1;
-  padding:12px;
+  background:var(--blue);
   border:0;
   border-radius:10px;
-  background:#334155;
-  color:white;
-  font-weight:bold;
+  padding:13px;
 }
-.actions .save { background:var(--blue); }
+
+.panel-footer button.secondary {
+  background:#475569;
+}
+
+@media(max-width:390px) {
+  .top {gap:5px}
+  .controls {gap:3px}
+  .controls .toggle {padding:7px 6px}
+  .number {min-width:23px;padding:6px 2px}
+  .top h1 {font-size:13px}
+}
 </style>
 </head>
+
 <body>
 
-<header>
-  <div class="top">
-    <div class="brand">📷 المجيب السريع</div>
-    <div class="tools">
-      <button class="small" onclick="openSettings()" aria-label="المفاتيح">🔑</button>
-      <button class="small" onclick="openSettings()" aria-label="الإعدادات">⚙️</button>
+<header class="top">
+  <div class="logo">
+    <img src="logo.png" alt="شعار لقطة AI">
+    <h1>لقطة AI</h1>
+  </div>
+
+  <div class="top-actions">
+    <div class="controls">
+      <button id="autoBtn" class="toggle" onclick="setMode('auto')">
+        ⚡ أوتو
+      </button>
+
+      <button id="manualBtn" class="toggle" onclick="setMode('manual')">
+        ✋ يدوي
+      </button>
+
+      <div id="keyGrid" class="numbers" aria-label="اختيار رقم المفتاح"></div>
     </div>
-  </div>
 
-  <div class="modebar">
-    <button id="autoBtn" class="mode" onclick="setMode('auto')">⚡ أوتو</button>
-    <button id="manualBtn" class="mode" onclick="setMode('manual')">✋ يدوي</button>
-  </div>
-
-  <div id="keyRow" class="keyrow">
-    <span>المفتاح</span>
-    <button class="keynum" data-key="0" onclick="selectKey(0)">1</button>
-    <button class="keynum" data-key="1" onclick="selectKey(1)">2</button>
-    <button class="keynum" data-key="2" onclick="selectKey(2)">3</button>
-    <button class="keynum" data-key="3" onclick="selectKey(3)">4</button>
-    <button class="keynum" data-key="4" onclick="selectKey(4)">5</button>
+    <button
+      class="small"
+      onclick="openSettings()"
+      aria-label="إدارة مفاتيح Gemini"
+      title="إدارة المفاتيح"
+    >🔑</button>
   </div>
 </header>
 
 <main>
   <div class="camera">
     <video id="video" autoplay playsinline muted></video>
-    <img id="photo" alt="السؤال الملتقط">
-    <div id="cameraHint" class="cameraHint">وجّه الكاميرا نحو السؤال</div>
+    <img id="photo" alt="السؤال المصور">
+    <canvas id="canvas"></canvas>
   </div>
 
-  <button id="captureBtn" onclick="mainAction()">📸 التقاط وتحليل فوري</button>
-  <div id="status" class="status">جاري تشغيل الكاميرا...</div>
-  <div id="answer" class="answer">الإجابة تظهر هنا</div>
+  <button id="captureBtn" onclick="mainAction()">
+    📸 التقاط وتحليل فوري
+  </button>
+
+  <section class="result" id="result">
+    <div id="status"></div>
+    <div id="answer"></div>
+  </section>
 </main>
 
-<div id="settingsOverlay" class="overlay">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-    <h2 id="settingsTitle">🔑 إعدادات مفاتيح Gemini</h2>
-    <p>أضف حتى 5 مفاتيح. تظهر أرقام المفاتيح المحفوظة في الوضع اليدوي.</p>
+<div class="overlay" id="settingsOverlay">
+  <div class="panel" role="dialog" aria-modal="true">
+    <h2>🔑 إدارة مفاتيح Gemini</h2>
+
+    <p class="muted">
+      كل شخص يضيف مفاتيحه الخاصة في متصفحه.
+      يمكنك حفظ حتى 5 مفاتيح، وترك الخانات غير المستخدمة فارغة.
+    </p>
+
     <div id="keyInputs"></div>
-    <div class="actions">
-      <button onclick="closeSettings()">إلغاء</button>
-      <button class="save" onclick="saveSettings()">حفظ المفاتيح</button>
+
+    <div class="panel-footer">
+      <button onclick="saveSettings()">حفظ المفاتيح</button>
+      <button class="secondary" onclick="closeSettings()">إلغاء</button>
     </div>
   </div>
 </div>
@@ -261,198 +339,127 @@ video,#photo {
 <script>
 'use strict';
 
-// حافظنا على اسم النموذج الذي تستخدمه.
-// إذا لم يكن متاحاً لحسابك سيظهر خطأ النموذج.
+// النموذج المطلوب، بشرط أن يكون متاحاً لحسابك
 const MODEL = 'gemini-3.8-flash';
 
 const $ = id => document.getElementById(id);
+
 const video = $('video');
 const photo = $('photo');
-const answer = $('answer');
-const statusBox = $('status');
+const canvas = $('canvas');
 const captureBtn = $('captureBtn');
+const result = $('result');
+const statusEl = $('status');
+const answerEl = $('answer');
 
 let keys = [];
-let selectedKey = 0;
+let selected = 0;
 let mode = localStorage.getItem('gemini_mode') === 'manual'
   ? 'manual' : 'auto';
 
 let captured = false;
-let imageBase64 = '';
+let imageData = '';
 let controller = null;
-let requestNumber = 0;
+let requestId = 0;
 
-function loadKeys() {
+function load() {
   try {
-    const stored = JSON.parse(localStorage.getItem('gemini_keys') || '[]');
-    if (Array.isArray(stored)) {
-      keys = stored.slice(0,5).map(v => typeof v === 'string' ? v.trim() : '');
-    }
-  } catch (_) {
+    const stored = JSON.parse(
+      localStorage.getItem('gemini_keys') || '[]'
+    );
+
+    keys = Array.isArray(stored)
+      ? stored.slice(0,5).map(x =>
+          typeof x === 'string' ? x.trim() : ''
+        )
+      : [];
+  } catch {
     keys = [];
   }
 
-  // دعم المفتاح القديم
-  if (!keys.some(Boolean)) {
-    const old = localStorage.getItem('gemini_key');
-    if (old) keys = [old.trim()];
+  // استرجاع المفتاح القديم إن وجد
+  const old = localStorage.getItem('gemini_key');
+
+  if (!keys.some(Boolean) && old) {
+    keys = [old.trim()];
   }
 
-  while (keys.length < 5) keys.push('');
+  while (keys.length < 5) {
+    keys.push('');
+  }
 
-  const saved = Number(localStorage.getItem('selected_gemini_key'));
-  selectedKey = Number.isInteger(saved) && saved >= 0 && saved < 5
-    ? saved : 0;
+  selected = Number(
+    localStorage.getItem('selected_gemini_key') || 0
+  );
 
-  if (!keys[selectedKey]) {
+  if (
+    !Number.isInteger(selected) ||
+    selected < 0 ||
+    selected >= 5
+  ) {
+    selected = 0;
+  }
+
+  if (!keys[selected]) {
     const first = keys.findIndex(Boolean);
-    if (first >= 0) selectedKey = first;
+    if (first >= 0) selected = first;
+  }
+
+  renderMode();
+  startCamera();
+
+  if (!keys.some(Boolean)) {
+    result.style.display = 'block';
+    statusEl.textContent = '👋 مرحباً بك في لقطة AI';
+    answerEl.textContent =
+      'اضغط زر 🔑 وأضف مفتاح Gemini الخاص بك للبدء.';
   }
 }
 
-function saveSelected() {
-  localStorage.setItem('selected_gemini_key', String(selectedKey));
-}
+function stopRequest() {
+  requestId++;
 
-function updateUI() {
-  $('autoBtn').classList.toggle('active', mode === 'auto');
-  $('manualBtn').classList.toggle('active', mode === 'manual');
-  $('keyRow').classList.toggle('show', mode === 'manual');
-
-  document.querySelectorAll('.keynum').forEach(btn => {
-    const index = Number(btn.dataset.key);
-    btn.disabled = !keys[index];
-    btn.classList.toggle('active', index === selectedKey && !!keys[index]);
-    btn.title = keys[index] ? 'استخدام المفتاح ' + (index+1) : 'لم يتم حفظ هذا المفتاح';
-  });
-}
-
-function cancelRequest() {
-  requestNumber++;
   if (controller) {
     controller.abort();
     controller = null;
   }
 }
 
-function setMode(nextMode) {
-  if (mode === nextMode) return;
-  cancelRequest();
-  mode = nextMode;
-  localStorage.setItem('gemini_mode',mode);
-  updateUI();
-  statusBox.textContent = mode === 'auto'
-    ? 'الوضع التلقائي مفعّل'
-    : 'الوضع اليدوي مفعّل — اختر رقم المفتاح';
-}
-
-function selectKey(index) {
-  if (!keys[index]) return;
-  cancelRequest();
-  selectedKey = index;
-  saveSelected();
-  updateUI();
-  statusBox.textContent = 'تم اختيار المفتاح رقم ' + (index+1);
-}
-
-function openSettings() {
-  const wrap = $('keyInputs');
-  wrap.innerHTML = '';
-
-  for (let i=0; i<5; i++) {
-    const field = document.createElement('div');
-    field.className = 'field';
-
-    const label = document.createElement('label');
-    label.textContent = 'المفتاح رقم ' + (i+1);
-    label.htmlFor = 'apiKey' + i;
-
-    const input = document.createElement('input');
-    input.type = 'password';
-    input.id = 'apiKey' + i;
-    input.autocomplete = 'off';
-    input.placeholder = 'AIza...';
-    input.value = keys[i] || '';
-
-    field.append(label,input);
-    wrap.append(field);
-  }
-
-  $('settingsOverlay').classList.add('show');
-}
-
-function closeSettings() {
-  $('settingsOverlay').classList.remove('show');
-}
-
-function saveSettings() {
-  const next = [];
-  for (let i=0;i<5;i++) {
-    next.push($('apiKey'+i).value.trim());
-  }
-
-  keys = next;
-  localStorage.setItem('gemini_keys',JSON.stringify(keys));
-
-  if (!keys[selectedKey]) {
-    const first = keys.findIndex(Boolean);
-    selectedKey = first >= 0 ? first : 0;
-  }
-
-  saveSelected();
-  cancelRequest();
-  updateUI();
-  closeSettings();
-  statusBox.textContent = 'تم حفظ إعدادات المفاتيح';
-}
-
-$('settingsOverlay').addEventListener('click',event => {
-  if (event.target === $('settingsOverlay')) closeSettings();
-});
-
 async function startCamera() {
   try {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      throw new Error('الكاميرا تحتاج اتصال HTTPS ومتصفحاً يدعم التصوير');
-    }
-
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio:false,
-      video:{
-        facingMode:{ideal:'environment'},
-        width:{ideal:1920},
-        height:{ideal:1080}
-      }
+      video: {
+        facingMode:'environment',
+        width:{ideal:1280},
+        height:{ideal:720}
+      },
+      audio:false
     });
 
     video.srcObject = stream;
     await video.play();
-
-    statusBox.textContent = keys.some(Boolean)
-      ? 'الكاميرا جاهزة'
-      : 'الكاميرا جاهزة — أضف مفتاح Gemini من 🔑';
-  } catch (error) {
-    statusBox.textContent = 'تعذر تشغيل الكاميرا: ' + error.message;
+  } catch (e) {
+    console.error(e);
+    result.style.display = 'block';
+    statusEl.textContent = 'تعذر فتح الكاميرا';
+    answerEl.textContent =
+      'اسمح للموقع باستخدام الكاميرا من إعدادات المتصفح.';
   }
 }
 
 function mainAction() {
   if (captured) {
-    resetCamera();
-  } else {
-    capture();
-  }
-}
-
-function capture() {
-  if (!video.videoWidth || !video.videoHeight) {
-    statusBox.textContent = 'انتظر حتى تعمل الكاميرا';
+    reset();
     return;
   }
 
-  cancelRequest();
+  if (!video.videoWidth) {
+    alert('انتظر حتى تعمل الكاميرا');
+    return;
+  }
 
-  const canvas = document.createElement('canvas');
+  stopRequest();
+
   const scale = Math.min(
     1,
     1280 / Math.max(video.videoWidth,video.videoHeight)
@@ -461,137 +468,319 @@ function capture() {
   canvas.width = Math.round(video.videoWidth * scale);
   canvas.height = Math.round(video.videoHeight * scale);
 
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+  canvas.getContext('2d').drawImage(
+    video,0,0,canvas.width,canvas.height
+  );
 
-  const dataUrl = canvas.toDataURL('image/jpeg',0.75);
-  imageBase64 = dataUrl.split(',')[1];
+  imageData = canvas.toDataURL('image/jpeg',0.75);
 
-  photo.src = dataUrl;
+  photo.src = imageData;
   photo.style.display = 'block';
   video.style.display = 'none';
-  $('cameraHint').style.display = 'none';
 
   captured = true;
-  captureBtn.classList.add('new');
   captureBtn.textContent = '🔄 التقاط سؤال جديد';
+  captureBtn.style.background = '#059669';
 
-  answer.textContent = 'جاري تحليل السؤال...';
-  statusBox.textContent = 'جاري إرسال الصورة إلى Gemini';
-
-  analyze(imageBase64);
+  analyze(imageData);
 }
 
-function resetCamera() {
-  cancelRequest();
+function reset() {
+  stopRequest();
+
   captured = false;
-  imageBase64 = '';
+  imageData = '';
 
   photo.style.display = 'none';
-  photo.removeAttribute('src');
   video.style.display = 'block';
-  $('cameraHint').style.display = '';
+  result.style.display = 'none';
 
-  captureBtn.classList.remove('new');
+  answerEl.textContent = '';
   captureBtn.textContent = '📸 التقاط وتحليل فوري';
-
-  answer.textContent = 'الإجابة تظهر هنا';
-  statusBox.textContent = 'وجّه الكاميرا نحو السؤال الجديد';
+  captureBtn.style.background = '#2563eb';
 }
 
-function cleanAnswer(text) {
-  return String(text || '')
-    .replace(/\*\*/g,'')
-    .trim();
+function setMode(nextMode) {
+  if (mode !== nextMode) {
+    stopRequest();
+
+    mode = nextMode;
+    localStorage.setItem('gemini_mode',mode);
+
+    if (captured) {
+      statusEl.textContent = 'تم تغيير الوضع';
+      answerEl.textContent =
+        'اضغط التقاط سؤال جديد للمتابعة.';
+    }
+  }
+
+  renderMode();
 }
 
-function readableWait(message) {
-  const match = String(message).match(
-    /retry\s+(?:in|after)\s+([^\n.]+)/i
+function chooseKey(index) {
+  if (!keys[index]) return;
+
+  stopRequest();
+
+  selected = index;
+
+  localStorage.setItem(
+    'selected_gemini_key',
+    String(index)
   );
-  return match ? ' — ' + match[1].trim() : '';
+
+  if (captured) {
+    statusEl.textContent =
+      'تم اختيار المفتاح رقم ' + (index+1);
+
+    answerEl.textContent =
+      'اضغط التقاط سؤال جديد للمتابعة.';
+  }
+
+  renderMode();
 }
 
-function errorMessage(error) {
-  if (error.name === 'AbortError') return 'تم إلغاء الطلب';
+function renderMode() {
+  $('autoBtn').classList.toggle(
+    'active',mode === 'auto'
+  );
 
-  const code = error.status;
-  const message = String(error.message || '');
+  $('manualBtn').classList.toggle(
+    'active',mode === 'manual'
+  );
 
-  if (code === 429) {
-    return 'انتهى الحد المتاح حالياً للمشروع أو الحساب' +
-      readableWait(message) +
-      '. انتظر إعادة توفر الحصة أو راجع الفوترة.';
+  const grid = $('keyGrid');
+
+  grid.style.display =
+    mode === 'manual' ? 'flex' : 'none';
+
+  grid.innerHTML = '';
+
+  for (let i=0;i<5;i++) {
+    const button = document.createElement('button');
+
+    button.className = 'number';
+    button.textContent = String(i+1);
+    button.disabled = !keys[i];
+
+    button.classList.toggle(
+      'active',
+      i === selected && !!keys[i]
+    );
+
+    button.title = keys[i]
+      ? 'المفتاح رقم ' + (i+1)
+      : 'لم يتم حفظ هذا المفتاح';
+
+    button.onclick = () => chooseKey(i);
+
+    grid.appendChild(button);
   }
-  if (code === 401 || code === 403) {
-    return 'المفتاح غير مصرح له باستخدام الخدمة أو لا يملك الصلاحية المطلوبة.';
-  }
-  if (code === 400 || code === 404) {
-    return 'تحقق من اسم النموذج وإعدادات Gemini API. ' + message;
-  }
-  if ([500,502,503,504].includes(code)) {
-    return 'خدمة Gemini مشغولة أو متوقفة مؤقتاً. حاول بعد قليل.';
-  }
-  if (error instanceof TypeError) {
-    return 'تعذر الاتصال بالخدمة. تحقق من الإنترنت.';
-  }
-  return message || 'حدث خطأ غير معروف';
 }
 
-function isKeySpecificError(error) {
-  const message = String(error.message || '').toLowerCase();
+function openSettings() {
+  const area = $('keyInputs');
+  area.innerHTML = '';
 
-  if (error.status === 401) return true;
+  for (let i=0;i<5;i++) {
+    const label = document.createElement('label');
+    label.textContent = 'المفتاح رقم ' + (i+1);
 
-  return error.status === 403 &&
-    /api.key|invalid.key|key.not.valid|permission.denied|api_key/.test(message) &&
-    !/quota|rate.limit|safety|policy/.test(message);
+    const input = document.createElement('input');
+    input.type = 'password';
+    input.id = 'key' + i;
+    input.autocomplete = 'off';
+    input.placeholder = 'AIzaSy...';
+    input.value = keys[i] || '';
+
+    area.append(label,input);
+  }
+
+  $('settingsOverlay').style.display = 'flex';
 }
 
-function temporaryError(error) {
-  return [500,502,503,504].includes(error.status) ||
-    error instanceof TypeError;
+function closeSettings() {
+  $('settingsOverlay').style.display = 'none';
 }
 
-function wait(ms,signal) {
+function saveSettings() {
+  const next = [];
+
+  for (let i=0;i<5;i++) {
+    next.push($('key'+i).value.trim());
+  }
+
+  stopRequest();
+
+  // كل مفتاح يحتفظ برقم خانته
+  keys = next;
+
+  if (!keys[selected]) {
+    const first = keys.findIndex(Boolean);
+    selected = first >= 0 ? first : 0;
+  }
+
+  localStorage.setItem(
+    'gemini_keys',
+    JSON.stringify(keys)
+  );
+
+  localStorage.setItem(
+    'selected_gemini_key',
+    String(selected)
+  );
+
+  localStorage.removeItem('gemini_key');
+
+  closeSettings();
+  renderMode();
+
+  if (captured) {
+    statusEl.textContent = 'تم حفظ المفاتيح';
+    answerEl.textContent =
+      'اضغط التقاط سؤال جديد للمتابعة.';
+  } else if (keys.some(Boolean)) {
+    result.style.display = 'block';
+    statusEl.textContent = '✅ تم حفظ المفاتيح';
+    answerEl.textContent =
+      'وجّه الكاميرا نحو السؤال واضغط التقاط.';
+  }
+
+  alert('تم حفظ مفاتيحك في هذا المتصفح');
+}
+
+function waitText(message) {
+  const match = String(message).match(
+    /Please retry in\s+((?:\d+h)?(?:\d+m)?(?:\d+(?:\.\d+)?s)?)/i
+  );
+
+  if (!match) return '';
+
+  const value = match[1];
+
+  const hours = +(value.match(/(\d+)h/)?.[1] || 0);
+  const minutes = +(value.match(/(\d+)m/)?.[1] || 0);
+  const seconds = +(
+    value.match(/(\d+(?:\.\d+)?)s/)?.[1] || 0
+  );
+
+  const total = Math.ceil(
+    hours*3600 + minutes*60 + seconds
+  );
+
+  if (total >= 3600) {
+    return Math.ceil(total/3600) + ' ساعة تقريباً';
+  }
+
+  if (total >= 60) {
+    return Math.ceil(total/60) + ' دقيقة تقريباً';
+  }
+
+  return total ? total + ' ثانية' : '';
+}
+
+function errorText(error) {
+  const message = error.message || '';
+
+  if (error.refusal) {
+    return 'لم يتمكن النموذج من الإجابة عن هذا الطلب.';
+  }
+
+  if (
+    error.status === 429 ||
+    /quota exceeded|resource.exhausted/i.test(message)
+  ) {
+    const wait = waitText(message);
+
+    return 'انتهت حصة الاستخدام للمشروع الحالي.' +
+      (wait ? ' حاول بعد ' + wait + '.' : '') +
+      ' تحقق من حدود الاستخدام أو الفوترة.';
+  }
+
+  if (
+    error.status === 503 ||
+    /high demand|overloaded/i.test(message)
+  ) {
+    return 'خوادم Gemini مشغولة، حاول بعد قليل.';
+  }
+
+  if (
+    error.status === 400 ||
+    error.status === 404
+  ) {
+    return 'تحقق من إتاحة النموذج للمفتاح المختار.';
+  }
+
+  if (
+    error.status === 401 ||
+    error.status === 403
+  ) {
+    return 'المفتاح غير صالح أو لا يملك الصلاحية المطلوبة.';
+  }
+
+  return 'تعذر الحصول على إجابة. تحقق من الاتصال والمفتاح.';
+}
+
+function keyError(error) {
+  const message = error.message || '';
+
+  return error.status === 401 || (
+    error.status === 403 &&
+    /api key|invalid key|key not valid|api_key/i.test(message) &&
+    !/quota|safety|policy/i.test(message)
+  );
+}
+
+function sleep(ms,signal) {
   return new Promise((resolve,reject) => {
     if (signal.aborted) {
-      reject(new DOMException('Aborted','AbortError'));
+      reject(new DOMException('Cancelled','AbortError'));
       return;
     }
+
     const timer = setTimeout(() => {
       signal.removeEventListener('abort',onAbort);
       resolve();
     },ms);
+
     function onAbort() {
       clearTimeout(timer);
-      reject(new DOMException('Aborted','AbortError'));
+      reject(new DOMException('Cancelled','AbortError'));
     }
-    signal.addEventListener('abort',onAbort,{once:true});
+
+    signal.addEventListener(
+      'abort',onAbort,{once:true}
+    );
   });
 }
 
-async function requestAnswer(apiKey,image,signal) {
-  const prompt =
-    'اقرأ السؤال الظاهر في الصورة وحدد الإجابة الصحيحة. ' +
-    'إذا كان سؤال اختيار من متعدد، اكتب حرف الخيار ونص الإجابة فقط، ' +
-    'بالعربية وباختصار شديد. ' +
-    'إذا كانت الصورة غير واضحة فاطلب إعادة التصوير. ' +
-    'لا تخمّن إذا لم تستطع قراءة السؤال.';
-
+async function ask(key,image,signal) {
   const response = await fetch(
     'https://generativelanguage.googleapis.com/v1beta/models/' +
     encodeURIComponent(MODEL) +
-    ':generateContent?key=' + encodeURIComponent(apiKey),
+    ':generateContent?key=' +
+    encodeURIComponent(key),
     {
       method:'POST',
       signal,
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json'
+      },
       body:JSON.stringify({
         contents:[{
           parts:[
-            {text:prompt},
-            {inline_data:{mime_type:'image/jpeg',data:image}}
+            {
+              text:
+                'اقرأ السؤال والخيارات في الصورة. ' +
+                'أجب بحرف الخيار الصحيح ونصه في سطر واحد دون شرح. ' +
+                'إذا كانت الصورة غير واضحة فاذكر ذلك، ولا تخمّن.'
+            },
+            {
+              inline_data:{
+                mime_type:'image/jpeg',
+                data:image.split(',')[1]
+              }
+            }
           ]
         }],
         generationConfig:{
@@ -604,128 +793,185 @@ async function requestAnswer(apiKey,image,signal) {
 
   const data = await response.json().catch(() => ({}));
 
-  if (!response.ok) {
+  if (!response.ok || data.error) {
     const error = new Error(
-      data.error?.message || 'HTTP ' + response.status
+      data.error?.message || 'فشل الطلب'
     );
+
     error.status = response.status;
     throw error;
   }
 
   const candidate = data.candidates?.[0];
+
   const text = candidate?.content?.parts
     ?.filter(part => typeof part.text === 'string')
     .map(part => part.text)
     .join('\n');
 
   if (!text?.trim()) {
+    const error = new Error('لم تصل إجابة');
+
     if (
-      candidate?.finishReason === 'SAFETY' ||
-      data.promptFeedback?.blockReason
+      data.promptFeedback?.blockReason ||
+      ['SAFETY','PROHIBITED_CONTENT'].includes(
+        candidate?.finishReason
+      )
     ) {
-      throw new Error('تعذر تقديم إجابة لهذا السؤال.');
+      error.refusal = true;
     }
-    throw new Error('لم تصل إجابة نصية. حاول تصوير السؤال بشكل أوضح.');
+
+    throw error;
   }
 
-  return cleanAnswer(text);
+  return text.replace(/\*\*/g,'').trim();
 }
 
 async function analyze(image) {
+  result.style.display = 'block';
+  answerEl.textContent = '';
+
   if (!keys.some(Boolean)) {
-    answer.textContent = 'أضف مفتاح Gemini أولاً من زر 🔑';
-    statusBox.textContent = 'لا توجد مفاتيح محفوظة';
+    statusEl.textContent = '⚠️ لا يوجد مفتاح';
+    answerEl.textContent =
+      'أضف مفتاح Gemini الخاص بك من زر 🔑.';
     return;
   }
 
-  if (!keys[selectedKey]) {
-    answer.textContent = 'اختر مفتاحاً محفوظاً من الشريط العلوي';
+  if (!keys[selected]) {
+    statusEl.textContent = '⚠️ المفتاح غير محفوظ';
+    answerEl.textContent =
+      'اختر مفتاحاً محفوظاً أو أضفه من زر 🔑.';
     return;
   }
 
-  cancelRequest();
-  const currentRequest = requestNumber;
-  controller = new AbortController();
-  const signal = controller.signal;
+  stopRequest();
 
-  const indices = mode === 'manual'
-    ? [selectedKey]
-    : [
-        selectedKey,
-        ...keys.map((_,i) => i).filter(i =>
-          i !== selectedKey && !!keys[i]
+  const id = requestId;
+  const active = new AbortController();
+
+  controller = active;
+
+  // يدوي: المفتاح المختار فقط
+  // أوتو: الانتقال عند أخطاء صلاحية المفتاح فقط
+  const order = mode === 'auto'
+    ? [
+        selected,
+        ...keys.map((_,i) => i).filter(
+          i => i !== selected && !!keys[i]
         )
-      ];
+      ]
+    : [selected];
 
-  for (const index of indices) {
-    if (!keys[index]) continue;
+  try {
+    for (let n=0;n<order.length;n++) {
+      const index = order[n];
 
-    let lastError = null;
+      if (!keys[index]) continue;
 
-    for (let attempt=0;attempt<2;attempt++) {
-      try {
-        statusBox.textContent =
-          'جاري التحليل بالمفتاح رقم ' + (index+1);
+      statusEl.textContent =
+        '⏳ جاري التحليل بالمفتاح رقم ' +
+        (index+1) + '...';
 
-        const result = await requestAnswer(keys[index],image,signal);
+      let lastError;
 
-        if (currentRequest !== requestNumber) return;
+      for (let retry=0;retry<2;retry++) {
+        try {
+          const text = await ask(
+            keys[index],
+            image,
+            active.signal
+          );
 
-        selectedKey = index;
-        saveSelected();
-        updateUI();
+          if (id !== requestId) return;
 
-        answer.textContent = result;
-        statusBox.textContent =
-          'اكتمل التحليل — المفتاح رقم ' + (index+1);
-        controller = null;
-        return;
-      } catch (error) {
-        if (currentRequest !== requestNumber || signal.aborted) return;
+          selected = index;
 
-        lastError = error;
+          localStorage.setItem(
+            'selected_gemini_key',
+            String(index)
+          );
 
-        if (temporaryError(error) && attempt === 0) {
-          statusBox.textContent = 'مشكلة مؤقتة، جاري إعادة المحاولة...';
-          try {
-            await wait(1200,signal);
-          } catch (_) {
-            return;
+          renderMode();
+
+          statusEl.textContent =
+            '✅ الإجابة — المفتاح رقم ' +
+            (index+1);
+
+          answerEl.textContent = text;
+          return;
+
+        } catch (error) {
+          if (
+            id !== requestId ||
+            active.signal.aborted
+          ) return;
+
+          lastError = error;
+
+          if (
+            error.refusal ||
+            error.status === 429 ||
+            error.status === 400 ||
+            error.status === 404 ||
+            (
+              error.status === 403 &&
+              !keyError(error)
+            )
+          ) {
+            throw error;
           }
-          continue;
+
+          if (keyError(error)) break;
+
+          const temporary =
+            [500,502,503,504].includes(error.status) ||
+            error instanceof TypeError;
+
+          if (temporary && retry === 0) {
+            statusEl.textContent =
+              '⏳ إعادة المحاولة بعد عطل مؤقت...';
+
+            await sleep(900,active.signal);
+            continue;
+          }
+
+          throw error;
         }
-
-        break;
       }
+
+      if (
+        mode === 'auto' &&
+        keyError(lastError) &&
+        n < order.length-1
+      ) {
+        continue;
+      }
+
+      throw lastError;
     }
 
-    if (currentRequest !== requestNumber) return;
+    throw new Error('لا يوجد مفتاح صالح متاح');
 
-    // في الوضع التلقائي ننتقل لمفتاح آخر
-    // فقط عند وجود مشكلة خاصة بصلاحية المفتاح.
-    // لا نتجاوز حدود الحصة 429 بتبديل المفاتيح.
-    if (mode === 'auto' && isKeySpecificError(lastError)) {
-      statusBox.textContent =
-        'المفتاح ' + (index+1) + ' غير صالح، تجربة التالي...';
-      continue;
+  } catch (error) {
+    if (
+      id !== requestId ||
+      error.name === 'AbortError'
+    ) return;
+
+    console.error(error);
+
+    statusEl.textContent = '❌ تعذر تحليل السؤال';
+    answerEl.textContent = errorText(error);
+
+  } finally {
+    if (id === requestId) {
+      controller = null;
     }
-
-    answer.textContent = errorMessage(lastError);
-    statusBox.textContent = 'تعذر إكمال التحليل';
-    controller = null;
-    return;
-  }
-
-  if (currentRequest === requestNumber) {
-    answer.textContent = 'لا يوجد مفتاح صالح متاح حالياً';
-    statusBox.textContent = 'راجع إعدادات المفاتيح';
-    controller = null;
   }
 }
 
-loadKeys();
-updateUI();
-startCamera();
+load();
 </script>
 </body>
 </html>
