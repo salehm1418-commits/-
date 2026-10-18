@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -5,93 +6,396 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>المجيب السريع للاختبارات</title>
 <style>
-:root{--bg-color:#080c14;--card-bg:#0f172a;--inner-card:#030712;--primary:#2563eb;--accent-blue:#38bdf8;--border-color:#1e293b}
-*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
-body{background:var(--bg-color);color:white;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
-header{width:100%;max-width:500px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-h1{font-size:17px}.icon-btn{background:var(--card-bg);border:1px solid var(--border-color);color:white;padding:8px 14px;border-radius:10px;cursor:pointer}
-.camera-container{width:100%;max-width:500px;height:62vh;min-height:380px;background:var(--inner-card);border:1px solid var(--border-color);border-radius:18px;overflow:hidden;position:relative}
-video,canvas,#captured-image{width:100%;height:100%;object-fit:cover}#captured-image{display:none}
-.controls{width:100%;max-width:500px;margin-top:12px}.btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:bold;cursor:pointer}.btn-primary{background:var(--primary);color:white}
-.result-box{width:100%;max-width:500px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;padding:18px;margin-top:12px;display:none}
-#status-text{color:var(--accent-blue);font-size:16px;font-weight:bold}#response-content{margin-top:12px;color:white;font-size:24px;font-weight:800;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:20px}.modal-content{background:var(--card-bg);border:1px solid var(--border-color);width:100%;max-width:450px;border-radius:16px;padding:20px}.modal-content h2{font-size:18px;margin-bottom:15px}.input-group{margin-bottom:15px}.input-group label{display:block;font-size:13px;color:#94a3b8;margin-bottom:6px}.input-group input{width:100%;padding:10px;background:var(--inner-card);border:1px solid var(--border-color);border-radius:8px;color:white}.modal-actions{display:flex;gap:10px;margin-top:20px}
+:root {
+  --bg-color:#080c14;
+  --card-bg:#0f172a;
+  --inner-card:#030712;
+  --primary:#2563eb;
+  --accent-blue:#38bdf8;
+  --border-color:#1e293b;
+}
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:system-ui,-apple-system,sans-serif;
+}
+body {
+  background:var(--bg-color);
+  color:white;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:12px;
+}
+header {
+  width:100%;
+  max-width:500px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+h1 {font-size:17px}
+.icon-btn {
+  background:var(--card-bg);
+  border:1px solid var(--border-color);
+  color:white;
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+}
+.camera-container {
+  width:100%;
+  max-width:500px;
+  height:62vh;
+  min-height:380px;
+  background:var(--inner-card);
+  border:1px solid var(--border-color);
+  border-radius:18px;
+  overflow:hidden;
+}
+video,canvas,#captured-image {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+#captured-image {display:none}
+.controls {
+  width:100%;
+  max-width:500px;
+  margin-top:12px;
+}
+.btn {
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.btn-primary {
+  background:var(--primary);
+  color:white;
+}
+.btn:disabled {
+  opacity:.6;
+  cursor:wait;
+}
+.result-box {
+  width:100%;
+  max-width:500px;
+  background:var(--card-bg);
+  border:1px solid var(--border-color);
+  border-radius:16px;
+  padding:18px;
+  margin-top:12px;
+  display:none;
+}
+#status-text {
+  color:var(--accent-blue);
+  font-size:16px;
+  font-weight:bold;
+}
+#response-content {
+  margin-top:12px;
+  color:white;
+  font-size:24px;
+  font-weight:800;
+  line-height:1.7;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+#retry-btn {
+  display:none;
+  margin-top:16px;
+  background:#334155;
+  color:white;
+}
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  z-index:100;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.modal-content {
+  background:var(--card-bg);
+  border:1px solid var(--border-color);
+  width:100%;
+  max-width:450px;
+  border-radius:16px;
+  padding:20px;
+}
+.modal-content h2 {
+  font-size:18px;
+  margin-bottom:15px;
+}
+.input-group {margin-bottom:15px}
+.input-group label {
+  display:block;
+  font-size:13px;
+  color:#94a3b8;
+  margin-bottom:6px;
+}
+.input-group input {
+  width:100%;
+  padding:10px;
+  background:var(--inner-card);
+  border:1px solid var(--border-color);
+  border-radius:8px;
+  color:white;
+}
+.modal-actions {
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
 </style>
 </head>
 <body>
-<header><h1>المجيب السريع للاختبارات</h1><button class="icon-btn" onclick="openSettings()">⚙️ الإعدادات</button></header>
-<div class="camera-container"><video id="video" autoplay playsinline></video><img id="captured-image" alt="الصورة الملتقطة"><canvas id="canvas" style="display:none"></canvas></div>
-<div class="controls"><button id="main-btn" class="btn btn-primary" onclick="handleMainAction()">📸 التقاط وتحليل فوري</button></div>
-<div id="result-box" class="result-box"><div id="status-text">في انتظار الصورة...</div><div id="response-content"></div></div>
-<div id="settings-modal" class="modal"><div class="modal-content"><h2>⚙️ إعدادات Gemini</h2><div class="input-group"><label>مفتاح Gemini API Key:</label><input type="password" id="gemini-key" placeholder="AIzaSy..."></div><div class="modal-actions"><button class="btn btn-primary" onclick="saveSettings()">حفظ</button><button class="btn" style="background:#334155;color:white" onclick="closeSettings()">إلغاء</button></div></div></div>
+
+<header>
+  <h1>المجيب السريع للاختبارات</h1>
+  <button class="icon-btn" onclick="openSettings()">⚙️ الإعدادات</button>
+</header>
+
+<div class="camera-container">
+  <video id="video" autoplay playsinline></video>
+  <img id="captured-image" alt="الصورة الملتقطة">
+  <canvas id="canvas" style="display:none"></canvas>
+</div>
+
+<div class="controls">
+  <button id="main-btn" class="btn btn-primary" onclick="handleMainAction()">📸 التقاط وتحليل فوري</button>
+</div>
+
+<div id="result-box" class="result-box">
+  <div id="status-text">في انتظار الصورة...</div>
+  <div id="response-content"></div>
+  <button id="retry-btn" class="btn" onclick="retryAnalysis()">🔄 إعادة المحاولة بنفس الصورة</button>
+</div>
+
+<div id="settings-modal" class="modal">
+  <div class="modal-content">
+    <h2>⚙️ إعدادات Gemini</h2>
+    <div class="input-group">
+      <label>مفتاح Gemini API Key:</label>
+      <input type="password" id="gemini-key" placeholder="AIzaSy...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveSettings()">حفظ</button>
+      <button class="btn" style="background:#334155;color:white" onclick="closeSettings()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const video=document.getElementById('video');
-const canvas=document.getElementById('canvas');
-const capturedImg=document.getElementById('captured-image');
-const mainBtn=document.getElementById('main-btn');
-const resultBox=document.getElementById('result-box');
-const statusText=document.getElementById('status-text');
-const responseContent=document.getElementById('response-content');
-let imageBase64=null;
-let isCaptured=false;
-let requestRunning=false;
-window.onload=()=>{document.getElementById('gemini-key').value=localStorage.getItem('gemini_key')||'';startCamera()};
-async function startCamera(){
- try{video.srcObject=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})}
- catch(err){console.error(err);alert('يرجى إعطاء صلاحية الكاميرا للمتصفح.')}
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const capturedImg = document.getElementById('captured-image');
+const mainBtn = document.getElementById('main-btn');
+const resultBox = document.getElementById('result-box');
+const statusText = document.getElementById('status-text');
+const responseContent = document.getElementById('response-content');
+const retryBtn = document.getElementById('retry-btn');
+
+let imageBase64 = null;
+let isCaptured = false;
+let requestRunning = false;
+let retryAfter = 0;
+
+window.onload = () => {
+  document.getElementById('gemini-key').value =
+    localStorage.getItem('gemini_key') || '';
+  startCamera();
+};
+
+async function startCamera() {
+  try {
+    video.srcObject = await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'environment'}
+    });
+  } catch(err) {
+    console.error(err);
+    alert('يرجى السماح باستخدام الكاميرا.');
+  }
 }
-function handleMainAction(){
- if(requestRunning)return;
- if(!isCaptured){
-  if(!video.videoWidth){alert('انتظر حتى تعمل الكاميرا.');return}
-  capturePhoto();processAndSend();
- }else resetToCamera();
+
+function handleMainAction() {
+  if(requestRunning) return;
+  if(!isCaptured) {
+    if(!video.videoWidth) {
+      alert('انتظر حتى تعمل الكاميرا.');
+      return;
+    }
+    capturePhoto();
+    processAndSend();
+  } else {
+    resetToCamera();
+  }
 }
-function capturePhoto(){
- const maxSide=1280;
- const ratio=Math.min(1,maxSide/Math.max(video.videoWidth,video.videoHeight));
- canvas.width=Math.round(video.videoWidth*ratio);
- canvas.height=Math.round(video.videoHeight*ratio);
- canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
- imageBase64=canvas.toDataURL('image/jpeg',0.75);
- capturedImg.src=imageBase64;
- video.style.display='none';capturedImg.style.display='block';
- isCaptured=true;mainBtn.innerText='🔄 التقاط سؤال جديد';
+
+function capturePhoto() {
+  const maxSide = 1280;
+  const ratio = Math.min(1, maxSide / Math.max(video.videoWidth, video.videoHeight));
+  canvas.width = Math.round(video.videoWidth * ratio);
+  canvas.height = Math.round(video.videoHeight * ratio);
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+  imageBase64 = canvas.toDataURL('image/jpeg', 0.75);
+  capturedImg.src = imageBase64;
+  video.style.display = 'none';
+  capturedImg.style.display = 'block';
+  isCaptured = true;
+  mainBtn.innerText = '🔄 التقاط سؤال جديد';
 }
-function resetToCamera(){
- video.style.display='block';capturedImg.style.display='none';
- resultBox.style.display='none';imageBase64=null;isCaptured=false;
- mainBtn.innerText='📸 التقاط وتحليل فوري';
+
+function resetToCamera() {
+  video.style.display = 'block';
+  capturedImg.style.display = 'none';
+  resultBox.style.display = 'none';
+  retryBtn.style.display = 'none';
+  imageBase64 = null;
+  isCaptured = false;
+  mainBtn.innerText = '📸 التقاط وتحليل فوري';
 }
-function openSettings(){document.getElementById('settings-modal').style.display='flex'}
-function closeSettings(){document.getElementById('settings-modal').style.display='none'}
-function saveSettings(){
- localStorage.setItem('gemini_key',document.getElementById('gemini-key').value.trim());
- alert('تم حفظ الإعدادات بنجاح!');closeSettings();
+
+function openSettings() {
+  document.getElementById('settings-modal').style.display = 'flex';
 }
-async function processAndSend(){
- const geminiKey=localStorage.getItem('gemini_key');
- if(!geminiKey){alert('يرجى إدخال مفتاح Gemini API أولاً.');openSettings();return}
- requestRunning=true;
- resultBox.style.display='block';statusText.innerText='⏳ جاري تحليل السؤال...';responseContent.innerText='';
- try{
-  const base64Data=imageBase64.split(',')[1];
-  const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key='+encodeURIComponent(geminiKey);
-  const response=await fetch(url,{
-   method:'POST',headers:{'Content-Type':'application/json'},
-   body:JSON.stringify({contents:[{parts:[
-    {text:'اقرأ السؤال والخيارات في الصورة. أجب فقط بحرف الخيار الصحيح والكلمة أو العبارة المقابلة له في سطر واحد، دون شرح أو تنسيق Markdown. إذا لم يتضح السؤال فقل: الصورة غير واضحة.'},
-    {inline_data:{mime_type:'image/jpeg',data:base64Data}}
-   ]}]})
-  });
-  const data=await response.json();
-  if(!response.ok||data.error)throw new Error(data.error?.message||'خطأ في الاستجابة');
-  const answer=data.candidates?.[0]?.content?.parts?.filter(p=>p.text).map(p=>p.text).join('\n');
-  if(!answer)throw new Error('لم يتم العثور على إجابة.');
-  statusText.innerText='✅ الإجابة:';
-  responseContent.innerText=answer.replace(/\*\*/g,'').replace(/[`*_]/g,'').trim();
- }catch(err){console.error(err);statusText.innerText='❌ حدث خطأ:';responseContent.innerText=err.message}
- finally{requestRunning=false}
+function closeSettings() {
+  document.getElementById('settings-modal').style.display = 'none';
+}
+function saveSettings() {
+  localStorage.setItem(
+    'gemini_key',
+    document.getElementById('gemini-key').value.trim()
+  );
+  alert('تم حفظ الإعدادات بنجاح!');
+  closeSettings();
+}
+
+function retryAnalysis() {
+  if(requestRunning || !imageBase64) return;
+  if(Date.now() < retryAfter) {
+    const seconds = Math.ceil((retryAfter - Date.now()) / 1000);
+    responseContent.innerText = 'انتظر ' + seconds + ' ثانية قبل إعادة المحاولة.';
+    return;
+  }
+  processAndSend();
+}
+
+function parseRetrySeconds(message) {
+  const match = message.match(/Please retry in\s+((?:\d+h)?(?:\d+m)?(?:\d+(?:\.\d+)?s)?)/i);
+  if(!match) return 0;
+  const value = match[1];
+  const hours = Number(value.match(/(\d+)h/)?.[1] || 0);
+  const minutes = Number(value.match(/(\d+)m/)?.[1] || 0);
+  const seconds = Number(value.match(/(\d+(?:\.\d+)?)s/)?.[1] || 0);
+  return Math.ceil(hours * 3600 + minutes * 60 + seconds);
+}
+
+async function processAndSend() {
+  const geminiKey = localStorage.getItem('gemini_key');
+
+  if(!geminiKey) {
+    alert('يرجى إدخال مفتاح Gemini API أولاً.');
+    openSettings();
+    return;
+  }
+
+  if(requestRunning || !imageBase64) return;
+
+  requestRunning = true;
+  mainBtn.disabled = true;
+  retryBtn.style.display = 'none';
+  resultBox.style.display = 'block';
+  statusText.innerText = '⏳ جاري تحليل السؤال...';
+  responseContent.innerText = '';
+
+  try {
+    const base64Data = imageBase64.split(',')[1];
+
+    const url =
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key='
+      + encodeURIComponent(geminiKey);
+
+    const response = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents:[{
+          parts:[
+            {
+              text:'اقرأ السؤال والخيارات في الصورة. أجب فقط بحرف الخيار الصحيح والكلمة أو العبارة المقابلة له في سطر واحد دون شرح أو تنسيق Markdown. إذا لم يتضح السؤال فقل: الصورة غير واضحة.'
+            },
+            {
+              inline_data:{
+                mime_type:'image/jpeg',
+                data:base64Data
+              }
+            }
+          ]
+        }]
+      })
+    });
+
+    const data = await response.json();
+
+    if(!response.ok || data.error) {
+      const error = new Error(data.error?.message || 'فشل الطلب');
+      error.status = response.status;
+      error.retryHeader = response.headers.get('Retry-After');
+      throw error;
+    }
+
+    const answer = data.candidates?.[0]?.content?.parts
+      ?.filter(p => p.text)
+      .map(p => p.text)
+      .join('\n');
+
+    if(!answer) throw new Error('لم يتم العثور على إجابة.');
+
+    statusText.innerText = '✅ الإجابة:';
+    responseContent.innerText = answer.replace(/\*\*/g,'').replace(/[`*_]/g,'').trim();
+    retryAfter = 0;
+
+  } catch(err) {
+    console.error(err);
+    const message = err.message || '';
+    statusText.innerText = '❌ تعذر تحليل السؤال';
+
+    if(err.status === 429 || /quota exceeded|resource.exhausted/i.test(message)) {
+      const seconds = parseRetrySeconds(message);
+      const headerSeconds = Number(err.retryHeader);
+      const wait = seconds || (Number.isFinite(headerSeconds) && headerSeconds > 0 ? headerSeconds : 0);
+
+      if(wait > 0) retryAfter = Date.now() + wait * 1000;
+
+      responseContent.innerText = wait > 0
+        ? 'انتهت الحصة المتاحة حاليًا. حاول بعد ' + Math.ceil(wait / 60) + ' دقيقة تقريبًا.'
+        : 'وصلت إلى حد استخدام Gemini. انتظر حتى تتجدد الحصة.';
+      retryBtn.style.display = 'none';
+
+    } else if(err.status === 503 || /high demand|overloaded|unavailable/i.test(message)) {
+      retryAfter = Date.now() + 15000;
+      responseContent.innerText = 'خوادم Gemini مشغولة حاليًا. انتظر 15 ثانية ثم اضغط إعادة المحاولة.';
+      retryBtn.style.display = 'block';
+
+    } else {
+      responseContent.innerText = 'تعذر إكمال التحليل. تحقق من الاتصال والإعدادات ثم حاول مجددًا.';
+      retryBtn.style.display = 'block';
+    }
+
+  } finally {
+    requestRunning = false;
+    mainBtn.disabled = false;
+  }
 }
 </script>
 </body>
