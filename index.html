@@ -7,329 +7,309 @@
 <meta name="theme-color" content="#080c14">
 
 <title>لقطة AI | حل الأسئلة بالكاميرا</title>
-<meta name="description" content="لقطة AI — صوّر سؤالك واحصل على إجابة مختصرة بمساعدة الذكاء الاصطناعي.">
-
+<meta name="description" content="لقطة AI: صوّر السؤال واحصل على إجابة مختصرة بمساعدة الذكاء الاصطناعي.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="لقطة AI | حل الأسئلة بالكاميرا">
-<meta property="og:description" content="وجّه الكاميرا نحو السؤال، التقط الصورة، وشاهد الإجابة بسهولة.">
-<meta property="og:url" content="https://salehm1418-commits.github.io/-/">
+<meta property="og:description" content="صوّر السؤال واحصل على إجابة مختصرة بمساعدة الذكاء الاصطناعي.">
 <meta property="og:image" content="https://salehm1418-commits.github.io/-/share.png">
-<meta name="twitter:card" content="summary_large_image">
-
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" href="logo.png" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
 
 <style>
 :root {
+  color-scheme:dark;
+  --bg:#080c14;
+  --panel:#111c30;
+  --line:#28364c;
   --blue:#2563eb;
   --green:#059669;
-  --bg:#080c14;
-  --card:#0f172a;
-  --border:#263449;
+  --muted:#a6b5ca;
 }
 * {box-sizing:border-box}
-
-body {
+html,body {
   margin:0;
+  min-height:100%;
   background:var(--bg);
   color:#fff;
   font-family:system-ui,-apple-system,sans-serif;
 }
-
 button,input {font:inherit}
-button {cursor:pointer;color:white}
+button {cursor:pointer;color:#fff}
+button:disabled {opacity:.32;cursor:not-allowed}
 
-.top {
-  position:fixed;
+header {
+  position:sticky;
   top:0;
-  left:0;
-  right:0;
-  z-index:20;
-  background:#0f172af5;
-  border-bottom:1px solid var(--border);
-  padding:calc(env(safe-area-inset-top) + 9px) 12px 10px;
+  z-index:30;
+  background:#0d1525f7;
+  border-bottom:1px solid var(--line);
+  padding:calc(env(safe-area-inset-top) + 10px) 12px 12px;
+  box-shadow:0 8px 25px #0005;
+}
+.headline {
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:8px;
-  flex-wrap:wrap;
+  gap:10px;
 }
-
-.logo {
+.identity {
   display:flex;
   align-items:center;
-  gap:6px;
-  white-space:nowrap;
+  gap:12px;
+  min-width:0;
 }
-
-.logo img {
-  width:27px;
-  height:27px;
-  border-radius:7px;
+.identity img {
+  width:58px;
+  height:58px;
+  object-fit:cover;
+  border-radius:15px;
+  border:1px solid #284a65;
 }
-
-.top h1 {
-  font-size:14px;
+.identity h1 {
+  font-size:22px;
+  line-height:1.2;
   margin:0;
-  white-space:nowrap;
+  font-weight:850;
 }
-
-.top-actions {
-  display:flex;
-  align-items:center;
-  gap:7px;
-}
-
-.small {
-  border:1px solid #334155;
-  background:#1e293b;
-  border-radius:10px;
-  padding:8px 9px;
-  font-size:14px;
-}
-
-.controls {
-  display:flex;
-  align-items:center;
-  gap:5px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-.controls .toggle {
-  padding:8px 9px;
-  border:1px solid #334155;
-  border-radius:9px;
-  background:#1e293b;
+.identity p {
   font-size:12px;
-  font-weight:700;
+  color:var(--muted);
+  margin:4px 0 0;
 }
-
-.controls .toggle.active,
+.key-settings {
+  background:#172b48;
+  border:1px solid #375477;
+  border-radius:14px;
+  min-width:58px;
+  min-height:54px;
+  font-size:27px;
+}
+.modes {
+  display:flex;
+  gap:9px;
+  margin-top:12px;
+}
+.mode {
+  flex:1;
+  min-height:49px;
+  border:1px solid #34445d;
+  background:#1b293e;
+  border-radius:12px;
+  font-weight:800;
+  font-size:17px;
+}
+.mode.active {
+  background:var(--blue);
+  border-color:#4f8cff;
+}
+.numbers {
+  display:none;
+  gap:7px;
+  margin-top:10px;
+  align-items:center;
+}
+.numbers.visible {display:flex}
+.numbers span {
+  font-size:13px;
+  color:var(--muted);
+}
+.number {
+  flex:1;
+  min-height:42px;
+  border-radius:10px;
+  border:1px solid #34445d;
+  background:#1b293e;
+  font-size:16px;
+  font-weight:800;
+}
 .number.active {
   background:var(--blue);
-  border-color:var(--blue);
-}
-
-.numbers {
-  display:flex;
-  gap:3px;
-}
-
-.number {
-  min-width:26px;
-  padding:7px 3px;
-  border:1px solid #334155;
-  border-radius:7px;
-  background:#1e293b;
-  font-size:12px;
-}
-
-.number:disabled {
-  opacity:.3;
-  cursor:not-allowed;
+  border-color:#4f8cff;
 }
 
 main {
-  max-width:520px;
+  max-width:680px;
   margin:auto;
-  padding:calc(env(safe-area-inset-top) + 102px) 12px 28px;
+  padding:12px 12px 30px;
 }
-
 .camera {
-  width:100%;
+  position:relative;
   height:62dvh;
-  min-height:320px;
-  background:#030712;
-  border:1px solid var(--border);
-  border-radius:17px;
+  min-height:300px;
+  background:#000;
+  border:1px solid #334155;
+  border-radius:18px;
   overflow:hidden;
 }
-
-.camera video,
-.camera img {
+video,#photo {
+  display:block;
   width:100%;
   height:100%;
   object-fit:cover;
 }
-
-.camera img,
-#canvas {
-  display:none;
+#photo {display:none}
+.camera-note {
+  position:absolute;
+  bottom:12px;
+  left:12px;
+  right:12px;
+  text-align:center;
+  background:#081222c9;
+  padding:9px;
+  border-radius:10px;
+  color:#d5e4f5;
+  font-size:13px;
+  pointer-events:none;
 }
-
-#captureBtn {
+#capture {
   display:block;
   width:100%;
   margin-top:12px;
-  background:var(--blue);
+  padding:18px 8px;
   border:0;
-  border-radius:13px;
-  padding:17px;
-  font-size:18px;
-  font-weight:750;
-}
-
-.result {
-  display:none;
-  background:var(--card);
-  border:1px solid var(--border);
   border-radius:14px;
-  margin-top:12px;
-  padding:17px;
+  background:var(--blue);
+  font-size:20px;
+  font-weight:800;
 }
-
-#status {
-  color:#38bdf8;
-  font-size:17px;
+#capture.new {background:var(--green)}
+.result {
+  margin-top:13px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:var(--panel);
+  padding:16px;
+  display:none;
+}
+.status {
+  font-size:14px;
+  color:#7dd3fc;
   font-weight:700;
 }
-
-#answer {
+.answer {
   font-size:26px;
+  line-height:1.55;
   font-weight:800;
-  line-height:1.6;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
-  margin-top:10px;
+  margin-top:8px;
 }
 
 .overlay {
   position:fixed;
   inset:0;
-  z-index:50;
-  background:#000c;
+  z-index:70;
   display:none;
   align-items:center;
   justify-content:center;
-  padding:16px;
+  padding:15px;
+  background:#000c;
 }
-
-.panel {
-  background:#101b30;
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:18px;
-  width:min(100%,440px);
+.overlay.open {display:flex}
+.modal {
+  background:#101b2e;
+  border:1px solid #40516b;
+  border-radius:18px;
+  width:min(100%,460px);
   max-height:85dvh;
-  overflow-y:auto;
+  overflow:auto;
+  padding:20px;
 }
-
-.panel h2 {
-  margin:0 0 14px;
-  font-size:19px;
-}
-
-.muted {
-  color:#a8b5c7;
+.modal h2 {margin:0 0 10px}
+.modal p {
   font-size:13px;
   line-height:1.7;
+  color:var(--muted);
 }
-
-.panel label {
+.field {margin-top:12px}
+.field label {
   display:block;
-  margin:11px 0 5px;
-  color:#cbd5e1;
-  font-size:13px;
+  margin-bottom:6px;
+  font-size:14px;
 }
-
-.panel input {
+.field input {
   width:100%;
-  background:#060d19;
-  border:1px solid #334155;
-  color:#fff;
+  background:#070f1d;
+  color:white;
+  border:1px solid #3b4b64;
+  border-radius:10px;
   padding:12px;
-  border-radius:9px;
   direction:ltr;
 }
-
-.panel-footer {
+.modal-actions {
   display:flex;
   gap:8px;
-  margin-top:16px;
+  margin-top:18px;
 }
-
-.panel-footer button {
+.modal-actions button {
   flex:1;
-  background:var(--blue);
   border:0;
-  border-radius:10px;
+  border-radius:11px;
+  background:var(--blue);
   padding:13px;
+  font-weight:800;
 }
+.modal-actions .secondary {background:#334155}
 
-.panel-footer button.secondary {
-  background:#475569;
-}
-
-@media(max-width:390px) {
-  .top {gap:5px}
-  .controls {gap:3px}
-  .controls .toggle {padding:7px 6px}
-  .number {min-width:23px;padding:6px 2px}
-  .top h1 {font-size:13px}
+@media(max-width:370px) {
+  .identity img {width:49px;height:49px}
+  .identity h1 {font-size:19px}
+  .key-settings {min-width:50px;min-height:50px}
+  .mode {font-size:15px}
 }
 </style>
 </head>
 
 <body>
 
-<header class="top">
-  <div class="logo">
-    <img src="logo.png" alt="شعار لقطة AI">
-    <h1>لقطة AI</h1>
+<header>
+  <div class="headline">
+    <div class="identity">
+      <img src="logo.png" alt="شعار لقطة AI">
+      <div>
+        <h1>لقطة AI</h1>
+        <p>صوّر السؤال وشاهد الإجابة</p>
+      </div>
+    </div>
+    <button class="key-settings" onclick="openSettings()" aria-label="إدارة المفاتيح" title="إدارة المفاتيح">🔑</button>
   </div>
 
-  <div class="top-actions">
-    <div class="controls">
-      <button id="autoBtn" class="toggle" onclick="setMode('auto')">
-        ⚡ أوتو
-      </button>
+  <div class="modes">
+    <button id="auto" class="mode" onclick="setMode('auto')">⚡ أوتو</button>
+    <button id="manual" class="mode" onclick="setMode('manual')">✋ يدوي</button>
+  </div>
 
-      <button id="manualBtn" class="toggle" onclick="setMode('manual')">
-        ✋ يدوي
-      </button>
-
-      <div id="keyGrid" class="numbers" aria-label="اختيار رقم المفتاح"></div>
-    </div>
-
-    <button
-      class="small"
-      onclick="openSettings()"
-      aria-label="إدارة مفاتيح Gemini"
-      title="إدارة المفاتيح"
-    >🔑</button>
+  <div id="numbers" class="numbers">
+    <span>المفتاح:</span>
+    <button class="number" data-n="0" onclick="chooseKey(0)">1</button>
+    <button class="number" data-n="1" onclick="chooseKey(1)">2</button>
+    <button class="number" data-n="2" onclick="chooseKey(2)">3</button>
+    <button class="number" data-n="3" onclick="chooseKey(3)">4</button>
+    <button class="number" data-n="4" onclick="chooseKey(4)">5</button>
   </div>
 </header>
 
 <main>
   <div class="camera">
     <video id="video" autoplay playsinline muted></video>
-    <img id="photo" alt="السؤال المصور">
-    <canvas id="canvas"></canvas>
+    <img id="photo" alt="السؤال الملتقط">
+    <div id="cameraNote" class="camera-note">جاري تشغيل الكاميرا...</div>
   </div>
 
-  <button id="captureBtn" onclick="mainAction()">
-    📸 التقاط وتحليل فوري
-  </button>
+  <button id="capture" onclick="mainAction()">📸 التقاط وتحليل فوري</button>
 
-  <section class="result" id="result">
-    <div id="status"></div>
-    <div id="answer"></div>
+  <section id="result" class="result" aria-live="polite">
+    <div id="status" class="status"></div>
+    <div id="answer" class="answer"></div>
   </section>
 </main>
 
-<div class="overlay" id="settingsOverlay">
-  <div class="panel" role="dialog" aria-modal="true">
+<div id="overlay" class="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="إدارة مفاتيح Gemini">
     <h2>🔑 إدارة مفاتيح Gemini</h2>
-
-    <p class="muted">
-      كل شخص يضيف مفاتيحه الخاصة في متصفحه.
-      يمكنك حفظ حتى 5 مفاتيح، وترك الخانات غير المستخدمة فارغة.
-    </p>
-
-    <div id="keyInputs"></div>
-
-    <div class="panel-footer">
+    <p>أضف مفاتيحك الخاصة. كل خانة لها رقم ثابت، والمفاتيح تُحفظ في هذا المتصفح فقط.</p>
+    <div id="inputs"></div>
+    <div class="modal-actions">
       <button onclick="saveSettings()">حفظ المفاتيح</button>
       <button class="secondary" onclick="closeSettings()">إلغاء</button>
     </div>
@@ -339,111 +319,189 @@ main {
 <script>
 'use strict';
 
-// النموذج المطلوب، بشرط أن يكون متاحاً لحسابك
 const MODEL = 'gemini-3.8-flash';
 
 const $ = id => document.getElementById(id);
-
 const video = $('video');
 const photo = $('photo');
-const canvas = $('canvas');
-const captureBtn = $('captureBtn');
+const captureBtn = $('capture');
+const note = $('cameraNote');
 const result = $('result');
 const statusEl = $('status');
 const answerEl = $('answer');
 
-let keys = [];
+let keys = Array(5).fill('');
 let selected = 0;
-let mode = localStorage.getItem('gemini_mode') === 'manual'
-  ? 'manual' : 'auto';
-
+let mode = localStorage.getItem('gemini_mode') === 'manual' ? 'manual' : 'auto';
 let captured = false;
-let imageData = '';
 let controller = null;
 let requestId = 0;
 
 function load() {
   try {
-    const stored = JSON.parse(
-      localStorage.getItem('gemini_keys') || '[]'
-    );
+    const x = JSON.parse(localStorage.getItem('gemini_keys') || '[]');
+    if (Array.isArray(x)) {
+      x.slice(0,5).forEach((v,i) => {
+        keys[i] = typeof v === 'string' ? v.trim() : '';
+      });
+    }
+  } catch(e) {}
 
-    keys = Array.isArray(stored)
-      ? stored.slice(0,5).map(x =>
-          typeof x === 'string' ? x.trim() : ''
-        )
-      : [];
-  } catch {
-    keys = [];
+  if (!keys.some(Boolean)) {
+    const old = localStorage.getItem('gemini_key');
+    if (old) keys[0] = old.trim();
   }
 
-  // استرجاع المفتاح القديم إن وجد
-  const old = localStorage.getItem('gemini_key');
-
-  if (!keys.some(Boolean) && old) {
-    keys = [old.trim()];
-  }
-
-  while (keys.length < 5) {
-    keys.push('');
-  }
-
-  selected = Number(
-    localStorage.getItem('selected_gemini_key') || 0
-  );
-
-  if (
-    !Number.isInteger(selected) ||
-    selected < 0 ||
-    selected >= 5
-  ) {
-    selected = 0;
-  }
+  const saved = Number(localStorage.getItem('selected_gemini_key') || 0);
+  selected = Number.isInteger(saved) && saved >= 0 && saved < 5 ? saved : 0;
 
   if (!keys[selected]) {
     const first = keys.findIndex(Boolean);
     if (first >= 0) selected = first;
   }
 
-  renderMode();
+  render();
   startCamera();
 
   if (!keys.some(Boolean)) {
-    result.style.display = 'block';
-    statusEl.textContent = '👋 مرحباً بك في لقطة AI';
-    answerEl.textContent =
-      'اضغط زر 🔑 وأضف مفتاح Gemini الخاص بك للبدء.';
+    show('مرحباً بك في لقطة AI','اضغط 🔑 وأضف مفتاح Gemini الخاص بك للبدء.');
   }
+}
+
+function show(status,text) {
+  result.style.display = 'block';
+  statusEl.textContent = status;
+  answerEl.textContent = text || '';
 }
 
 function stopRequest() {
   requestId++;
-
   if (controller) {
     controller.abort();
     controller = null;
   }
 }
 
+function render() {
+  $('auto').classList.toggle('active',mode === 'auto');
+  $('manual').classList.toggle('active',mode === 'manual');
+  $('numbers').classList.toggle('visible',mode === 'manual');
+
+  document.querySelectorAll('.number').forEach(b => {
+    const n = Number(b.dataset.n);
+    b.disabled = !keys[n];
+    b.classList.toggle('active',n === selected && !!keys[n]);
+    b.title = keys[n] ? 'المفتاح ' + (n+1) : 'لا يوجد مفتاح محفوظ';
+  });
+}
+
+function setMode(value) {
+  if (mode === value) return;
+  stopRequest();
+  mode = value;
+  localStorage.setItem('gemini_mode',mode);
+  render();
+
+  if (captured) {
+    show('تم تغيير الوضع','التقط سؤالاً جديداً للمتابعة.');
+  }
+}
+
+function chooseKey(n) {
+  if (!keys[n]) return;
+  stopRequest();
+  selected = n;
+  localStorage.setItem('selected_gemini_key',String(n));
+  render();
+
+  if (captured) {
+    show('المفتاح رقم ' + (n+1) + ' محدد','التقط سؤالاً جديداً للمتابعة.');
+  }
+}
+
+function openSettings() {
+  const inputs = $('inputs');
+  inputs.replaceChildren();
+
+  for (let i=0;i<5;i++) {
+    const wrap = document.createElement('div');
+    wrap.className = 'field';
+
+    const label = document.createElement('label');
+    label.textContent = 'المفتاح رقم ' + (i+1);
+    label.htmlFor = 'key'+i;
+
+    const input = document.createElement('input');
+    input.id = 'key'+i;
+    input.type = 'password';
+    input.autocomplete = 'off';
+    input.placeholder = 'AIza...';
+    input.value = keys[i];
+
+    wrap.append(label,input);
+    inputs.append(wrap);
+  }
+
+  $('overlay').classList.add('open');
+}
+
+function closeSettings() {
+  $('overlay').classList.remove('open');
+}
+
+function saveSettings() {
+  stopRequest();
+
+  keys = Array.from({length:5},(_,i) => $('key'+i).value.trim());
+
+  localStorage.setItem('gemini_keys',JSON.stringify(keys));
+  localStorage.removeItem('gemini_key');
+
+  if (!keys[selected]) {
+    const first = keys.findIndex(Boolean);
+    selected = first < 0 ? 0 : first;
+  }
+
+  localStorage.setItem('selected_gemini_key',String(selected));
+
+  closeSettings();
+  render();
+
+  show(
+    'تم حفظ المفاتيح',
+    keys.some(Boolean)
+      ? 'وجّه الكاميرا للسؤال واضغط التقاط.'
+      : 'أضف مفتاحاً واحداً على الأقل للبدء.'
+  );
+}
+
 async function startCamera() {
   try {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error('افتح الموقع عبر HTTPS وفي متصفح يدعم الكاميرا');
+    }
+
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode:'environment',
-        width:{ideal:1280},
-        height:{ideal:720}
-      },
-      audio:false
+      audio:false,
+      video:{
+        facingMode:{ideal:'environment'},
+        width:{ideal:1920},
+        height:{ideal:1080}
+      }
     });
 
     video.srcObject = stream;
     await video.play();
-  } catch (e) {
-    console.error(e);
-    result.style.display = 'block';
-    statusEl.textContent = 'تعذر فتح الكاميرا';
-    answerEl.textContent =
-      'اسمح للموقع باستخدام الكاميرا من إعدادات المتصفح.';
+    note.textContent = 'وجّه الكاميرا نحو السؤال';
+
+  } catch(e) {
+    note.textContent = 'الكاميرا لم تعمل — تحقق من إذن الكاميرا';
+    show(
+      'تعذر تشغيل الكاميرا',
+      e.name === 'NotAllowedError'
+        ? 'اسمح للموقع باستخدام الكاميرا من إعدادات المتصفح.'
+        : e.message
+    );
   }
 }
 
@@ -454,520 +512,213 @@ function mainAction() {
   }
 
   if (!video.videoWidth) {
-    alert('انتظر حتى تعمل الكاميرا');
+    show('الكاميرا غير جاهزة','تأكد من السماح للكاميرا ثم حدّث الصفحة.');
     return;
   }
 
   stopRequest();
 
-  const scale = Math.min(
-    1,
-    1280 / Math.max(video.videoWidth,video.videoHeight)
-  );
+  const canvas = document.createElement('canvas');
+  const s = Math.min(1,1280/Math.max(video.videoWidth,video.videoHeight));
 
-  canvas.width = Math.round(video.videoWidth * scale);
-  canvas.height = Math.round(video.videoHeight * scale);
+  canvas.width = Math.round(video.videoWidth*s);
+  canvas.height = Math.round(video.videoHeight*s);
 
-  canvas.getContext('2d').drawImage(
-    video,0,0,canvas.width,canvas.height
-  );
+  canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
 
-  imageData = canvas.toDataURL('image/jpeg',0.75);
+  const image = canvas.toDataURL('image/jpeg',.75);
 
-  photo.src = imageData;
+  photo.src = image;
   photo.style.display = 'block';
   video.style.display = 'none';
+  note.style.display = 'none';
 
   captured = true;
+  captureBtn.classList.add('new');
   captureBtn.textContent = '🔄 التقاط سؤال جديد';
-  captureBtn.style.background = '#059669';
 
-  analyze(imageData);
+  analyze(image);
 }
 
 function reset() {
   stopRequest();
-
   captured = false;
-  imageData = '';
-
   photo.style.display = 'none';
+  photo.removeAttribute('src');
   video.style.display = 'block';
-  result.style.display = 'none';
-
-  answerEl.textContent = '';
+  note.style.display = 'block';
+  note.textContent = 'وجّه الكاميرا نحو السؤال';
+  captureBtn.classList.remove('new');
   captureBtn.textContent = '📸 التقاط وتحليل فوري';
-  captureBtn.style.background = '#2563eb';
+  result.style.display = 'none';
 }
 
-function setMode(nextMode) {
-  if (mode !== nextMode) {
-    stopRequest();
-
-    mode = nextMode;
-    localStorage.setItem('gemini_mode',mode);
-
-    if (captured) {
-      statusEl.textContent = 'تم تغيير الوضع';
-      answerEl.textContent =
-        'اضغط التقاط سؤال جديد للمتابعة.';
-    }
-  }
-
-  renderMode();
-}
-
-function chooseKey(index) {
-  if (!keys[index]) return;
-
-  stopRequest();
-
-  selected = index;
-
-  localStorage.setItem(
-    'selected_gemini_key',
-    String(index)
-  );
-
-  if (captured) {
-    statusEl.textContent =
-      'تم اختيار المفتاح رقم ' + (index+1);
-
-    answerEl.textContent =
-      'اضغط التقاط سؤال جديد للمتابعة.';
-  }
-
-  renderMode();
-}
-
-function renderMode() {
-  $('autoBtn').classList.toggle(
-    'active',mode === 'auto'
-  );
-
-  $('manualBtn').classList.toggle(
-    'active',mode === 'manual'
-  );
-
-  const grid = $('keyGrid');
-
-  grid.style.display =
-    mode === 'manual' ? 'flex' : 'none';
-
-  grid.innerHTML = '';
-
-  for (let i=0;i<5;i++) {
-    const button = document.createElement('button');
-
-    button.className = 'number';
-    button.textContent = String(i+1);
-    button.disabled = !keys[i];
-
-    button.classList.toggle(
-      'active',
-      i === selected && !!keys[i]
-    );
-
-    button.title = keys[i]
-      ? 'المفتاح رقم ' + (i+1)
-      : 'لم يتم حفظ هذا المفتاح';
-
-    button.onclick = () => chooseKey(i);
-
-    grid.appendChild(button);
-  }
-}
-
-function openSettings() {
-  const area = $('keyInputs');
-  area.innerHTML = '';
-
-  for (let i=0;i<5;i++) {
-    const label = document.createElement('label');
-    label.textContent = 'المفتاح رقم ' + (i+1);
-
-    const input = document.createElement('input');
-    input.type = 'password';
-    input.id = 'key' + i;
-    input.autocomplete = 'off';
-    input.placeholder = 'AIzaSy...';
-    input.value = keys[i] || '';
-
-    area.append(label,input);
-  }
-
-  $('settingsOverlay').style.display = 'flex';
-}
-
-function closeSettings() {
-  $('settingsOverlay').style.display = 'none';
-}
-
-function saveSettings() {
-  const next = [];
-
-  for (let i=0;i<5;i++) {
-    next.push($('key'+i).value.trim());
-  }
-
-  stopRequest();
-
-  // كل مفتاح يحتفظ برقم خانته
-  keys = next;
-
-  if (!keys[selected]) {
-    const first = keys.findIndex(Boolean);
-    selected = first >= 0 ? first : 0;
-  }
-
-  localStorage.setItem(
-    'gemini_keys',
-    JSON.stringify(keys)
-  );
-
-  localStorage.setItem(
-    'selected_gemini_key',
-    String(selected)
-  );
-
-  localStorage.removeItem('gemini_key');
-
-  closeSettings();
-  renderMode();
-
-  if (captured) {
-    statusEl.textContent = 'تم حفظ المفاتيح';
-    answerEl.textContent =
-      'اضغط التقاط سؤال جديد للمتابعة.';
-  } else if (keys.some(Boolean)) {
-    result.style.display = 'block';
-    statusEl.textContent = '✅ تم حفظ المفاتيح';
-    answerEl.textContent =
-      'وجّه الكاميرا نحو السؤال واضغط التقاط.';
-  }
-
-  alert('تم حفظ مفاتيحك في هذا المتصفح');
-}
-
-function waitText(message) {
-  const match = String(message).match(
-    /Please retry in\s+((?:\d+h)?(?:\d+m)?(?:\d+(?:\.\d+)?s)?)/i
-  );
-
-  if (!match) return '';
-
-  const value = match[1];
-
-  const hours = +(value.match(/(\d+)h/)?.[1] || 0);
-  const minutes = +(value.match(/(\d+)m/)?.[1] || 0);
-  const seconds = +(
-    value.match(/(\d+(?:\.\d+)?)s/)?.[1] || 0
-  );
-
-  const total = Math.ceil(
-    hours*3600 + minutes*60 + seconds
-  );
-
-  if (total >= 3600) {
-    return Math.ceil(total/3600) + ' ساعة تقريباً';
-  }
-
-  if (total >= 60) {
-    return Math.ceil(total/60) + ' دقيقة تقريباً';
-  }
-
-  return total ? total + ' ثانية' : '';
-}
-
-function errorText(error) {
-  const message = error.message || '';
-
-  if (error.refusal) {
-    return 'لم يتمكن النموذج من الإجابة عن هذا الطلب.';
-  }
-
-  if (
-    error.status === 429 ||
-    /quota exceeded|resource.exhausted/i.test(message)
-  ) {
-    const wait = waitText(message);
-
-    return 'انتهت حصة الاستخدام للمشروع الحالي.' +
-      (wait ? ' حاول بعد ' + wait + '.' : '') +
-      ' تحقق من حدود الاستخدام أو الفوترة.';
-  }
-
-  if (
-    error.status === 503 ||
-    /high demand|overloaded/i.test(message)
-  ) {
-    return 'خوادم Gemini مشغولة، حاول بعد قليل.';
-  }
-
-  if (
-    error.status === 400 ||
-    error.status === 404
-  ) {
-    return 'تحقق من إتاحة النموذج للمفتاح المختار.';
-  }
-
-  if (
-    error.status === 401 ||
-    error.status === 403
-  ) {
-    return 'المفتاح غير صالح أو لا يملك الصلاحية المطلوبة.';
-  }
-
-  return 'تعذر الحصول على إجابة. تحقق من الاتصال والمفتاح.';
-}
-
-function keyError(error) {
-  const message = error.message || '';
-
-  return error.status === 401 || (
-    error.status === 403 &&
-    /api key|invalid key|key not valid|api_key/i.test(message) &&
-    !/quota|safety|policy/i.test(message)
+function isKeyError(e) {
+  return e.status === 401 || (
+    e.status === 403 &&
+    /api.key|invalid.key|key.not.valid|api_key/i.test(e.message) &&
+    !/quota|rate.limit|safety/i.test(e.message)
   );
 }
 
-function sleep(ms,signal) {
-  return new Promise((resolve,reject) => {
-    if (signal.aborted) {
-      reject(new DOMException('Cancelled','AbortError'));
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      signal.removeEventListener('abort',onAbort);
-      resolve();
-    },ms);
-
-    function onAbort() {
-      clearTimeout(timer);
-      reject(new DOMException('Cancelled','AbortError'));
-    }
-
-    signal.addEventListener(
-      'abort',onAbort,{once:true}
-    );
-  });
+function errorText(e) {
+  if (e.status === 429) {
+    return 'انتهت حصة الاستخدام أو وصلت إلى حد الطلبات. انتظر أو راجع حدود مشروعك.';
+  }
+  if (e.status === 400 || e.status === 404) {
+    return 'النموذج المحدد غير متاح أو الطلب غير مقبول. راجع اسم النموذج وإعدادات Gemini API.';
+  }
+  if (e.status === 401 || e.status === 403) {
+    return 'مفتاح API غير صالح أو ليس لديه الصلاحية المطلوبة.';
+  }
+  if ([500,502,503,504].includes(e.status)) {
+    return 'خدمة Gemini مشغولة مؤقتاً. حاول بعد قليل.';
+  }
+  if (e instanceof TypeError) {
+    return 'تعذر الاتصال بالخدمة. تحقق من الإنترنت.';
+  }
+  return e.message || 'حدث خطأ غير معروف.';
 }
 
 async function ask(key,image,signal) {
-  const response = await fetch(
+  const url =
     'https://generativelanguage.googleapis.com/v1beta/models/' +
     encodeURIComponent(MODEL) +
     ':generateContent?key=' +
-    encodeURIComponent(key),
-    {
-      method:'POST',
-      signal,
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({
-        contents:[{
-          parts:[
-            {
-              text:
-                'اقرأ السؤال والخيارات في الصورة. ' +
-                'أجب بحرف الخيار الصحيح ونصه في سطر واحد دون شرح. ' +
-                'إذا كانت الصورة غير واضحة فاذكر ذلك، ولا تخمّن.'
-            },
-            {
-              inline_data:{
-                mime_type:'image/jpeg',
-                data:image.split(',')[1]
-              }
+    encodeURIComponent(key);
+
+  const response = await fetch(url,{
+    method:'POST',
+    signal,
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      contents:[{
+        parts:[
+          {
+            text:'اقرأ السؤال والخيارات في الصورة. أعط حرف الخيار الصحيح ونص الإجابة فقط دون شرح. إذا لم تستطع قراءة السؤال فقل إن الصورة غير واضحة ولا تخمّن.'
+          },
+          {
+            inline_data:{
+              mime_type:'image/jpeg',
+              data:image.split(',')[1]
             }
-          ]
-        }],
-        generationConfig:{
-          temperature:0,
-          maxOutputTokens:256
-        }
-      })
-    }
-  );
+          }
+        ]
+      }],
+      generationConfig:{
+        temperature:0,
+        maxOutputTokens:256
+      }
+    })
+  });
 
   const data = await response.json().catch(() => ({}));
 
-  if (!response.ok || data.error) {
-    const error = new Error(
-      data.error?.message || 'فشل الطلب'
-    );
-
-    error.status = response.status;
-    throw error;
+  if (!response.ok) {
+    const e = new Error(data.error?.message || 'HTTP '+response.status);
+    e.status = response.status;
+    throw e;
   }
 
   const candidate = data.candidates?.[0];
-
   const text = candidate?.content?.parts
-    ?.filter(part => typeof part.text === 'string')
-    .map(part => part.text)
+    ?.filter(x => typeof x.text === 'string')
+    .map(x => x.text)
     .join('\n');
 
   if (!text?.trim()) {
-    const error = new Error('لم تصل إجابة');
-
     if (
-      data.promptFeedback?.blockReason ||
-      ['SAFETY','PROHIBITED_CONTENT'].includes(
-        candidate?.finishReason
-      )
+      candidate?.finishReason === 'SAFETY' ||
+      data.promptFeedback?.blockReason
     ) {
-      error.refusal = true;
+      throw new Error('لم يتمكن النموذج من الإجابة عن هذا الطلب.');
     }
-
-    throw error;
+    throw new Error('لم تصل إجابة نصية. حاول بصورة أوضح.');
   }
 
   return text.replace(/\*\*/g,'').trim();
 }
 
 async function analyze(image) {
-  result.style.display = 'block';
-  answerEl.textContent = '';
-
   if (!keys.some(Boolean)) {
-    statusEl.textContent = '⚠️ لا يوجد مفتاح';
-    answerEl.textContent =
-      'أضف مفتاح Gemini الخاص بك من زر 🔑.';
+    show('لا يوجد مفتاح','اضغط 🔑 وأضف مفتاح Gemini الخاص بك.');
     return;
   }
 
   if (!keys[selected]) {
-    statusEl.textContent = '⚠️ المفتاح غير محفوظ';
-    answerEl.textContent =
-      'اختر مفتاحاً محفوظاً أو أضفه من زر 🔑.';
+    show('اختر مفتاحاً','اختر مفتاحاً محفوظاً أو أضفه من 🔑.');
     return;
   }
 
   stopRequest();
 
   const id = requestId;
-  const active = new AbortController();
+  controller = new AbortController();
+  const signal = controller.signal;
 
-  controller = active;
-
-  // يدوي: المفتاح المختار فقط
-  // أوتو: الانتقال عند أخطاء صلاحية المفتاح فقط
-  const order = mode === 'auto'
-    ? [
+  const order = mode === 'manual'
+    ? [selected]
+    : [
         selected,
-        ...keys.map((_,i) => i).filter(
-          i => i !== selected && !!keys[i]
-        )
-      ]
-    : [selected];
+        ...keys.map((_,i) => i).filter(i => i !== selected && keys[i])
+      ];
 
   try {
-    for (let n=0;n<order.length;n++) {
-      const index = order[n];
+    for (const index of order) {
+      show('جاري التحليل بالمفتاح '+(index+1)+'...','');
 
-      if (!keys[index]) continue;
+      let last;
 
-      statusEl.textContent =
-        '⏳ جاري التحليل بالمفتاح رقم ' +
-        (index+1) + '...';
-
-      let lastError;
-
-      for (let retry=0;retry<2;retry++) {
+      for (let attempt=0;attempt<2;attempt++) {
         try {
-          const text = await ask(
-            keys[index],
-            image,
-            active.signal
-          );
+          const text = await ask(keys[index],image,signal);
 
           if (id !== requestId) return;
 
           selected = index;
+          localStorage.setItem('selected_gemini_key',String(index));
+          render();
 
-          localStorage.setItem(
-            'selected_gemini_key',
-            String(index)
-          );
-
-          renderMode();
-
-          statusEl.textContent =
-            '✅ الإجابة — المفتاح رقم ' +
-            (index+1);
-
-          answerEl.textContent = text;
+          show('تم التحليل — المفتاح '+(index+1),text);
           return;
 
-        } catch (error) {
-          if (
-            id !== requestId ||
-            active.signal.aborted
-          ) return;
+        } catch(e) {
+          if (id !== requestId || signal.aborted) return;
 
-          lastError = error;
+          last = e;
 
           if (
-            error.refusal ||
-            error.status === 429 ||
-            error.status === 400 ||
-            error.status === 404 ||
-            (
-              error.status === 403 &&
-              !keyError(error)
-            )
+            (e instanceof TypeError || [500,502,503,504].includes(e.status)) &&
+            attempt === 0
           ) {
-            throw error;
-          }
-
-          if (keyError(error)) break;
-
-          const temporary =
-            [500,502,503,504].includes(error.status) ||
-            error instanceof TypeError;
-
-          if (temporary && retry === 0) {
-            statusEl.textContent =
-              '⏳ إعادة المحاولة بعد عطل مؤقت...';
-
-            await sleep(900,active.signal);
+            await new Promise((resolve,reject) => {
+              const t = setTimeout(resolve,1000);
+              signal.addEventListener('abort',() => {
+                clearTimeout(t);
+                reject(new DOMException('Aborted','AbortError'));
+              },{once:true});
+            });
             continue;
           }
 
-          throw error;
+          break;
         }
       }
 
-      if (
-        mode === 'auto' &&
-        keyError(lastError) &&
-        n < order.length-1
-      ) {
+      if (mode === 'auto' && isKeyError(last)) {
         continue;
       }
 
-      throw lastError;
+      throw last;
     }
 
-    throw new Error('لا يوجد مفتاح صالح متاح');
+    throw new Error('لم يتوفر مفتاح صالح للاستخدام.');
 
-  } catch (error) {
-    if (
-      id !== requestId ||
-      error.name === 'AbortError'
-    ) return;
-
-    console.error(error);
-
-    statusEl.textContent = '❌ تعذر تحليل السؤال';
-    answerEl.textContent = errorText(error);
-
+  } catch(e) {
+    if (id !== requestId || e.name === 'AbortError') return;
+    show('تعذر تحليل السؤال',errorText(e));
   } finally {
-    if (id === requestId) {
-      controller = null;
-    }
+    if (id === requestId) controller = null;
   }
 }
 
