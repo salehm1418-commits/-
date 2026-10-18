@@ -3,16 +3,16 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>المجيب السريع للاختبارات</title>
 <style>
 :root {
-  --bg-color:#080c14;
-  --card-bg:#0f172a;
-  --inner-card:#030712;
-  --primary:#2563eb;
-  --accent-blue:#38bdf8;
-  --border-color:#1e293b;
+  --bg:#080c14;
+  --card:#0f172a;
+  --inner:#030712;
+  --blue:#2563eb;
+  --cyan:#38bdf8;
+  --border:#1e293b;
 }
 * {
   box-sizing:border-box;
@@ -21,13 +21,13 @@
   font-family:system-ui,-apple-system,sans-serif;
 }
 body {
-  background:var(--bg-color);
+  background:var(--bg);
   color:white;
   min-height:100vh;
+  padding:12px;
   display:flex;
   flex-direction:column;
   align-items:center;
-  padding:12px;
 }
 header {
   width:100%;
@@ -38,30 +38,31 @@ header {
   margin-bottom:10px;
 }
 h1 {font-size:17px}
+button {cursor:pointer}
 .icon-btn {
-  background:var(--card-bg);
-  border:1px solid var(--border-color);
+  background:var(--card);
+  border:1px solid var(--border);
   color:white;
-  padding:8px 14px;
+  padding:9px 13px;
   border-radius:10px;
-  cursor:pointer;
 }
 .camera-container {
   width:100%;
   max-width:500px;
   height:62vh;
-  min-height:380px;
-  background:var(--inner-card);
-  border:1px solid var(--border-color);
+  min-height:350px;
+  background:var(--inner);
+  border:1px solid var(--border);
   border-radius:18px;
   overflow:hidden;
 }
-video,canvas,#captured-image {
+video,#captured-image {
   width:100%;
   height:100%;
   object-fit:cover;
 }
 #captured-image {display:none}
+#canvas {display:none}
 .controls {
   width:100%;
   max-width:500px;
@@ -70,50 +71,59 @@ video,canvas,#captured-image {
 .btn {
   width:100%;
   padding:16px;
-  border:none;
+  border:0;
   border-radius:14px;
   font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
+  font-weight:700;
 }
-.btn-primary {
-  background:var(--primary);
+.primary {
+  background:var(--blue);
   color:white;
 }
-.btn:disabled {
-  opacity:.6;
-  cursor:wait;
-}
-.result-box {
-  width:100%;
-  max-width:500px;
-  background:var(--card-bg);
-  border:1px solid var(--border-color);
-  border-radius:16px;
-  padding:18px;
-  margin-top:12px;
-  display:none;
-}
-#status-text {
-  color:var(--accent-blue);
-  font-size:16px;
-  font-weight:bold;
-}
-#response-content {
-  margin-top:12px;
-  color:white;
-  font-size:24px;
-  font-weight:800;
-  line-height:1.7;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-}
-#retry-btn {
-  display:none;
-  margin-top:16px;
+.secondary {
   background:#334155;
   color:white;
 }
+.btn:disabled {
+  opacity:.55;
+  cursor:wait;
+}
+.result-box {
+  display:none;
+  width:100%;
+  max-width:500px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-top:12px;
+}
+#status {
+  color:var(--cyan);
+  font-size:17px;
+  font-weight:700;
+}
+#timer {
+  color:#94a3b8;
+  font-size:14px;
+  margin-top:7px;
+}
+#answer {
+  color:white;
+  font-size:26px;
+  font-weight:800;
+  line-height:1.6;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  margin-top:12px;
+}
+.action-row {
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+}
+.action-row .btn {font-size:14px}
+#cancel-btn,#retry-btn {display:none}
 .modal {
   display:none;
   position:fixed;
@@ -125,36 +135,30 @@ video,canvas,#captured-image {
   padding:20px;
 }
 .modal-content {
-  background:var(--card-bg);
-  border:1px solid var(--border-color);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
   width:100%;
   max-width:450px;
-  border-radius:16px;
   padding:20px;
 }
 .modal-content h2 {
   font-size:18px;
   margin-bottom:15px;
 }
-.input-group {margin-bottom:15px}
-.input-group label {
+label {
   display:block;
   font-size:13px;
   color:#94a3b8;
   margin-bottom:6px;
 }
-.input-group input {
+input {
   width:100%;
-  padding:10px;
-  background:var(--inner-card);
-  border:1px solid var(--border-color);
-  border-radius:8px;
+  padding:12px;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:var(--inner);
   color:white;
-}
-.modal-actions {
-  display:flex;
-  gap:10px;
-  margin-top:20px;
 }
 </style>
 </head>
@@ -162,35 +166,56 @@ video,canvas,#captured-image {
 
 <header>
   <h1>المجيب السريع للاختبارات</h1>
-  <button class="icon-btn" onclick="openSettings()">⚙️ الإعدادات</button>
+  <button class="icon-btn" onclick="openSettings()">
+    ⚙️ الإعدادات
+  </button>
 </header>
 
 <div class="camera-container">
   <video id="video" autoplay playsinline></video>
-  <img id="captured-image" alt="الصورة الملتقطة">
-  <canvas id="canvas" style="display:none"></canvas>
+  <img id="captured-image" alt="السؤال">
+  <canvas id="canvas"></canvas>
 </div>
 
 <div class="controls">
-  <button id="main-btn" class="btn btn-primary" onclick="handleMainAction()">📸 التقاط وتحليل فوري</button>
+  <button id="main-btn" class="btn primary"
+    onclick="mainAction()">
+    📸 التقاط وتحليل فوري
+  </button>
 </div>
 
 <div id="result-box" class="result-box">
-  <div id="status-text">في انتظار الصورة...</div>
-  <div id="response-content"></div>
-  <button id="retry-btn" class="btn" onclick="retryAnalysis()">🔄 إعادة المحاولة بنفس الصورة</button>
+  <div id="status">جاهز للتحليل</div>
+  <div id="timer"></div>
+  <div id="answer"></div>
+
+  <div class="action-row">
+    <button id="cancel-btn" class="btn secondary"
+      onclick="cancelAnalysis()">
+      ⏹ إلغاء الانتظار
+    </button>
+    <button id="retry-btn" class="btn secondary"
+      onclick="retryAnalysis()">
+      🔄 إعادة المحاولة بنفس الصورة
+    </button>
+  </div>
 </div>
 
 <div id="settings-modal" class="modal">
   <div class="modal-content">
     <h2>⚙️ إعدادات Gemini</h2>
-    <div class="input-group">
-      <label>مفتاح Gemini API Key:</label>
-      <input type="password" id="gemini-key" placeholder="AIzaSy...">
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="saveSettings()">حفظ</button>
-      <button class="btn" style="background:#334155;color:white" onclick="closeSettings()">إلغاء</button>
+    <label>مفتاح Gemini API Key</label>
+    <input type="password" id="gemini-key"
+      placeholder="AIzaSy...">
+
+    <div class="action-row">
+      <button class="btn primary" onclick="saveSettings()">
+        حفظ
+      </button>
+      <button class="btn secondary"
+        onclick="closeSettings()">
+        إلغاء
+      </button>
     </div>
   </div>
 </div>
@@ -198,203 +223,397 @@ video,canvas,#captured-image {
 <script>
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
-const capturedImg = document.getElementById('captured-image');
+const photo = document.getElementById('captured-image');
 const mainBtn = document.getElementById('main-btn');
 const resultBox = document.getElementById('result-box');
-const statusText = document.getElementById('status-text');
-const responseContent = document.getElementById('response-content');
+const statusEl = document.getElementById('status');
+const timerEl = document.getElementById('timer');
+const answerEl = document.getElementById('answer');
+const cancelBtn = document.getElementById('cancel-btn');
 const retryBtn = document.getElementById('retry-btn');
+
+const MODEL = 'gemini-3.8-flash';
 
 let imageBase64 = null;
 let isCaptured = false;
-let requestRunning = false;
+let running = false;
+let controller = null;
+let timerInterval = null;
+let startedAt = 0;
 let retryAfter = 0;
+let requestId = 0;
 
-window.onload = () => {
+window.addEventListener('load', () => {
   document.getElementById('gemini-key').value =
     localStorage.getItem('gemini_key') || '';
   startCamera();
-};
+});
 
 async function startCamera() {
   try {
-    video.srcObject = await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:'environment'}
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video:{
+        facingMode:'environment',
+        width:{ideal:1280},
+        height:{ideal:720}
+      },
+      audio:false
     });
-  } catch(err) {
-    console.error(err);
+    video.srcObject = stream;
+    await video.play();
+  } catch(e) {
+    console.error(e);
     alert('يرجى السماح باستخدام الكاميرا.');
   }
 }
 
-function handleMainAction() {
-  if(requestRunning) return;
+function mainAction() {
+  if(running) return;
+
   if(!isCaptured) {
     if(!video.videoWidth) {
       alert('انتظر حتى تعمل الكاميرا.');
       return;
     }
     capturePhoto();
-    processAndSend();
+    analyze();
   } else {
-    resetToCamera();
+    resetCamera();
   }
 }
 
 function capturePhoto() {
   const maxSide = 1280;
-  const ratio = Math.min(1, maxSide / Math.max(video.videoWidth, video.videoHeight));
-  canvas.width = Math.round(video.videoWidth * ratio);
-  canvas.height = Math.round(video.videoHeight * ratio);
-  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-  imageBase64 = canvas.toDataURL('image/jpeg', 0.75);
-  capturedImg.src = imageBase64;
+  const scale = Math.min(
+    1,
+    maxSide / Math.max(video.videoWidth,video.videoHeight)
+  );
+
+  canvas.width = Math.round(video.videoWidth * scale);
+  canvas.height = Math.round(video.videoHeight * scale);
+
+  canvas.getContext('2d').drawImage(
+    video,0,0,canvas.width,canvas.height
+  );
+
+  imageBase64 = canvas.toDataURL('image/jpeg',0.75);
+  photo.src = imageBase64;
+
   video.style.display = 'none';
-  capturedImg.style.display = 'block';
+  photo.style.display = 'block';
+
   isCaptured = true;
-  mainBtn.innerText = '🔄 التقاط سؤال جديد';
+  mainBtn.textContent = '🔄 التقاط سؤال جديد';
 }
 
-function resetToCamera() {
+function resetCamera() {
+  if(running) return;
+
   video.style.display = 'block';
-  capturedImg.style.display = 'none';
+  photo.style.display = 'none';
   resultBox.style.display = 'none';
-  retryBtn.style.display = 'none';
+
   imageBase64 = null;
   isCaptured = false;
-  mainBtn.innerText = '📸 التقاط وتحليل فوري';
+  mainBtn.textContent = '📸 التقاط وتحليل فوري';
 }
 
 function openSettings() {
-  document.getElementById('settings-modal').style.display = 'flex';
+  document.getElementById('settings-modal').style.display =
+    'flex';
 }
+
 function closeSettings() {
-  document.getElementById('settings-modal').style.display = 'none';
+  document.getElementById('settings-modal').style.display =
+    'none';
 }
+
 function saveSettings() {
-  localStorage.setItem(
-    'gemini_key',
-    document.getElementById('gemini-key').value.trim()
-  );
-  alert('تم حفظ الإعدادات بنجاح!');
+  const key = document.getElementById('gemini-key').value.trim();
+  localStorage.setItem('gemini_key',key);
   closeSettings();
+  alert('تم حفظ المفتاح.');
+}
+
+function startTimer() {
+  startedAt = performance.now();
+  timerEl.textContent = '⏱ 0.0 ثانية';
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const elapsed = (performance.now()-startedAt)/1000;
+    timerEl.textContent =
+      '⏱ ' + elapsed.toFixed(1) + ' ثانية';
+  },100);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+
+  if(startedAt) {
+    const elapsed = (performance.now()-startedAt)/1000;
+    timerEl.textContent =
+      '⏱ استغرق ' + elapsed.toFixed(1) + ' ثانية';
+  }
+}
+
+function cleanAnswer(text) {
+  return text
+    .replace(/\*\*/g,'')
+    .replace(/[`*_]/g,'')
+    .trim();
+}
+
+function showAnswer(text) {
+  answerEl.textContent = cleanAnswer(text);
 }
 
 function retryAnalysis() {
-  if(requestRunning || !imageBase64) return;
+  if(running || !imageBase64) return;
+
   if(Date.now() < retryAfter) {
-    const seconds = Math.ceil((retryAfter - Date.now()) / 1000);
-    responseContent.innerText = 'انتظر ' + seconds + ' ثانية قبل إعادة المحاولة.';
+    const seconds = Math.ceil(
+      (retryAfter-Date.now())/1000
+    );
+    statusEl.textContent =
+      '⏳ انتظر ' + seconds + ' ثانية';
     return;
   }
-  processAndSend();
+
+  analyze();
 }
 
-function parseRetrySeconds(message) {
-  const match = message.match(/Please retry in\s+((?:\d+h)?(?:\d+m)?(?:\d+(?:\.\d+)?s)?)/i);
+function cancelAnalysis() {
+  if(!running) return;
+
+  requestId++;
+  controller?.abort();
+  controller = null;
+  running = false;
+
+  stopTimer();
+  statusEl.textContent = '⏹ تم إلغاء الانتظار';
+  cancelBtn.style.display = 'none';
+  retryBtn.style.display = 'block';
+  mainBtn.disabled = false;
+}
+
+function parseWait(message) {
+  const match = message.match(
+    /Please retry in\s+((?:\d+h)?(?:\d+m)?(?:\d+(?:\.\d+)?s)?)/i
+  );
+
   if(!match) return 0;
+
   const value = match[1];
-  const hours = Number(value.match(/(\d+)h/)?.[1] || 0);
-  const minutes = Number(value.match(/(\d+)m/)?.[1] || 0);
-  const seconds = Number(value.match(/(\d+(?:\.\d+)?)s/)?.[1] || 0);
-  return Math.ceil(hours * 3600 + minutes * 60 + seconds);
+  const h = Number(value.match(/(\d+)h/)?.[1] || 0);
+  const m = Number(value.match(/(\d+)m/)?.[1] || 0);
+  const s = Number(value.match(/(\d+(?:\.\d+)?)s/)?.[1] || 0);
+
+  return Math.ceil(h*3600+m*60+s);
 }
 
-async function processAndSend() {
-  const geminiKey = localStorage.getItem('gemini_key');
+async function analyze() {
+  const key = localStorage.getItem('gemini_key');
 
-  if(!geminiKey) {
-    alert('يرجى إدخال مفتاح Gemini API أولاً.');
+  if(!key) {
+    alert('أدخل مفتاح Gemini من الإعدادات.');
     openSettings();
     return;
   }
 
-  if(requestRunning || !imageBase64) return;
+  if(running || !imageBase64) return;
 
-  requestRunning = true;
-  mainBtn.disabled = true;
-  retryBtn.style.display = 'none';
+  if(Date.now() < retryAfter) {
+    const seconds = Math.ceil(
+      (retryAfter-Date.now())/1000
+    );
+    resultBox.style.display = 'block';
+    statusEl.textContent = '⏳ انتظر قبل المحاولة';
+    answerEl.textContent =
+      'الوقت المتبقي: ' + seconds + ' ثانية';
+    retryBtn.style.display = 'block';
+    return;
+  }
+
+  const myRequest = ++requestId;
+  controller = new AbortController();
+  running = true;
+
   resultBox.style.display = 'block';
-  statusText.innerText = '⏳ جاري تحليل السؤال...';
-  responseContent.innerText = '';
+  statusEl.textContent = '⏳ جاري تحليل السؤال...';
+  answerEl.textContent = '';
+  retryBtn.style.display = 'none';
+  cancelBtn.style.display = 'block';
+  mainBtn.disabled = true;
+  startTimer();
 
   try {
-    const base64Data = imageBase64.split(',')[1];
-
     const url =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key='
-      + encodeURIComponent(geminiKey);
+      'https://generativelanguage.googleapis.com/v1beta/models/'
+      + MODEL
+      + ':streamGenerateContent?alt=sse&key='
+      + encodeURIComponent(key);
 
-    const response = await fetch(url, {
+    const response = await fetch(url,{
       method:'POST',
+      signal:controller.signal,
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         contents:[{
           parts:[
             {
-              text:'اقرأ السؤال والخيارات في الصورة. أجب فقط بحرف الخيار الصحيح والكلمة أو العبارة المقابلة له في سطر واحد دون شرح أو تنسيق Markdown. إذا لم يتضح السؤال فقل: الصورة غير واضحة.'
+              text:'اقرأ السؤال والخيارات في الصورة. أجب بحرف الخيار الصحيح والكلمة أو العبارة المقابلة له فقط. لا تكتب شرحًا ولا Markdown. إذا لم تكن الصورة واضحة فقل: الصورة غير واضحة.'
             },
             {
               inline_data:{
                 mime_type:'image/jpeg',
-                data:base64Data
+                data:imageBase64.split(',')[1]
               }
             }
           ]
-        }]
+        }],
+        generationConfig:{
+          maxOutputTokens:256,
+          temperature:0
+        }
       })
     });
 
-    const data = await response.json();
-
-    if(!response.ok || data.error) {
-      const error = new Error(data.error?.message || 'فشل الطلب');
-      error.status = response.status;
-      error.retryHeader = response.headers.get('Retry-After');
-      throw error;
+    if(!response.ok) {
+      const errorData = await response.json().catch(()=>({}));
+      const err = new Error(
+        errorData.error?.message || 'فشل الاتصال'
+      );
+      err.status = response.status;
+      err.retryHeader = response.headers.get('Retry-After');
+      throw err;
     }
 
-    const answer = data.candidates?.[0]?.content?.parts
-      ?.filter(p => p.text)
-      .map(p => p.text)
-      .join('\n');
+    if(!response.body) {
+      throw new Error('المتصفح لا يدعم قراءة البث.');
+    }
 
-    if(!answer) throw new Error('لم يتم العثور على إجابة.');
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
 
-    statusText.innerText = '✅ الإجابة:';
-    responseContent.innerText = answer.replace(/\*\*/g,'').replace(/[`*_]/g,'').trim();
+    let buffer = '';
+    let fullText = '';
+    let receivedAny = false;
+
+    while(true) {
+      const {done,value} = await reader.read();
+
+      if(myRequest !== requestId) {
+        await reader.cancel();
+        return;
+      }
+
+      if(done) break;
+
+      buffer += decoder.decode(value,{stream:true});
+      buffer = buffer.replace(/\r\n/g,'\n');
+
+      let boundary;
+
+      while((boundary = buffer.indexOf('\n\n')) !== -1) {
+        const event = buffer.slice(0,boundary);
+        buffer = buffer.slice(boundary+2);
+
+        const dataLines = event.split('\n')
+          .filter(line=>line.startsWith('data:'))
+          .map(line=>line.slice(5).trim());
+
+        if(!dataLines.length) continue;
+
+        const raw = dataLines.join('\n');
+        if(raw === '[DONE]') continue;
+
+        let json;
+        try {
+          json = JSON.parse(raw);
+        } catch {
+          continue;
+        }
+
+        if(json.error) {
+          throw new Error(json.error.message || 'خطأ في البث');
+        }
+
+        const chunk = json.candidates?.[0]?.content?.parts
+          ?.filter(part=>typeof part.text==='string')
+          .map(part=>part.text)
+          .join('') || '';
+
+        if(chunk) {
+          receivedAny = true;
+          fullText += chunk;
+          statusEl.textContent = '✅ الإجابة:';
+          showAnswer(fullText);
+        }
+      }
+    }
+
+    if(!receivedAny) {
+      throw new Error('لم تصل إجابة من Gemini.');
+    }
+
+    statusEl.textContent = '✅ الإجابة:';
+    showAnswer(fullText);
     retryAfter = 0;
 
   } catch(err) {
+    if(myRequest !== requestId) return;
+
     console.error(err);
+    statusEl.textContent = '❌ تعذر تحليل السؤال';
+
     const message = err.message || '';
-    statusText.innerText = '❌ تعذر تحليل السؤال';
 
-    if(err.status === 429 || /quota exceeded|resource.exhausted/i.test(message)) {
-      const seconds = parseRetrySeconds(message);
-      const headerSeconds = Number(err.retryHeader);
-      const wait = seconds || (Number.isFinite(headerSeconds) && headerSeconds > 0 ? headerSeconds : 0);
+    if(err.name === 'AbortError') {
+      statusEl.textContent = '⏹ تم إلغاء الانتظار';
+      retryBtn.style.display = 'block';
 
-      if(wait > 0) retryAfter = Date.now() + wait * 1000;
+    } else if(
+      err.status === 429 ||
+      /quota exceeded|resource.exhausted/i.test(message)
+    ) {
+      const wait = parseWait(message);
+      if(wait > 0) {
+        retryAfter = Date.now()+wait*1000;
+      }
 
-      responseContent.innerText = wait > 0
-        ? 'انتهت الحصة المتاحة حاليًا. حاول بعد ' + Math.ceil(wait / 60) + ' دقيقة تقريبًا.'
-        : 'وصلت إلى حد استخدام Gemini. انتظر حتى تتجدد الحصة.';
+      answerEl.textContent = wait > 0
+        ? 'انتهت الحصة المتاحة. حاول بعد ' +
+          Math.ceil(wait/60) + ' دقيقة تقريبًا.'
+        : 'وصلت إلى حد الاستخدام المتاح لمفتاح Gemini.';
+
       retryBtn.style.display = 'none';
 
-    } else if(err.status === 503 || /high demand|overloaded|unavailable/i.test(message)) {
-      retryAfter = Date.now() + 15000;
-      responseContent.innerText = 'خوادم Gemini مشغولة حاليًا. انتظر 15 ثانية ثم اضغط إعادة المحاولة.';
+    } else if(
+      err.status === 503 ||
+      /high demand|overloaded|unavailable/i.test(message)
+    ) {
+      retryAfter = Date.now()+15000;
+      answerEl.textContent =
+        'خوادم Gemini مشغولة حاليًا. انتظر 15 ثانية ثم حاول مجددًا.';
       retryBtn.style.display = 'block';
 
     } else {
-      responseContent.innerText = 'تعذر إكمال التحليل. تحقق من الاتصال والإعدادات ثم حاول مجددًا.';
+      answerEl.textContent =
+        'تعذر إكمال التحليل. تحقق من الاتصال ثم حاول مجددًا.';
       retryBtn.style.display = 'block';
     }
 
   } finally {
-    requestRunning = false;
-    mainBtn.disabled = false;
+    if(myRequest === requestId) {
+      stopTimer();
+      running = false;
+      controller = null;
+      mainBtn.disabled = false;
+      cancelBtn.style.display = 'none';
+    }
   }
 }
 </script>
