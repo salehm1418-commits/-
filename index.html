@@ -5,266 +5,67 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080c14">
-
 <title>لقطة AI | حل الأسئلة بالكاميرا</title>
 <meta name="description" content="لقطة AI: صوّر السؤال واحصل على إجابة مختصرة بمساعدة الذكاء الاصطناعي.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="لقطة AI | حل الأسئلة بالكاميرا">
 <meta property="og:description" content="صوّر السؤال واحصل على إجابة مختصرة بمساعدة الذكاء الاصطناعي.">
-<meta property="og:url" content="https://salehm1418-commits.github.io/-/">
-<meta property="og:image" content="https://salehm1418-commits.github.io/-/share.png">
+<meta property="og:image" content="https://salehm1418-commits.github.io/-/logo.png">
 <link rel="icon" href="logo.png" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
-
 <style>
-:root {
-  color-scheme:dark;
-  --bg:#080c14;
-  --panel:#111c30;
-  --line:#28364c;
-  --blue:#2563eb;
-  --green:#059669;
-  --muted:#a6b5ca;
-}
-* {box-sizing:border-box}
-html,body {
-  margin:0;
-  min-height:100%;
-  background:var(--bg);
-  color:#fff;
-  font-family:system-ui,-apple-system,sans-serif;
-}
-button,input {font:inherit}
-button {cursor:pointer;color:#fff}
-button:disabled {opacity:.32;cursor:not-allowed}
-
-header {
-  position:sticky;
-  top:0;
-  z-index:30;
-  background:#0d1525f7;
-  border-bottom:1px solid var(--line);
-  padding:calc(env(safe-area-inset-top) + 10px) 12px 12px;
-  box-shadow:0 8px 25px #0005;
-}
-.headline {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.identity {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
-}
-.identity img {
-  width:58px;
-  height:58px;
-  object-fit:contain;
-  border-radius:15px;
-  border:1px solid #284a65;
-}
-.identity h1 {
-  font-size:22px;
-  line-height:1.2;
-  margin:0;
-  font-weight:850;
-}
-.identity p {
-  font-size:12px;
-  color:var(--muted);
-  margin:4px 0 0;
-}
-.key-settings {
-  background:#172b48;
-  border:1px solid #375477;
-  border-radius:14px;
-  min-width:58px;
-  min-height:54px;
-  font-size:27px;
-}
-.modes {
-  display:flex;
-  gap:9px;
-  margin-top:12px;
-}
-.mode {
-  flex:1;
-  min-height:49px;
-  border:1px solid #34445d;
-  background:#1b293e;
-  border-radius:12px;
-  font-weight:800;
-  font-size:17px;
-}
-.mode.active {
-  background:var(--blue);
-  border-color:#4f8cff;
-}
-.numbers {
-  display:none;
-  gap:7px;
-  margin-top:10px;
-  align-items:center;
-}
-.numbers.visible {display:flex}
-.numbers span {
-  font-size:13px;
-  color:var(--muted);
-}
-.number {
-  flex:1;
-  min-height:42px;
-  border-radius:10px;
-  border:1px solid #34445d;
-  background:#1b293e;
-  font-size:16px;
-  font-weight:800;
-}
-.number.active {
-  background:var(--blue);
-  border-color:#4f8cff;
-}
-
-main {
-  max-width:680px;
-  margin:auto;
-  padding:12px 12px 30px;
-}
-.camera {
-  position:relative;
-  height:62dvh;
-  min-height:300px;
-  background:#000;
-  border:1px solid #334155;
-  border-radius:18px;
-  overflow:hidden;
-}
-
-/* عرض إطار الكاميرا كاملاً بدون قص */
-video,#photo {
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#000;
-}
-#photo {display:none}
-
-.camera-note {
-  position:absolute;
-  bottom:12px;
-  left:12px;
-  right:12px;
-  text-align:center;
-  background:#081222c9;
-  padding:9px;
-  border-radius:10px;
-  color:#d5e4f5;
-  font-size:13px;
-  pointer-events:none;
-}
-#capture {
-  display:block;
-  width:100%;
-  margin-top:12px;
-  padding:18px 8px;
-  border:0;
-  border-radius:14px;
-  background:var(--blue);
-  font-size:20px;
-  font-weight:800;
-}
-#capture.new {background:var(--green)}
-.result {
-  margin-top:13px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:var(--panel);
-  padding:16px;
-  display:none;
-}
-.status {
-  font-size:14px;
-  color:#7dd3fc;
-  font-weight:700;
-}
-.answer {
-  font-size:26px;
-  line-height:1.55;
-  font-weight:800;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  margin-top:8px;
-}
-
-.overlay {
-  position:fixed;
-  inset:0;
-  z-index:70;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:15px;
-  background:#000c;
-}
-.overlay.open {display:flex}
-.modal {
-  background:#101b2e;
-  border:1px solid #40516b;
-  border-radius:18px;
-  width:min(100%,460px);
-  max-height:85dvh;
-  overflow:auto;
-  padding:20px;
-}
-.modal h2 {margin:0 0 10px}
-.modal p {
-  font-size:13px;
-  line-height:1.7;
-  color:var(--muted);
-}
-.field {margin-top:12px}
-.field label {
-  display:block;
-  margin-bottom:6px;
-  font-size:14px;
-}
-.field input {
-  width:100%;
-  background:#070f1d;
-  color:white;
-  border:1px solid #3b4b64;
-  border-radius:10px;
-  padding:12px;
-  direction:ltr;
-}
-.modal-actions {
-  display:flex;
-  gap:8px;
-  margin-top:18px;
-}
-.modal-actions button {
-  flex:1;
-  border:0;
-  border-radius:11px;
-  background:var(--blue);
-  padding:13px;
-  font-weight:800;
-}
-.modal-actions .secondary {background:#334155}
-@media(max-width:370px) {
-  .identity img {width:49px;height:49px}
-  .identity h1 {font-size:19px}
-  .key-settings {min-width:50px;min-height:50px}
-  .mode {font-size:15px}
+:root{color-scheme:dark;--bg:#080c14;--panel:#111c30;--line:#28364c;--blue:#2563eb;--green:#059669;--muted:#a6b5ca}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer;color:#fff}
+button:disabled{opacity:.32;cursor:not-allowed}
+header{position:sticky;top:0;z-index:30;background:#0d1525f7;border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top) + 10px) 12px 12px;box-shadow:0 8px 25px #0005}
+.headline{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.identity{display:flex;align-items:center;gap:12px;min-width:0}
+.identity img{width:58px;height:58px;object-fit:contain;border-radius:15px;border:1px solid #284a65}
+.identity h1{font-size:22px;line-height:1.2;margin:0;font-weight:850}
+.identity p{font-size:12px;color:var(--muted);margin:4px 0 0}
+.key-settings{background:#172b48;border:1px solid #375477;border-radius:14px;min-width:58px;min-height:54px;font-size:27px}
+.modes{display:flex;gap:9px;margin-top:12px}
+.mode{flex:1;min-height:49px;border:1px solid #34445d;background:#1b293e;border-radius:12px;font-weight:800;font-size:17px}
+.mode.active{background:var(--blue);border-color:#4f8cff}
+.numbers{display:none;gap:7px;margin-top:10px;align-items:center}
+.numbers.visible{display:flex}
+.numbers span{font-size:13px;color:var(--muted)}
+.number{flex:1;min-height:42px;border-radius:10px;border:1px solid #34445d;background:#1b293e;font-size:16px;font-weight:800}
+.number.active{background:var(--blue);border-color:#4f8cff}
+main{max-width:680px;margin:auto;padding:12px 12px 30px}
+.camera{position:relative;height:62dvh;min-height:300px;background:#000;border:1px solid #334155;border-radius:18px;overflow:hidden}
+video,#photo{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+#photo{display:none}
+.camera-note{position:absolute;bottom:12px;left:12px;right:12px;text-align:center;background:#081222c9;padding:9px;border-radius:10px;color:#d5e4f5;font-size:13px;pointer-events:none}
+#capture{display:block;width:100%;margin-top:12px;padding:18px 8px;border:0;border-radius:14px;background:var(--blue);font-size:20px;font-weight:800}
+#capture.new{background:var(--green)}
+.result{margin-top:13px;border:1px solid var(--line);border-radius:15px;background:var(--panel);padding:16px;display:none}
+.status{font-size:14px;color:#7dd3fc;font-weight:700}
+.answer{font-size:26px;line-height:1.55;font-weight:800;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px}
+.overlay{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:15px;background:#000c}
+.overlay.open{display:flex}
+.modal{background:#101b2e;border:1px solid #40516b;border-radius:18px;width:min(100%,460px);max-height:85dvh;overflow:auto;padding:20px}
+.modal h2{margin:0 0 10px}
+.modal p{font-size:13px;line-height:1.7;color:var(--muted)}
+.field{margin-top:12px}
+.field label{display:block;margin-bottom:6px;font-size:14px}
+.field input{width:100%;background:#070f1d;color:white;border:1px solid #3b4b64;border-radius:10px;padding:12px;direction:ltr}
+.modal-actions{display:flex;gap:8px;margin-top:18px}
+.modal-actions button{flex:1;border:0;border-radius:11px;background:var(--blue);padding:13px;font-weight:800}
+.modal-actions .secondary{background:#334155}
+@media(max-width:370px){
+.identity img{width:49px;height:49px}
+.identity h1{font-size:19px}
+.key-settings{min-width:50px;min-height:50px}
+.mode{font-size:15px}
 }
 </style>
 </head>
-
 <body>
+
 <header>
   <div class="headline">
     <div class="identity">
@@ -276,14 +77,12 @@ video,#photo {
     </div>
     <button class="key-settings" onclick="openSettings()" aria-label="إدارة المفاتيح">🔑</button>
   </div>
-
   <div class="modes">
     <button id="auto" class="mode" onclick="setMode('auto')">⚡ أوتو</button>
     <button id="manual" class="mode" onclick="setMode('manual')">✋ يدوي</button>
   </div>
-
   <div id="numbers" class="numbers">
-    <span>المفتاح:</span>
+    <span>المفتاح</span>
     <button class="number" data-n="0" onclick="chooseKey(0)">1</button>
     <button class="number" data-n="1" onclick="chooseKey(1)">2</button>
     <button class="number" data-n="2" onclick="chooseKey(2)">3</button>
@@ -298,9 +97,7 @@ video,#photo {
     <img id="photo" alt="السؤال الملتقط">
     <div id="cameraNote" class="camera-note">جاري تشغيل الكاميرا...</div>
   </div>
-
   <button id="capture" onclick="mainAction()">📸 التقاط وتحليل فوري</button>
-
   <section id="result" class="result" aria-live="polite">
     <div id="status" class="status"></div>
     <div id="answer" class="answer"></div>
@@ -308,12 +105,12 @@ video,#photo {
 </main>
 
 <div id="overlay" class="overlay">
-  <div class="modal" role="dialog" aria-modal="true" aria-label="إدارة مفاتيح Gemini">
-    <h2>🔑 إدارة مفاتيح Gemini</h2>
-    <p>أضف مفاتيحك الخاصة. كل خانة لها رقم ثابت، والمفاتيح تُحفظ في هذا المتصفح فقط.</p>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="إدارة المفاتيح">
+    <h2>🔑 مفاتيح Gemini</h2>
+    <p>أضف مفاتيحك الخاصة. الخانات من 1 إلى 5 مستقلة، وتُحفظ على جهازك في هذا المتصفح.</p>
     <div id="inputs"></div>
     <div class="modal-actions">
-      <button onclick="saveSettings()">حفظ المفاتيح</button>
+      <button onclick="saveSettings()">حفظ</button>
       <button class="secondary" onclick="closeSettings()">إلغاء</button>
     </div>
   </div>
@@ -323,8 +120,8 @@ video,#photo {
 'use strict';
 
 const MODEL = 'gemini-3.8-flash';
-
 const $ = id => document.getElementById(id);
+
 const video = $('video');
 const photo = $('photo');
 const captureBtn = $('capture');
@@ -339,12 +136,13 @@ let mode = localStorage.getItem('gemini_mode') === 'manual' ? 'manual' : 'auto';
 let captured = false;
 let controller = null;
 let requestId = 0;
+let cameraStream = null;
 
 function load() {
   try {
-    const x = JSON.parse(localStorage.getItem('gemini_keys') || '[]');
-    if (Array.isArray(x)) {
-      x.slice(0,5).forEach((v,i) => {
+    const savedKeys = JSON.parse(localStorage.getItem('gemini_keys') || '[]');
+    if (Array.isArray(savedKeys)) {
+      savedKeys.slice(0,5).forEach((v,i) => {
         keys[i] = typeof v === 'string' ? v.trim() : '';
       });
     }
@@ -404,7 +202,6 @@ function setMode(value) {
   mode = value;
   localStorage.setItem('gemini_mode',mode);
   render();
-
   if (captured) {
     show('تم تغيير الوضع','التقط سؤالاً جديداً للمتابعة.');
   }
@@ -416,7 +213,6 @@ function chooseKey(n) {
   selected = n;
   localStorage.setItem('selected_gemini_key',String(n));
   render();
-
   if (captured) {
     show('المفتاح رقم ' + (n+1) + ' محدد','التقط سؤالاً جديداً للمتابعة.');
   }
@@ -456,7 +252,6 @@ function saveSettings() {
   stopRequest();
 
   keys = Array.from({length:5},(_,i) => $('key'+i).value.trim());
-
   localStorage.setItem('gemini_keys',JSON.stringify(keys));
   localStorage.removeItem('gemini_key');
 
@@ -478,27 +273,101 @@ function saveSettings() {
   );
 }
 
+$('overlay').addEventListener('click',e => {
+  if (e.target === $('overlay')) closeSettings();
+});
+
+/* محاولة اختيار العدسة الخلفية العادية 1x */
 async function startCamera() {
+  let stream;
+
   try {
     if (!navigator.mediaDevices?.getUserMedia) {
       throw new Error('افتح الموقع عبر HTTPS وفي متصفح يدعم الكاميرا');
     }
 
-    const stream = await navigator.mediaDevices.getUserMedia({
+    stream = await navigator.mediaDevices.getUserMedia({
       audio:false,
       video:{
-        facingMode:{ideal:'environment'},
-        width:{ideal:1920},
-        height:{ideal:1080}
+        facingMode:{ideal:'environment'}
       }
     });
 
+    try {
+      const devices = (await navigator.mediaDevices.enumerateDevices())
+        .filter(d => d.kind === 'videoinput');
+
+      const rear = devices.filter(d =>
+        /back|rear|environment|خلف/i.test(d.label)
+      );
+
+      const ordinary =
+        rear.find(d => /^(back|rear) camera$/i.test(d.label.trim())) ||
+        rear.find(d =>
+          /wide/i.test(d.label) &&
+          !/ultra|dual|triple|tele|macro/i.test(d.label)
+        ) ||
+        rear.find(d =>
+          !/ultra|tele|dual|triple|macro|0\.5|2x|3x|5x/i.test(d.label)
+        );
+
+      if (
+        ordinary &&
+        ordinary.deviceId &&
+        stream.getVideoTracks()[0]?.getSettings().deviceId !== ordinary.deviceId
+      ) {
+        try {
+          const preferred = await navigator.mediaDevices.getUserMedia({
+            audio:false,
+            video:{
+              deviceId:{exact:ordinary.deviceId}
+            }
+          });
+
+          stream.getTracks().forEach(t => t.stop());
+          stream = preferred;
+
+        } catch(e) {
+          // الاستمرار بالكاميرا الخلفية المتاحة
+        }
+      }
+    } catch(e) {
+      // بعض إصدارات Safari لا تعرض أسماء العدسات
+    }
+
+    const track = stream.getVideoTracks()[0];
+
+    try {
+      const caps = track.getCapabilities?.();
+
+      if (
+        caps?.zoom &&
+        typeof track.applyConstraints === 'function'
+      ) {
+        const target = Math.max(
+          caps.zoom.min,
+          Math.min(1,caps.zoom.max)
+        );
+
+        await track.applyConstraints({
+          advanced:[{zoom:target}]
+        });
+      }
+    } catch(e) {
+      // تجاهل عدم دعم التحكم بالزوم
+    }
+
+    cameraStream = stream;
     video.srcObject = stream;
     await video.play();
+
     note.textContent = 'وجّه الكاميرا نحو السؤال';
 
   } catch(e) {
+    if (stream) stream.getTracks().forEach(t => t.stop());
+
     note.textContent = 'الكاميرا لم تعمل — تحقق من إذن الكاميرا';
+
     show(
       'تعذر تشغيل الكاميرا',
       e.name === 'NotAllowedError'
@@ -522,12 +391,17 @@ function mainAction() {
   stopRequest();
 
   const canvas = document.createElement('canvas');
-  const s = Math.min(1,1280/Math.max(video.videoWidth,video.videoHeight));
+  const s = Math.min(
+    1,
+    1280/Math.max(video.videoWidth,video.videoHeight)
+  );
 
   canvas.width = Math.round(video.videoWidth*s);
   canvas.height = Math.round(video.videoHeight*s);
 
-  canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+  canvas.getContext('2d').drawImage(
+    video,0,0,canvas.width,canvas.height
+  );
 
   const image = canvas.toDataURL('image/jpeg',.75);
 
@@ -545,12 +419,14 @@ function mainAction() {
 
 function reset() {
   stopRequest();
+
   captured = false;
   photo.style.display = 'none';
   photo.removeAttribute('src');
   video.style.display = 'block';
   note.style.display = 'block';
   note.textContent = 'وجّه الكاميرا نحو السؤال';
+
   captureBtn.classList.remove('new');
   captureBtn.textContent = '📸 التقاط وتحليل فوري';
   result.style.display = 'none';
@@ -624,6 +500,7 @@ async function ask(key,image,signal) {
   }
 
   const candidate = data.candidates?.[0];
+
   const text = candidate?.content?.parts
     ?.filter(x => typeof x.text === 'string')
     .map(x => x.text)
@@ -636,6 +513,7 @@ async function ask(key,image,signal) {
     ) {
       throw new Error('لم يتمكن النموذج من الإجابة عن هذا الطلب.');
     }
+
     throw new Error('لم تصل إجابة نصية. حاول بصورة أوضح.');
   }
 
@@ -691,16 +569,19 @@ async function analyze(image) {
           last = e;
 
           if (
-            (e instanceof TypeError || [500,502,503,504].includes(e.status)) &&
+            (e instanceof TypeError ||
+            [500,502,503,504].includes(e.status)) &&
             attempt === 0
           ) {
             await new Promise((resolve,reject) => {
               const t = setTimeout(resolve,1000);
+
               signal.addEventListener('abort',() => {
                 clearTimeout(t);
                 reject(new DOMException('Aborted','AbortError'));
               },{once:true});
             });
+
             continue;
           }
 
