@@ -59,7 +59,6 @@
       font-size: 13px;
     }
 
-    /* تكبير شاشة الكاميرا لتستغل أقصى ارتفاع ممكن في الجوال */
     .camera-container {
       width: 100%;
       max-width: 500px;
@@ -323,7 +322,7 @@
 
       try {
         let base64Data = imageBase64.split(',')[1];
-        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${geminiKey}`;
         
         let response = await fetch(url, {
           method: 'POST',
