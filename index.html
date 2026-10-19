@@ -341,7 +341,7 @@ header{
 <script>
 'use strict';
 
-// نموذج Gemini الذي اخترته سابقًا.
+// نموذج Gemini المحدد في الكود
 // قد لا يكون متاحًا رسميًا في Google API.
 const GEMINI_MODEL = 'gemini-3.8-flash';
 
@@ -700,12 +700,32 @@ $('captureBtn').onclick = async () => {
   }
 };
 
+// التعديل المطلوب: الإجابة فقط دون السؤال
 const PROMPT =
-  'اقرأ السؤال الموجود في الصورة بدقة. ' +
-  'إذا كان سؤال اختيار من متعدد فاذكر حرف الإجابة الصحيحة ' +
-  'ونص الخيار الصحيح فقط. ' +
-  'إذا كان سؤالًا مباشرًا فأجب بإيجاز ووضوح باللغة العربية. ' +
-  'لا تخمّن إن كانت الصورة غير واضحة.';
+  'اقرأ السؤال من الصورة وحدد الإجابة الصحيحة بدقة. ' +
+  'إذا كان السؤال اختيارًا من متعدد، اكتب حرف الخيار الصحيح ' +
+  'ونص الإجابة الصحيحة فقط، في سطر واحد. ' +
+  'مثال لشكل الإجابة: d. التحليل عملية لجمع المعلومات، ' +
+  'والتوصيف وثيقة تلخص نتائجه. ' +
+  'ممنوع إعادة كتابة السؤال أو رقم السؤال أو عنوانه. ' +
+  'ممنوع كتابة شرح أو مقدمة أو تبرير أو خيارات خاطئة. ' +
+  'إذا كان السؤال مباشرًا فاكتب الجواب المختصر فقط. ' +
+  'إذا كانت الصورة تحتوي عدة أسئلة، أجب عن السؤال الأوضح ' +
+  'والأقرب إلى منتصف الصورة فقط. ' +
+  'إذا تعذرت قراءة السؤال فاكتب: الصورة غير واضحة.';
+
+function cleanAnswer(text) {
+  let result = String(text || '').trim();
+
+  result = result
+    .replace(/^```(?:text)?\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .replace(/^\s*(?:السؤال|سؤال)\s*(?:رقم)?\s*\d+\s*[:：.\-–]?\s*/i, '')
+    .replace(/^\s*(?:الإجابة الصحيحة|الإجابة|الجواب الصحيح|الجواب)\s*[:：]\s*/i, '')
+    .trim();
+
+  return result;
+}
 
 function getError(data, code) {
   return data?.error?.message ||
@@ -786,7 +806,7 @@ async function askGemini(key, image) {
     throw Error('لم يرجع Gemini إجابة نصية');
   }
 
-  return answer;
+  return cleanAnswer(answer);
 }
 
 async function askCompatible(name, key, image) {
@@ -837,7 +857,7 @@ async function askCompatible(name, key, image) {
     throw Error('لم يرجع النموذج إجابة نصية');
   }
 
-  return String(answer).trim();
+  return cleanAnswer(answer);
 }
 
 function jobs() {
