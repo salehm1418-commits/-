@@ -83,14 +83,8 @@ header{
   height:48px;
   object-fit:contain;
 }
-.brand h1{
-  font-size:23px;
-  margin:0;
-}
-.brand small{
-  color:var(--muted);
-  font-size:12px;
-}
+.brand h1{font-size:23px;margin:0}
+.brand small{color:var(--muted);font-size:12px}
 .tools{display:flex;gap:7px}
 .tools button{padding:9px}
 .panel{
@@ -191,9 +185,7 @@ header{
   overflow-wrap:anywhere;
   padding:12px 4px;
 }
-.answer.choice{
-  font-size:clamp(34px,8vw,52px);
-}
+.answer.choice{font-size:clamp(34px,8vw,52px)}
 .answer.loading{
   font-size:23px;
   color:var(--muted);
@@ -231,10 +223,7 @@ header{
   overflow:auto;
   padding:17px;
 }
-.dialog h2{
-  margin:0 0 12px;
-  font-size:22px;
-}
+.dialog h2{margin:0 0 12px;font-size:22px}
 .section{
   border:1px solid var(--line);
   border-radius:16px;
@@ -264,10 +253,7 @@ header{
   text-align:left;
   overflow-wrap:anywhere;
 }
-.small{
-  color:var(--muted);
-  font-size:13px;
-}
+.small{color:var(--muted);font-size:13px}
 .accordion{
   width:100%;
   display:flex;
@@ -305,6 +291,14 @@ header{
   color:#fca5a5;
   padding:6px 10px;
   font-size:13px;
+}
+.mainKeyBadge{
+  font-size:12px;
+  color:#86efac;
+  border:1px solid #166534;
+  background:#14532d55;
+  border-radius:10px;
+  padding:6px 9px;
 }
 .addKey{
   width:100%;
@@ -426,7 +420,6 @@ header{
   <div id="answerStatus" class="status">
     وجّه الكاميرا نحو السؤال
   </div>
-
   <div id="answer" class="answer loading">
     الإجابة بتظهر هنا
   </div>
@@ -442,8 +435,8 @@ header{
     </div>
 
     <p class="small">
-      افتح الشركة بالسهم وأضف المفاتيح تحت بعض.
-      جميع الأقسام مطوية افتراضيًا.
+      كل شركة لها مفتاح أول أساسي لا ينحذف.
+      وتقدر تضيف مفاتيح أخرى وتحذفها.
     </p>
 
     <div id="providerSettings"></div>
@@ -552,15 +545,23 @@ function saveJSON(key,value){
   localStorage.setItem(key,JSON.stringify(value));
 }
 
+// المفتاح الأول دائمًا موجود
 function normalizeKeys(value){
-  if(!Array.isArray(value))return [];
+  const result=Array.isArray(value)
+    ?value.map(x=>String(x||'').trim())
+    :[];
 
-  return value
-    .map(x=>String(x||'').trim())
-    .filter(Boolean);
+  // إزالة الخانات الفارغة الإضافية فقط
+  // مع إبقاء المفتاح الأول حتى لو كان فاضيًا
+  if(!result.length)return [''];
+
+  return [
+    result[0],
+    ...result.slice(1).filter(Boolean)
+  ];
 }
 
-// ترحيل المفاتيح القديمة تلقائيًا
+// استيراد الإعدادات السابقة
 const oldOther=getJSON('laqta_three_keys',{});
 const legacyOther=getJSON('laqta_other_keys',{});
 const oldModels=getJSON('laqta_three_models',{});
@@ -619,7 +620,6 @@ if(typeof selectedKeys!=='object'||!selectedKeys){
   selectedKeys={};
 }
 
-// ترحيل اختيار مفتاح Gemini القديم
 if(selectedKeys.gemini===undefined){
   selectedKeys.gemini=
     Number(localStorage.getItem('laqta_selected_key'))||0;
@@ -685,22 +685,12 @@ $('themeBtn').onclick=()=>{
   updateTheme();
 };
 
-// اختيار المفاتيح في الوضع اليدوي
+// اختيار المفتاح يدويًا
 function renderKeyChoices(){
   const box=$('keyChoices');
   box.innerHTML='';
 
   const keys=providerKeys[provider];
-
-  if(!keys.length){
-    const note=document.createElement('p');
-    note.className='hint';
-    note.textContent=
-      'ما عندك مفاتيح لهذه الشركة. أضف مفتاحًا من 🔑 الإعدادات.';
-
-    box.append(note);
-    return;
-  }
 
   keys.forEach((key,i)=>{
     const button=document.createElement('button');
@@ -746,9 +736,7 @@ function updateMode(){
 
   $('providerHint').textContent=
     'الخدمة المختارة: '+info.name+
-    (providerKeys[provider].length
-      ?' — المفتاح '+(selectedKeys[provider]+1)
-      :'');
+    ' — المفتاح '+(selectedKeys[provider]+1);
 }
 
 $('autoBtn').onclick=()=>{
@@ -781,10 +769,17 @@ function readEditingInputs(){
       '[data-key-input="'+p.id+'"]'
     );
 
+    // لا نمسح قيم الشركة المطوية
+    if(!expandedSections[p.id])continue;
+
     editingKeys[p.id]=Array.from(
       inputs,
       input=>input.value
     );
+
+    if(!editingKeys[p.id].length){
+      editingKeys[p.id]=[''];
+    }
   }
 }
 
@@ -796,19 +791,35 @@ function createKeyItem(providerId,index,value){
   head.className='keyItemHead';
 
   const label=document.createElement('strong');
-  label.textContent='مفتاح '+(index+1);
+  label.textContent=
+    'مفتاح '+(index+1)+
+    (index===0?' — الأساسي':'');
 
-  const remove=document.createElement('button');
-  remove.type='button';
-  remove.textContent='🗑️ حذف';
+  head.append(label);
 
-  remove.onclick=()=>{
-    readEditingInputs();
-    editingKeys[providerId].splice(index,1);
-    renderProviderSettings();
-  };
+  if(index===0){
+    // المفتاح الأول لا يوجد له زر حذف
+    const badge=document.createElement('span');
+    badge.className='mainKeyBadge';
+    badge.textContent='🔒 ثابت';
+    head.append(badge);
+  }else{
+    const remove=document.createElement('button');
+    remove.type='button';
+    remove.textContent='🗑️ حذف';
 
-  head.append(label,remove);
+    remove.onclick=()=>{
+      readEditingInputs();
+
+      // حماية إضافية: ممنوع حذف المفتاح الأول
+      if(index===0)return;
+
+      editingKeys[providerId].splice(index,1);
+      renderProviderSettings();
+    };
+
+    head.append(remove);
+  }
 
   const input=document.createElement('input');
   input.type='password';
@@ -824,7 +835,6 @@ function createKeyItem(providerId,index,value){
   );
 
   item.append(head,input);
-
   return item;
 }
 
@@ -870,13 +880,11 @@ function renderProviderSettings(){
       content.classList.add('hidden');
     }
 
-    // النموذج لكل شركة
     const modelField=document.createElement('div');
     modelField.className='field';
 
     const modelLabel=document.createElement('label');
     modelLabel.textContent='النموذج';
-
     modelField.append(modelLabel);
 
     if(p.id==='gemini'){
@@ -890,11 +898,9 @@ function renderProviderSettings(){
         'اسم هذا النموذج غير مؤكد في Gemini API، وقد يسبب خطأ 404.';
 
       modelField.append(fixed,warning);
-
     }else{
       const modelInput=document.createElement('input');
       modelInput.type='text';
-      modelInput.id='model_'+p.id;
       modelInput.value=models[p.id];
       modelInput.autocomplete='off';
 
@@ -924,6 +930,7 @@ function renderProviderSettings(){
 
     add.onclick=()=>{
       readEditingInputs();
+
       editingKeys[p.id].push('');
       expandedSections[p.id]=true;
 
@@ -994,7 +1001,7 @@ $('saveSettings').onclick=()=>{
   saveJSON('laqta_all_models',models);
   saveJSON('laqta_selected_keys',selectedKeys);
 
-  // توافق مع التخزين القديم
+  // حفظ التوافق مع الإصدار السابق
   saveJSON('gemini_keys',providerKeys.gemini);
 
   saveJSON('laqta_three_keys',{
@@ -1319,7 +1326,6 @@ function jobs(){
     const keys=providerKeys[p.id];
     const selected=selectedKeys[p.id]||0;
 
-    // يبدأ بالمفتاح المختار، ثم يجرب باقي مفاتيح الشركة
     const order=keys.length
       ?Array.from(
         {length:keys.length},
@@ -1407,8 +1413,6 @@ async function analyze(image){
           job.name+' ('+(job.index+1)+'): '+
           e.message
         );
-
-        console.warn(job.name,e.message);
       }
     }
 
@@ -1425,7 +1429,7 @@ async function analyze(image){
   }
 }
 
-// أرشيف IndexedDB
+// الأرشيف
 const DB_NAME='LaqtaAIHistory';
 const STORE='questions';
 
@@ -1613,7 +1617,7 @@ function openDetail(record){
   showModal('detailModal');
 }
 
-// نسخ ومشاركة الإجابة في الأرشيف فقط
+// النسخ والمشاركة داخل الأرشيف
 $('copyArchive').onclick=async()=>{
   if(!detailRecord)return;
 
@@ -1649,7 +1653,7 @@ $('shareArchive').onclick=async()=>{
   }
 };
 
-// حفظ الصور ومشاركتها
+// حفظ ومشاركة الصور
 function downloadBlob(blob,name){
   const url=URL.createObjectURL(blob);
   const link=document.createElement('a');
