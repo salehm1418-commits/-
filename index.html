@@ -3,9 +3,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<meta name="description" content="لقطة AI - تصوير الأسئلة وتحليلها بالذكاء الاصطناعي">
 <title>لقطة AI</title>
 <link rel="icon" href="logo.png">
 
@@ -24,7 +23,7 @@
 body.light{
   color-scheme:light;
   --bg:#f3f6fb;
-  --card:#ffffff;
+  --card:#fff;
   --card2:#e9eef7;
   --line:#cbd5e1;
   --text:#152239;
@@ -45,9 +44,8 @@ button{
   border:1px solid var(--line);
   border-radius:14px;
   padding:12px;
-  transition:background .18s,border-color .18s;
 }
-button:disabled{opacity:.55;cursor:not-allowed}
+button:disabled{opacity:.5;cursor:not-allowed}
 button.active,.primary{
   background:var(--blue);
   color:#fff;
@@ -75,10 +73,24 @@ header{
   gap:10px;
   margin-bottom:12px;
 }
-.brand{display:flex;align-items:center;gap:10px}
-.brand img{width:52px;height:52px;object-fit:contain}
-.brand h1{font-size:24px;margin:0}
-.brand small{color:var(--muted);font-size:12px}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.brand img{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+}
+.brand h1{
+  font-size:23px;
+  margin:0;
+}
+.brand small{
+  color:var(--muted);
+  font-size:12px;
+}
 .tools{display:flex;gap:7px}
 .tools button{padding:9px}
 .panel{
@@ -97,7 +109,6 @@ header{
   min-height:58px;
   font-size:19px;
   font-weight:800;
-  letter-spacing:.1px;
   border-radius:16px;
 }
 .modes button.active{
@@ -112,17 +123,21 @@ header{
   margin-top:12px;
 }
 .providers button{
-  font-size:13px;
+  font-size:12px;
   font-weight:700;
   padding:13px 4px;
 }
-.keys{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+.keyChoices{
+  display:flex;
+  flex-wrap:wrap;
   gap:8px;
   margin-top:10px;
 }
-.keys button{font-size:13px;padding:11px 3px}
+.keyChoices button{
+  flex:1 1 90px;
+  font-size:13px;
+  padding:11px 5px;
+}
 .hint{
   color:var(--muted);
   font-size:13px;
@@ -156,7 +171,10 @@ header{
   padding:20px;
   margin-top:12px;
 }
-.answerPanel{text-align:center;padding:18px 12px 22px}
+.answerPanel{
+  text-align:center;
+  padding:18px 12px 22px;
+}
 .status{
   color:#49b9ff;
   font-size:14px;
@@ -173,7 +191,9 @@ header{
   overflow-wrap:anywhere;
   padding:12px 4px;
 }
-.answer.choice{font-size:clamp(34px,8vw,52px)}
+.answer.choice{
+  font-size:clamp(34px,8vw,52px);
+}
 .answer.loading{
   font-size:23px;
   color:var(--muted);
@@ -211,17 +231,22 @@ header{
   overflow:auto;
   padding:17px;
 }
-.dialog h2{margin:0 0 12px;font-size:22px}
+.dialog h2{
+  margin:0 0 12px;
+  font-size:22px;
+}
 .section{
   border:1px solid var(--line);
   border-radius:16px;
   padding:12px;
   margin:14px 0;
 }
-.section h3{margin:0 0 8px}
 .field{margin:13px 0}
-.field label{display:block;margin-bottom:7px}
-.field input{
+.field label{
+  display:block;
+  margin-bottom:7px;
+}
+.field input,.keyInput{
   width:100%;
   background:var(--bg);
   color:var(--text);
@@ -239,7 +264,57 @@ header{
   text-align:left;
   overflow-wrap:anywhere;
 }
-.small{color:var(--muted);font-size:13px}
+.small{
+  color:var(--muted);
+  font-size:13px;
+}
+.accordion{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  text-align:right;
+  background:transparent;
+  border:none;
+  padding:7px 0;
+  font-size:19px;
+  font-weight:800;
+}
+.accordion .arrow{
+  font-size:20px;
+  transition:transform .2s;
+}
+.accordion.open .arrow{
+  transform:rotate(180deg);
+}
+.keyItem{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  margin:10px 0;
+  background:var(--bg);
+}
+.keyItemHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.keyItemHead button{
+  color:#fca5a5;
+  padding:6px 10px;
+  font-size:13px;
+}
+.addKey{
+  width:100%;
+  border:1px dashed #6a9bff;
+  background:var(--card2);
+  color:var(--text);
+  font-weight:800;
+  padding:15px;
+  margin-top:8px;
+}
 .search{
   width:100%;
   background:var(--bg);
@@ -288,14 +363,13 @@ header{
   .brand img{width:44px;height:44px}
   .tools button{padding:8px}
   .dialog{padding:13px}
-  .providers button{font-size:12px}
 }
 </style>
 </head>
 
 <body>
-<div class="wrap">
 
+<div class="wrap">
 <header>
   <div class="brand">
     <img src="logo.png" alt="لقطة AI"
@@ -305,6 +379,7 @@ header{
       <small>صوّر السؤال وشاهد الإجابة</small>
     </div>
   </div>
+
   <div class="tools">
     <button id="themeBtn" aria-label="تغيير المظهر">☀️</button>
     <button id="historyBtn">📚 السجل</button>
@@ -325,24 +400,17 @@ header{
       <button data-provider="openai">🟢 OpenAI</button>
     </div>
 
-    <div id="geminiKeys" class="keys">
-      <button data-key="0">مفتاح 1</button>
-      <button data-key="1">مفتاح 2</button>
-      <button data-key="2">مفتاح 3</button>
-      <button data-key="3">مفتاح 4</button>
-    </div>
-
+    <div id="keyChoices" class="keyChoices"></div>
     <p id="providerHint" class="hint"></p>
   </div>
 
-  <p id="modeHint" class="hint">
-    الوضع التلقائي: Gemini ← OpenRouter ← OpenAI
-  </p>
+  <p id="modeHint" class="hint"></p>
 </div>
 
 <div class="camera">
   <video id="video" autoplay playsinline muted></video>
   <img id="preview" class="hidden" alt="السؤال الملتقط">
+
   <div id="cameraEmpty" class="empty hidden">
     <h2>📷 الكاميرا غير متاحة</h2>
     <p>اسمح للموقع باستخدام الكاميرا.</p>
@@ -358,6 +426,7 @@ header{
   <div id="answerStatus" class="status">
     وجّه الكاميرا نحو السؤال
   </div>
+
   <div id="answer" class="answer loading">
     الإجابة بتظهر هنا
   </div>
@@ -373,54 +442,11 @@ header{
     </div>
 
     <p class="small">
-      المفاتيح محفوظة في متصفحك الحالي.
-      لا تضفها مباشرة إلى كود GitHub.
+      افتح الشركة بالسهم وأضف المفاتيح تحت بعض.
+      جميع الأقسام مطوية افتراضيًا.
     </p>
 
-    <div class="section">
-      <h3>🔵 Gemini — أربعة مفاتيح</h3>
-      <div class="field">
-        <label>نموذج Gemini الثابت</label>
-        <div class="fixed">gemini-3.8-flash</div>
-        <p class="small">
-          توفر اسم هذا النموذج في واجهة Gemini API غير مؤكد،
-          وقد يسبب خطأ 404.
-        </p>
-      </div>
-      <div id="geminiInputs"></div>
-    </div>
-
-    <div class="section">
-      <h3>🟣 OpenRouter</h3>
-      <div class="field">
-        <label>مفتاح OpenRouter</label>
-        <input id="openrouterKey" type="password"
-          autocomplete="off" placeholder="sk-or-...">
-      </div>
-      <div class="field">
-        <label>نموذج OpenRouter</label>
-        <input id="openrouterModel" type="text"
-          autocomplete="off">
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>🟢 OpenAI</h3>
-      <div class="field">
-        <label>مفتاح OpenAI</label>
-        <input id="openaiKey" type="password"
-          autocomplete="off" placeholder="sk-...">
-      </div>
-      <div class="field">
-        <label>نموذج OpenAI</label>
-        <input id="openaiModel" type="text"
-          autocomplete="off">
-      </div>
-      <p class="small">
-        استخدام OpenAI API يحتاج رصيد API متاحًا،
-        وهو منفصل عن اشتراك ChatGPT.
-      </p>
-    </div>
+    <div id="providerSettings"></div>
 
     <div class="row">
       <button data-close="settingsModal">إلغاء</button>
@@ -489,14 +515,28 @@ header{
 <script>
 'use strict';
 
-// النماذج
 const GEMINI_MODEL='gemini-3.8-flash';
-const GEMINI_COUNT=4;
 
-const DEFAULT_MODELS={
-  openrouter:'google/gemini-2.5-flash',
-  openai:'gpt-4.1-mini'
-};
+const PROVIDERS=[
+  {
+    id:'gemini',
+    name:'Gemini',
+    icon:'🔵',
+    defaultModel:GEMINI_MODEL
+  },
+  {
+    id:'openrouter',
+    name:'OpenRouter',
+    icon:'🟣',
+    defaultModel:'google/gemini-2.5-flash'
+  },
+  {
+    id:'openai',
+    name:'OpenAI',
+    icon:'🟢',
+    defaultModel:'gpt-4.1-mini'
+  }
+];
 
 const $=id=>document.getElementById(id);
 
@@ -512,37 +552,57 @@ function saveJSON(key,value){
   localStorage.setItem(key,JSON.stringify(value));
 }
 
-// الاحتفاظ بأول أربعة مفاتيح Gemini المحفوظة
-let storedGemini=getJSON('gemini_keys',[]);
+function normalizeKeys(value){
+  if(!Array.isArray(value))return [];
 
-if(!Array.isArray(storedGemini)){
-  storedGemini=[];
+  return value
+    .map(x=>String(x||'').trim())
+    .filter(Boolean);
 }
 
-let geminiKeys=Array.from(
-  {length:GEMINI_COUNT},
-  (_,i)=>String(storedGemini[i]||'')
-);
-
+// ترحيل المفاتيح القديمة تلقائيًا
+const oldOther=getJSON('laqta_three_keys',{});
 const legacyOther=getJSON('laqta_other_keys',{});
-
-let otherKeys=getJSON('laqta_three_keys',{
-  openrouter:legacyOther.openrouter||'',
-  openai:''
-});
-
-let models=getJSON('laqta_three_models',{});
+const oldModels=getJSON('laqta_three_models',{});
 const legacyModels=getJSON('laqta_models',{});
 
-models={
-  openrouter:
-    models.openrouter||
-    legacyModels.openrouter||
-    DEFAULT_MODELS.openrouter,
-  openai:
-    models.openai||
-    DEFAULT_MODELS.openai
+const savedAll=getJSON('laqta_all_provider_keys',null);
+
+let providerKeys={
+  gemini:normalizeKeys(
+    savedAll?.gemini??getJSON('gemini_keys',[])
+  ),
+  openrouter:normalizeKeys(
+    savedAll?.openrouter??[
+      oldOther.openrouter||legacyOther.openrouter||''
+    ]
+  ),
+  openai:normalizeKeys(
+    savedAll?.openai??[
+      oldOther.openai||''
+    ]
+  )
 };
+
+let models={
+  gemini:GEMINI_MODEL,
+  openrouter:
+    oldModels.openrouter||
+    legacyModels.openrouter||
+    'google/gemini-2.5-flash',
+  openai:
+    oldModels.openai||
+    'gpt-4.1-mini'
+};
+
+const savedModels=getJSON('laqta_all_models',null);
+
+if(savedModels){
+  models.openrouter=
+    savedModels.openrouter||models.openrouter;
+  models.openai=
+    savedModels.openai||models.openai;
+}
 
 let mode=localStorage.getItem('laqta_mode')==='manual'
   ?'manual':'auto';
@@ -553,13 +613,26 @@ let provider=['gemini','openrouter','openai'].includes(
   ?localStorage.getItem('laqta_provider')
   :'gemini';
 
-let selectedKey=Math.min(
-  GEMINI_COUNT-1,
-  Math.max(
+let selectedKeys=getJSON('laqta_selected_keys',{});
+
+if(typeof selectedKeys!=='object'||!selectedKeys){
+  selectedKeys={};
+}
+
+// ترحيل اختيار مفتاح Gemini القديم
+if(selectedKeys.gemini===undefined){
+  selectedKeys.gemini=
+    Number(localStorage.getItem('laqta_selected_key'))||0;
+}
+
+for(const p of PROVIDERS){
+  const index=Number(selectedKeys[p.id])||0;
+
+  selectedKeys[p.id]=Math.max(
     0,
-    Number(localStorage.getItem('laqta_selected_key'))||0
-  )
-);
+    Math.min(index,providerKeys[p.id].length-1)
+  );
+}
 
 let stream=null;
 let shot=null;
@@ -568,6 +641,7 @@ let requestId=0;
 let activeController=null;
 let detailRecord=null;
 
+// الواجهة
 function status(message){
   $('answerStatus').textContent=message;
 }
@@ -593,23 +667,59 @@ function hideModal(id){
   $(id).classList.add('hidden');
 }
 
-// المظهر
 function updateTheme(){
   const light=localStorage.getItem('laqta_theme')==='light';
+
   document.body.classList.toggle('light',light);
   $('themeBtn').textContent=light?'🌙':'☀️';
 }
 
 $('themeBtn').onclick=()=>{
   const light=document.body.classList.contains('light');
+
   localStorage.setItem(
     'laqta_theme',
     light?'dark':'light'
   );
+
   updateTheme();
 };
 
-// تلقائي / يدوي
+// اختيار المفاتيح في الوضع اليدوي
+function renderKeyChoices(){
+  const box=$('keyChoices');
+  box.innerHTML='';
+
+  const keys=providerKeys[provider];
+
+  if(!keys.length){
+    const note=document.createElement('p');
+    note.className='hint';
+    note.textContent=
+      'ما عندك مفاتيح لهذه الشركة. أضف مفتاحًا من 🔑 الإعدادات.';
+
+    box.append(note);
+    return;
+  }
+
+  keys.forEach((key,i)=>{
+    const button=document.createElement('button');
+    button.textContent='مفتاح '+(i+1);
+
+    if(i===selectedKeys[provider]){
+      button.classList.add('active');
+    }
+
+    button.onclick=()=>{
+      selectedKeys[provider]=i;
+      saveJSON('laqta_selected_keys',selectedKeys);
+      updateMode();
+    };
+
+    box.append(button);
+  });
+}
+
 function updateMode(){
   $('autoBtn').classList.toggle('active',mode==='auto');
   $('manualBtn').classList.toggle('active',mode==='manual');
@@ -620,7 +730,7 @@ function updateMode(){
 
   $('modeHint').textContent=
     mode==='auto'
-      ?'الوضع التلقائي: مفاتيح Gemini الأربعة ← OpenRouter ← OpenAI'
+      ?'الوضع التلقائي: جميع مفاتيح Gemini ← OpenRouter ← OpenAI'
       :'الوضع اليدوي: الشركة والمفتاح المحددان فقط';
 
   document.querySelectorAll('[data-provider]').forEach(b=>{
@@ -630,28 +740,14 @@ function updateMode(){
     );
   });
 
-  document.querySelectorAll('[data-key]').forEach(b=>{
-    b.classList.toggle(
-      'active',
-      Number(b.dataset.key)===selectedKey
-    );
-  });
+  renderKeyChoices();
 
-  $('geminiKeys').classList.toggle(
-    'hidden',
-    provider!=='gemini'
-  );
-
-  const names={
-    gemini:'Gemini',
-    openrouter:'OpenRouter',
-    openai:'OpenAI'
-  };
+  const info=PROVIDERS.find(p=>p.id===provider);
 
   $('providerHint').textContent=
-    'الخدمة المختارة: '+names[provider]+
-    (provider==='gemini'
-      ?' — المفتاح '+(selectedKey+1)
+    'الخدمة المختارة: '+info.name+
+    (providerKeys[provider].length
+      ?' — المفتاح '+(selectedKeys[provider]+1)
       :'');
 }
 
@@ -675,73 +771,251 @@ document.querySelectorAll('[data-provider]').forEach(b=>{
   };
 });
 
-document.querySelectorAll('[data-key]').forEach(b=>{
-  b.onclick=()=>{
-    selectedKey=Number(b.dataset.key);
-    localStorage.setItem('laqta_selected_key',selectedKey);
-    updateMode();
-  };
-});
+// إعدادات جميع الشركات
+let editingKeys={};
+let expandedSections={};
 
-// الإعدادات
-function renderSettings(){
-  $('geminiInputs').innerHTML='';
+function readEditingInputs(){
+  for(const p of PROVIDERS){
+    const inputs=document.querySelectorAll(
+      '[data-key-input="'+p.id+'"]'
+    );
 
-  geminiKeys.forEach((key,i)=>{
-    const box=document.createElement('div');
-    box.className='field';
-
-    const label=document.createElement('label');
-    label.textContent='مفتاح Gemini '+(i+1);
-
-    const input=document.createElement('input');
-    input.type='password';
-    input.autocomplete='off';
-    input.id='gKey'+i;
-    input.value=key;
-    input.placeholder='AIza...';
-
-    box.append(label,input);
-    $('geminiInputs').append(box);
-  });
-
-  $('openrouterKey').value=otherKeys.openrouter||'';
-  $('openaiKey').value=otherKeys.openai||'';
-  $('openrouterModel').value=models.openrouter;
-  $('openaiModel').value=models.openai;
+    editingKeys[p.id]=Array.from(
+      inputs,
+      input=>input.value
+    );
+  }
 }
 
-$('settingsBtn').onclick=()=>{
-  renderSettings();
-  showModal('settingsModal');
-};
+function createKeyItem(providerId,index,value){
+  const item=document.createElement('div');
+  item.className='keyItem';
 
-$('saveSettings').onclick=()=>{
-  geminiKeys=Array.from(
-    {length:GEMINI_COUNT},
-    (_,i)=>$('gKey'+i).value.trim()
+  const head=document.createElement('div');
+  head.className='keyItemHead';
+
+  const label=document.createElement('strong');
+  label.textContent='مفتاح '+(index+1);
+
+  const remove=document.createElement('button');
+  remove.type='button';
+  remove.textContent='🗑️ حذف';
+
+  remove.onclick=()=>{
+    readEditingInputs();
+    editingKeys[providerId].splice(index,1);
+    renderProviderSettings();
+  };
+
+  head.append(label,remove);
+
+  const input=document.createElement('input');
+  input.type='password';
+  input.className='keyInput';
+  input.autocomplete='off';
+  input.placeholder='ألصق مفتاح API هنا';
+  input.value=value;
+  input.dataset.keyInput=providerId;
+
+  input.setAttribute(
+    'aria-label',
+    'مفتاح '+(index+1)
   );
 
-  otherKeys={
-    openrouter:$('openrouterKey').value.trim(),
-    openai:$('openaiKey').value.trim()
+  item.append(head,input);
+
+  return item;
+}
+
+function renderProviderSettings(){
+  const container=$('providerSettings');
+  container.innerHTML='';
+
+  PROVIDERS.forEach(p=>{
+    const section=document.createElement('div');
+    section.className='section';
+
+    const toggle=document.createElement('button');
+    toggle.className='accordion';
+    toggle.type='button';
+
+    const title=document.createElement('span');
+    title.textContent=
+      p.icon+' '+p.name+
+      ' ('+editingKeys[p.id].length+')';
+
+    const arrow=document.createElement('span');
+    arrow.className='arrow';
+    arrow.textContent='⌄';
+
+    toggle.append(title,arrow);
+
+    const open=!!expandedSections[p.id];
+
+    toggle.classList.toggle('open',open);
+    toggle.setAttribute('aria-expanded',String(open));
+
+    toggle.onclick=()=>{
+      readEditingInputs();
+      expandedSections[p.id]=!expandedSections[p.id];
+      renderProviderSettings();
+    };
+
+    section.append(toggle);
+
+    const content=document.createElement('div');
+
+    if(!open){
+      content.classList.add('hidden');
+    }
+
+    // النموذج لكل شركة
+    const modelField=document.createElement('div');
+    modelField.className='field';
+
+    const modelLabel=document.createElement('label');
+    modelLabel.textContent='النموذج';
+
+    modelField.append(modelLabel);
+
+    if(p.id==='gemini'){
+      const fixed=document.createElement('div');
+      fixed.className='fixed';
+      fixed.textContent=GEMINI_MODEL;
+
+      const warning=document.createElement('p');
+      warning.className='small';
+      warning.textContent=
+        'اسم هذا النموذج غير مؤكد في Gemini API، وقد يسبب خطأ 404.';
+
+      modelField.append(fixed,warning);
+
+    }else{
+      const modelInput=document.createElement('input');
+      modelInput.type='text';
+      modelInput.id='model_'+p.id;
+      modelInput.value=models[p.id];
+      modelInput.autocomplete='off';
+
+      modelInput.addEventListener('input',()=>{
+        models[p.id]=modelInput.value;
+      });
+
+      modelField.append(modelInput);
+    }
+
+    content.append(modelField);
+
+    const keyList=document.createElement('div');
+
+    editingKeys[p.id].forEach((key,i)=>{
+      keyList.append(
+        createKeyItem(p.id,i,key)
+      );
+    });
+
+    content.append(keyList);
+
+    const add=document.createElement('button');
+    add.className='addKey';
+    add.type='button';
+    add.textContent='＋ إضافة مفتاح جديد';
+
+    add.onclick=()=>{
+      readEditingInputs();
+      editingKeys[p.id].push('');
+      expandedSections[p.id]=true;
+
+      renderProviderSettings();
+
+      const inputs=document.querySelectorAll(
+        '[data-key-input="'+p.id+'"]'
+      );
+
+      const last=inputs[inputs.length-1];
+
+      if(last){
+        last.focus();
+        last.scrollIntoView({
+          behavior:'smooth',
+          block:'nearest'
+        });
+      }
+    };
+
+    content.append(add);
+    section.append(content);
+    container.append(section);
+  });
+}
+
+function openSettings(){
+  editingKeys={
+    gemini:[...providerKeys.gemini],
+    openrouter:[...providerKeys.openrouter],
+    openai:[...providerKeys.openai]
   };
 
-  models={
-    openrouter:
-      $('openrouterModel').value.trim()||
-      DEFAULT_MODELS.openrouter,
-    openai:
-      $('openaiModel').value.trim()||
-      DEFAULT_MODELS.openai
+  expandedSections={
+    gemini:false,
+    openrouter:false,
+    openai:false
   };
 
-  saveJSON('gemini_keys',geminiKeys);
-  saveJSON('laqta_three_keys',otherKeys);
-  saveJSON('laqta_three_models',models);
+  renderProviderSettings();
+  showModal('settingsModal');
+}
+
+$('settingsBtn').onclick=openSettings;
+
+$('saveSettings').onclick=()=>{
+  readEditingInputs();
+
+  for(const p of PROVIDERS){
+    providerKeys[p.id]=normalizeKeys(
+      editingKeys[p.id]
+    );
+
+    if(selectedKeys[p.id]>=providerKeys[p.id].length){
+      selectedKeys[p.id]=0;
+    }
+  }
+
+  models.openrouter=
+    models.openrouter.trim()||
+    'google/gemini-2.5-flash';
+
+  models.openai=
+    models.openai.trim()||
+    'gpt-4.1-mini';
+
+  saveJSON('laqta_all_provider_keys',providerKeys);
+  saveJSON('laqta_all_models',models);
+  saveJSON('laqta_selected_keys',selectedKeys);
+
+  // توافق مع التخزين القديم
+  saveJSON('gemini_keys',providerKeys.gemini);
+
+  saveJSON('laqta_three_keys',{
+    openrouter:providerKeys.openrouter[0]||'',
+    openai:providerKeys.openai[0]||''
+  });
+
+  saveJSON('laqta_three_models',{
+    openrouter:models.openrouter,
+    openai:models.openai
+  });
+
+  localStorage.setItem(
+    'laqta_selected_key',
+    selectedKeys.gemini
+  );
 
   hideModal('settingsModal');
-  status('تم حفظ المفاتيح والإعدادات ✅');
+  updateMode();
+
+  status('تم حفظ جميع المفاتيح والإعدادات ✅');
 };
 
 document.querySelectorAll('[data-close]').forEach(b=>{
@@ -750,7 +1024,9 @@ document.querySelectorAll('[data-close]').forEach(b=>{
 
 document.querySelectorAll('.modal').forEach(modal=>{
   modal.addEventListener('click',e=>{
-    if(e.target===modal)hideModal(modal.id);
+    if(e.target===modal){
+      hideModal(modal.id);
+    }
   });
 });
 
@@ -799,7 +1075,10 @@ function capture(){
 
   const scale=Math.min(
     1,
-    1600/Math.max(video.videoWidth,video.videoHeight)
+    1600/Math.max(
+      video.videoWidth,
+      video.videoHeight
+    )
   );
 
   canvas.width=Math.round(video.videoWidth*scale);
@@ -867,7 +1146,7 @@ $('captureBtn').onclick=async()=>{
   }
 };
 
-// الجواب فقط، دون إعادة السؤال
+// تعليمات الإجابة
 const PROMPT=[
   'اقرأ السؤال الواضح من الصورة وحدد إجابته الصحيحة.',
   'إذا كان اختيارًا من متعدد، اكتب حرف الخيار الصحيح ونصه فقط.',
@@ -1021,51 +1300,47 @@ async function askCompatible(name,key,image){
   return cleanAnswer(answer);
 }
 
-// ترتيب الشركات والمفاتيح
+// قائمة المحاولات
 function jobs(){
   if(mode==='manual'){
-    if(provider==='gemini'){
-      return [{
-        name:'Gemini',
-        kind:'gemini',
-        key:geminiKeys[selectedKey],
-        index:selectedKey
-      }];
-    }
+    const info=PROVIDERS.find(p=>p.id===provider);
 
     return [{
-      name:provider==='openai'?'OpenAI':'OpenRouter',
+      name:info.name,
       kind:provider,
-      key:otherKeys[provider]
+      key:providerKeys[provider][selectedKeys[provider]]||'',
+      index:selectedKeys[provider]
     }];
   }
 
-  const order=Array.from(
-    {length:GEMINI_COUNT},
-    (_,i)=>(selectedKey+i)%GEMINI_COUNT
-  );
+  const allJobs=[];
 
-  return [
-    ...order.map(i=>({
-      name:'Gemini',
-      kind:'gemini',
-      key:geminiKeys[i],
-      index:i
-    })),
-    {
-      name:'OpenRouter',
-      kind:'openrouter',
-      key:otherKeys.openrouter
-    },
-    {
-      name:'OpenAI',
-      kind:'openai',
-      key:otherKeys.openai
+  for(const p of PROVIDERS){
+    const keys=providerKeys[p.id];
+    const selected=selectedKeys[p.id]||0;
+
+    // يبدأ بالمفتاح المختار، ثم يجرب باقي مفاتيح الشركة
+    const order=keys.length
+      ?Array.from(
+        {length:keys.length},
+        (_,i)=>(selected+i)%keys.length
+      )
+      :[];
+
+    for(const i of order){
+      allJobs.push({
+        name:p.name,
+        kind:p.id,
+        key:keys[i],
+        index:i
+      });
     }
-  ];
+  }
+
+  return allJobs;
 }
 
-// تحليل الصورة
+// تحليل السؤال
 async function analyze(image){
   busy=true;
   const myId=++requestId;
@@ -1077,40 +1352,45 @@ async function analyze(image){
   if(!attempts.length){
     busy=false;
     status('لا توجد مفاتيح محفوظة');
-    setAnswer('اضغط 🔑 وأضف مفتاح API أولًا','error');
+    setAnswer(
+      'اضغط 🔑 وأضف مفتاح API أولًا',
+      'error'
+    );
     return;
   }
 
   const errors=[];
 
   try{
-    for(let i=0;i<attempts.length;i++){
-      const job=attempts[i];
-
+    for(const job of attempts){
       if(myId!==requestId)return;
 
       status(
         '⏳ جارٍ التحليل عبر '+job.name+
-        (job.kind==='gemini'
-          ?' — مفتاح '+(job.index+1)
-          :'')
+        ' — مفتاح '+(job.index+1)
       );
 
       try{
         const answer=job.kind==='gemini'
           ?await askGemini(job.key,image)
-          :await askCompatible(job.kind,job.key,image);
+          :await askCompatible(
+              job.kind,job.key,image
+            );
 
         if(myId!==requestId)return;
 
         setAnswer(answer);
-        status('تم التحليل عبر '+job.name+' ✓');
+        status(
+          'تم التحليل عبر '+job.name+
+          ' — مفتاح '+(job.index+1)+' ✓'
+        );
 
         try{
           await addHistory({
             image,
             answer,
-            provider:job.name,
+            provider:job.name+
+              ' — مفتاح '+(job.index+1),
             createdAt:Date.now()
           });
         }catch(e){
@@ -1123,7 +1403,11 @@ async function analyze(image){
       }catch(e){
         if(myId!==requestId)return;
 
-        errors.push(job.name+': '+e.message);
+        errors.push(
+          job.name+' ('+(job.index+1)+'): '+
+          e.message
+        );
+
         console.warn(job.name,e.message);
       }
     }
@@ -1131,7 +1415,8 @@ async function analyze(image){
     status('تعذر تحليل السؤال');
 
     setAnswer(
-      errors.join('\n\n')||'حدث خطأ غير معروف',
+      errors.join('\n\n')||
+      'حدث خطأ غير معروف',
       'error'
     );
 
@@ -1191,7 +1476,9 @@ async function allHistory(){
       .objectStore(STORE).getAll();
 
     req.onsuccess=()=>resolve(
-      req.result.sort((a,b)=>b.createdAt-a.createdAt)
+      req.result.sort(
+        (a,b)=>b.createdAt-a.createdAt
+      )
     );
     req.onerror=()=>reject(req.error);
   });
@@ -1226,7 +1513,8 @@ async function clearHistory(){
 let historyCache=[];
 
 async function renderHistory(){
-  $('historyList').textContent='جاري تحميل السجل...';
+  $('historyList').textContent=
+    'جاري تحميل السجل...';
 
   try{
     historyCache=await allHistory();
@@ -1238,9 +1526,10 @@ async function renderHistory(){
 }
 
 function filterHistory(){
-  const q=$('historySearch').value.trim().toLowerCase();
-  const list=$('historyList');
+  const q=$('historySearch').value
+    .trim().toLowerCase();
 
+  const list=$('historyList');
   list.innerHTML='';
 
   const records=historyCache.filter(r=>
@@ -1316,19 +1605,22 @@ function openDetail(record){
   $('detailImage').src=record.image;
 
   $('detailDate').textContent=
-    new Date(record.createdAt).toLocaleString('ar-SA')+
+    new Date(record.createdAt)
+      .toLocaleString('ar-SA')+
     ' — '+(record.provider||'AI');
 
   $('detailAnswer').textContent=record.answer;
   showModal('detailModal');
 }
 
-// النسخ والمشاركة في الأرشيف
+// نسخ ومشاركة الإجابة في الأرشيف فقط
 $('copyArchive').onclick=async()=>{
   if(!detailRecord)return;
 
   try{
-    await navigator.clipboard.writeText(detailRecord.answer);
+    await navigator.clipboard.writeText(
+      detailRecord.answer
+    );
     alert('تم نسخ الإجابة ✅');
   }catch{
     alert('تعذر النسخ');
@@ -1345,7 +1637,9 @@ $('shareArchive').onclick=async()=>{
         text:detailRecord.answer
       });
     }else{
-      await navigator.clipboard.writeText(detailRecord.answer);
+      await navigator.clipboard.writeText(
+        detailRecord.answer
+      );
       alert('تم نسخ الإجابة للمشاركة');
     }
   }catch(e){
@@ -1355,7 +1649,7 @@ $('shareArchive').onclick=async()=>{
   }
 };
 
-// الصور
+// حفظ الصور ومشاركتها
 function downloadBlob(blob,name){
   const url=URL.createObjectURL(blob);
   const link=document.createElement('a');
@@ -1366,7 +1660,10 @@ function downloadBlob(blob,name){
   link.click();
   link.remove();
 
-  setTimeout(()=>URL.revokeObjectURL(url),10000);
+  setTimeout(
+    ()=>URL.revokeObjectURL(url),
+    10000
+  );
 }
 
 async function dataToBlob(data){
@@ -1374,7 +1671,10 @@ async function dataToBlob(data){
 }
 
 async function saveData(data,name){
-  downloadBlob(await dataToBlob(data),name);
+  downloadBlob(
+    await dataToBlob(data),
+    name
+  );
 }
 
 async function shareBlob(blob,name,text){
@@ -1382,7 +1682,10 @@ async function shareBlob(blob,name,text){
     type:blob.type||'image/png'
   });
 
-  if(navigator.share&&navigator.canShare?.({files:[file]})){
+  if(
+    navigator.share&&
+    navigator.canShare?.({files:[file]})
+  ){
     await navigator.share({
       files:[file],
       title:'لقطة AI',
@@ -1411,7 +1714,10 @@ function wrapLines(ctx,text,maxWidth){
     for(const word of paragraph.split(/\s+/)){
       const test=line?line+' '+word:word;
 
-      if(ctx.measureText(test).width>maxWidth&&line){
+      if(
+        ctx.measureText(test).width>maxWidth&&
+        line
+      ){
         lines.push(line);
         line=word;
       }else{
@@ -1430,7 +1736,10 @@ async function combinedBlob(record){
   const width=1000;
   const padding=50;
 
-  let imageHeight=Math.round(img.height*width/img.width);
+  let imageHeight=Math.round(
+    img.height*width/img.width
+  );
+
   imageHeight=Math.min(imageHeight,1200);
 
   const canvas=document.createElement('canvas');
@@ -1439,20 +1748,30 @@ async function combinedBlob(record){
   ctx.font='bold 38px system-ui';
 
   const lines=wrapLines(
-    ctx,record.answer,width-padding*2
+    ctx,
+    record.answer,
+    width-padding*2
   );
 
   canvas.width=width;
   canvas.height=
-    imageHeight+padding*3+
+    imageHeight+
+    padding*3+
     Math.max(130,lines.length*62);
 
-  ctx.fillStyle='#ffffff';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#fff';
+  ctx.fillRect(
+    0,0,canvas.width,canvas.height
+  );
 
   ctx.fillStyle='#0b1220';
-  ctx.fillRect(0,0,width,imageHeight+padding);
-  ctx.drawImage(img,0,0,width,imageHeight);
+  ctx.fillRect(
+    0,0,width,imageHeight+padding
+  );
+
+  ctx.drawImage(
+    img,0,0,width,imageHeight
+  );
 
   ctx.direction='rtl';
   ctx.textAlign='right';
@@ -1469,10 +1788,16 @@ async function combinedBlob(record){
 
   ctx.fillStyle='#6b7280';
   ctx.font='24px system-ui';
-  ctx.fillText('لقطة AI',width-padding,canvas.height-25);
+  ctx.fillText(
+    'لقطة AI',
+    width-padding,
+    canvas.height-25
+  );
 
   return new Promise(resolve=>{
-    canvas.toBlob(resolve,'image/png');
+    canvas.toBlob(
+      resolve,'image/png'
+    );
   });
 }
 
@@ -1480,7 +1805,10 @@ $('saveOriginal').onclick=async()=>{
   if(!detailRecord)return;
 
   try{
-    await saveData(detailRecord.image,'laqta-question.jpg');
+    await saveData(
+      detailRecord.image,
+      'laqta-question.jpg'
+    );
   }catch{
     alert('تعذر حفظ الصورة');
   }
@@ -1496,7 +1824,9 @@ $('shareOriginal').onclick=async()=>{
       detailRecord.answer
     );
   }catch(e){
-    if(e.name!=='AbortError')alert('تعذرت المشاركة');
+    if(e.name!=='AbortError'){
+      alert('تعذرت المشاركة');
+    }
   }
 };
 
@@ -1523,11 +1853,13 @@ $('shareCombined').onclick=async()=>{
       detailRecord.answer
     );
   }catch(e){
-    if(e.name!=='AbortError')alert('تعذرت المشاركة');
+    if(e.name!=='AbortError'){
+      alert('تعذرت المشاركة');
+    }
   }
 };
 
-// تشغيل
+// تشغيل التطبيق
 updateTheme();
 updateMode();
 startCamera();
