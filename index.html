@@ -5,489 +5,443 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" id="themeColor" content="#080c14">
-
 <title>لقطة AI | حل الأسئلة بالكاميرا</title>
-<meta name="description" content="حل الأسئلة بالكاميرا وحفظها ومشاركتها">
-<meta property="og:title" content="لقطة AI">
-<meta property="og:image" content="https://salehm1418-commits.github.io/-/logo.png">
+<meta name="description" content="حل الأسئلة بالكاميرا وحفظ الإجابات ومشاركتها">
 <link rel="icon" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
+<meta property="og:title" content="لقطة AI">
+<meta property="og:image" content="https://salehm1418-commits.github.io/-/logo.png">
 
 <script>
 try {
-  document.documentElement.dataset.theme =
-    localStorage.getItem("laqta_theme") === "light"
-      ? "light" : "dark";
+ document.documentElement.dataset.theme =
+ localStorage.getItem("laqta_theme")==="light"?"light":"dark";
 } catch(e) {
-  document.documentElement.dataset.theme = "dark";
+ document.documentElement.dataset.theme="dark";
 }
 </script>
 
 <style>
-:root {
-  color-scheme:dark;
-  --bg:#080c14;
-  --surface:#0d1525;
-  --panel:#111c30;
-  --line:#28364c;
-  --text:#fff;
-  --muted:#a6b5ca;
-  --button:#1b293e;
-  --input:#070f1d;
-  --blue:#2563eb;
-  --green:#059669;
-  --shadow:#0005;
+:root{
+ color-scheme:dark;
+ --bg:#080c14;
+ --surface:#0d1525;
+ --panel:#111c30;
+ --line:#28364c;
+ --text:#fff;
+ --muted:#a6b5ca;
+ --button:#1b293e;
+ --input:#070f1d;
+ --blue:#2563eb;
+ --green:#059669;
 }
-
-html[data-theme="light"] {
-  color-scheme:light;
-  --bg:#f3f6fc;
-  --surface:#fff;
-  --panel:#fff;
-  --line:#d5deeb;
-  --text:#162238;
-  --muted:#617188;
-  --button:#e7eef9;
-  --input:#f8faff;
-  --shadow:#172b4820;
+html[data-theme="light"]{
+ color-scheme:light;
+ --bg:#f3f6fc;
+ --surface:#fff;
+ --panel:#fff;
+ --line:#d5deeb;
+ --text:#162238;
+ --muted:#617188;
+ --button:#e7eef9;
+ --input:#f8faff;
 }
-
-* { box-sizing:border-box; }
-
-html,body {
-  margin:0;
-  min-height:100%;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,sans-serif;
+*{box-sizing:border-box}
+html,body{
+ margin:0;
+ min-height:100%;
+ background:var(--bg);
+ color:var(--text);
+ font-family:system-ui,-apple-system,sans-serif;
 }
-
-button,input { font:inherit; }
-
-button {
-  cursor:pointer;
-  color:var(--text);
+button,input,select{font:inherit}
+button{cursor:pointer;color:var(--text)}
+button:disabled{opacity:.4;cursor:not-allowed}
+header{
+ position:sticky;
+ top:0;
+ z-index:30;
+ background:var(--surface);
+ border-bottom:1px solid var(--line);
+ padding:calc(env(safe-area-inset-top) + 10px) 12px 12px;
 }
-
-button:disabled {
-  opacity:.4;
-  cursor:not-allowed;
+.headline{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
 }
-
-header {
-  position:sticky;
-  top:0;
-  z-index:30;
-  background:var(--surface);
-  border-bottom:1px solid var(--line);
-  padding:calc(env(safe-area-inset-top) + 10px) 12px 12px;
-  box-shadow:0 8px 25px var(--shadow);
+.identity{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ min-width:0;
 }
-
-.headline {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
+.identity img{
+ width:47px;
+ height:47px;
+ object-fit:contain;
+ border-radius:12px;
+ border:1px solid var(--line);
 }
-
-.identity {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  min-width:0;
+.identity h1{font-size:19px;margin:0}
+.identity p{
+ font-size:10px;
+ color:var(--muted);
+ margin:3px 0 0;
 }
-
-.identity img {
-  width:49px;
-  height:49px;
-  object-fit:contain;
-  border-radius:13px;
-  border:1px solid var(--line);
+.top-actions{display:flex;gap:5px}
+.top-btn{
+ min-height:44px;
+ padding:0 8px;
+ border:1px solid var(--line);
+ border-radius:11px;
+ background:var(--button);
+ font-size:13px;
+ font-weight:800;
 }
-
-.identity h1 {
-  font-size:20px;
-  margin:0;
+.icon-btn{font-size:21px}
+.modes{
+ display:flex;
+ gap:8px;
+ margin-top:12px;
 }
-
-.identity p {
-  font-size:10px;
-  color:var(--muted);
-  margin:3px 0 0;
+.mode{
+ flex:1;
+ min-height:48px;
+ border:1px solid var(--line);
+ background:var(--button);
+ border-radius:12px;
+ font-weight:800;
 }
-
-.top-actions {
-  display:flex;
-  align-items:center;
-  gap:5px;
+.mode.active,.key-number.active,.provider-choice.active{
+ background:var(--blue);
+ color:white;
+ border-color:#5b92ff;
 }
-
-.top-btn {
-  min-height:45px;
-  border:1px solid var(--line);
-  border-radius:11px;
-  background:var(--button);
-  font-size:13px;
-  font-weight:800;
-  padding:0 9px;
+.manual-panel{
+ display:none;
+ margin-top:10px;
+ padding:10px;
+ border:1px solid var(--line);
+ border-radius:12px;
 }
-
-.icon-btn {
-  min-width:43px;
-  padding:0 7px;
-  font-size:22px;
+.manual-panel.visible{display:block}
+.provider-choices{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:6px;
 }
-
-.modes {
-  display:flex;
-  gap:9px;
-  margin-top:12px;
+.provider-choice{
+ min-height:38px;
+ background:var(--button);
+ border:1px solid var(--line);
+ border-radius:9px;
+ font-size:12px;
+ font-weight:800;
 }
-
-.mode {
-  flex:1;
-  min-height:49px;
-  border:1px solid var(--line);
-  background:var(--button);
-  border-radius:12px;
-  font-weight:800;
-  font-size:17px;
+.key-numbers{
+ display:flex;
+ gap:6px;
+ margin-top:9px;
 }
-
-.mode.active,.number.active {
-  background:var(--blue);
-  border-color:#4f8cff;
-  color:white;
+.key-number{
+ flex:1;
+ min-height:38px;
+ border:1px solid var(--line);
+ background:var(--button);
+ border-radius:9px;
+ font-weight:800;
 }
-
-.numbers {
-  display:none;
-  gap:7px;
-  margin-top:10px;
-  align-items:center;
+.selected-label{
+ font-size:12px;
+ color:var(--muted);
+ margin-top:8px;
 }
-
-.numbers.visible { display:flex; }
-
-.numbers span {
-  font-size:12px;
-  color:var(--muted);
+main{
+ max-width:680px;
+ margin:auto;
+ padding:12px 12px 30px;
 }
-
-.number {
-  flex:1;
-  min-height:42px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  background:var(--button);
-  font-weight:800;
+.camera{
+ position:relative;
+ height:62dvh;
+ min-height:300px;
+ background:#000;
+ border:1px solid var(--line);
+ border-radius:18px;
+ overflow:hidden;
 }
-
-main {
-  max-width:680px;
-  margin:auto;
-  padding:12px 12px 30px;
+video,#photo{
+ display:block;
+ width:100%;
+ height:100%;
+ object-fit:contain;
+ background:#000;
 }
-
-.camera {
-  position:relative;
-  height:62dvh;
-  min-height:300px;
-  background:#000;
-  border:1px solid var(--line);
-  border-radius:18px;
-  overflow:hidden;
+#photo{display:none}
+.camera-note{
+ position:absolute;
+ bottom:12px;
+ left:12px;
+ right:12px;
+ text-align:center;
+ background:#081222cf;
+ padding:9px;
+ border-radius:10px;
+ color:#d5e4f5;
+ font-size:13px;
+ pointer-events:none;
 }
-
-video,#photo {
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#000;
+#capture{
+ display:block;
+ width:100%;
+ margin-top:12px;
+ padding:18px 8px;
+ border:0;
+ border-radius:14px;
+ background:var(--blue);
+ color:white;
+ font-size:20px;
+ font-weight:800;
 }
-
-#photo { display:none; }
-
-.camera-note {
-  position:absolute;
-  bottom:12px;
-  left:12px;
-  right:12px;
-  text-align:center;
-  background:#081222cf;
-  padding:9px;
-  border-radius:10px;
-  color:#d5e4f5;
-  font-size:13px;
-  pointer-events:none;
+#capture.new{background:var(--green)}
+.result{
+ margin-top:13px;
+ border:1px solid var(--line);
+ border-radius:15px;
+ background:var(--panel);
+ padding:16px;
+ display:none;
 }
-
-#capture {
-  display:block;
-  width:100%;
-  margin-top:12px;
-  padding:18px 8px;
-  border:0;
-  border-radius:14px;
-  background:var(--blue);
-  color:white;
-  font-size:20px;
-  font-weight:800;
+.status{
+ font-size:14px;
+ color:#38a9e9;
+ font-weight:700;
 }
-
-#capture.new { background:var(--green); }
-
-.result {
-  margin-top:13px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:var(--panel);
-  padding:16px;
-  display:none;
+.answer{
+ font-size:25px;
+ line-height:1.55;
+ font-weight:800;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ margin-top:8px;
 }
-
-.status {
-  font-size:14px;
-  color:#0284c7;
-  font-weight:700;
+.overlay{
+ position:fixed;
+ inset:0;
+ z-index:70;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:14px;
+ background:#000b;
 }
-
-.answer {
-  font-size:25px;
-  line-height:1.55;
-  font-weight:800;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  margin-top:8px;
+.overlay.open{display:flex}
+.modal{
+ background:var(--panel);
+ border:1px solid var(--line);
+ border-radius:18px;
+ width:min(100%,500px);
+ max-height:88dvh;
+ overflow:auto;
+ padding:18px;
 }
-
-.overlay {
-  position:fixed;
-  inset:0;
-  z-index:70;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:14px;
-  background:#000b;
+.modal h2{margin:0 0 10px}
+.modal p{
+ font-size:13px;
+ line-height:1.7;
+ color:var(--muted);
 }
-
-.overlay.open { display:flex; }
-
-.modal {
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:18px;
-  width:min(100%,480px);
-  max-height:88dvh;
-  overflow:auto;
-  padding:18px;
-  box-shadow:0 20px 60px #0004;
+.field{margin-top:11px}
+.field label{
+ display:block;
+ margin-bottom:6px;
+ font-size:13px;
 }
-
-.modal h2 { margin:0 0 10px; }
-
-.modal p {
-  font-size:13px;
-  line-height:1.7;
-  color:var(--muted);
+.field input,.field select,.search-input{
+ width:100%;
+ background:var(--input);
+ color:var(--text);
+ border:1px solid var(--line);
+ border-radius:10px;
+ padding:12px;
+ font-size:15px;
 }
-
-.field { margin-top:12px; }
-
-.field label {
-  display:block;
-  margin-bottom:6px;
-  font-size:14px;
+.field input{direction:ltr}
+.section{
+ border:1px solid var(--line);
+ border-radius:14px;
+ padding:12px;
+ margin-top:14px;
 }
-
-.field input,.search-input {
-  width:100%;
-  background:var(--input);
-  color:var(--text);
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:12px;
+.section-title{
+ font-size:17px;
+ font-weight:800;
+ margin-bottom:8px;
 }
-
-.field input { direction:ltr; }
-
-.modal-actions {
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:18px;
+.section-desc{
+ font-size:12px;
+ color:var(--muted);
+ line-height:1.6;
 }
-
-.modal-actions button {
-  flex:1;
-  min-width:90px;
-  border:0;
-  border-radius:11px;
-  background:var(--blue);
-  color:white;
-  padding:12px;
-  font-weight:800;
+.key-row{
+ padding:10px;
+ background:var(--button);
+ border-radius:10px;
+ margin-top:8px;
 }
-
-.modal-actions .secondary {
-  background:var(--button);
-  color:var(--text);
+.key-row label{
+ display:block;
+ font-size:13px;
+ margin-bottom:6px;
 }
-
-.modal-actions .danger {
-  background:#991b1b;
-  color:white;
+.key-row input{
+ width:100%;
+ background:var(--input);
+ color:var(--text);
+ border:1px solid var(--line);
+ border-radius:9px;
+ padding:11px;
+ direction:ltr;
 }
-
-.history-head {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+.modal-actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ margin-top:17px;
 }
-
-.history-head h2 { margin:0; }
-
-.history-count {
-  color:var(--muted);
-  font-size:13px;
+.modal-actions button{
+ flex:1;
+ min-width:90px;
+ border:0;
+ border-radius:11px;
+ background:var(--blue);
+ color:white;
+ padding:12px;
+ font-weight:800;
 }
-
-.search-input {
-  margin:14px 0;
-  font-size:16px;
+.modal-actions .secondary{
+ background:var(--button);
+ color:var(--text);
 }
-
-.history-list {
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+.modal-actions .danger{background:#991b1b}
+.history-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
 }
-
-.history-item {
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:10px;
-  border:1px solid var(--line);
-  border-radius:13px;
-  background:var(--button);
+.history-head h2{margin:0}
+.history-count{
+ color:var(--muted);
+ font-size:13px;
 }
-
-.history-thumb {
-  width:76px;
-  height:85px;
-  object-fit:contain;
-  background:#000;
-  border-radius:9px;
-  flex-shrink:0;
+.search-input{margin:14px 0}
+.history-list{
+ display:flex;
+ flex-direction:column;
+ gap:10px;
 }
-
-.history-info {
-  flex:1;
-  min-width:0;
+.history-item{
+ display:flex;
+ align-items:center;
+ gap:11px;
+ padding:10px;
+ border:1px solid var(--line);
+ border-radius:13px;
+ background:var(--button);
 }
-
-.history-answer {
-  font-weight:800;
-  font-size:15px;
-  overflow-wrap:anywhere;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
+.history-thumb{
+ width:76px;
+ height:85px;
+ object-fit:contain;
+ background:#000;
+ border-radius:9px;
+ flex-shrink:0;
 }
-
-.history-date {
-  font-size:11px;
-  color:var(--muted);
-  margin-top:7px;
+.history-info{flex:1;min-width:0}
+.history-answer{
+ font-weight:800;
+ font-size:15px;
+ overflow-wrap:anywhere;
+ display:-webkit-box;
+ -webkit-line-clamp:2;
+ -webkit-box-orient:vertical;
+ overflow:hidden;
 }
-
-.history-buttons {
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:9px;
+.history-date{
+ font-size:11px;
+ color:var(--muted);
+ margin-top:7px;
 }
-
-.history-buttons button {
-  border:0;
-  background:var(--blue);
-  color:white;
-  padding:8px 10px;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:800;
+.history-buttons{
+ display:flex;
+ flex-wrap:wrap;
+ gap:6px;
+ margin-top:9px;
 }
-
-.history-buttons .delete {
-  background:#7f1d1d;
+.history-buttons button{
+ border:0;
+ background:var(--blue);
+ color:white;
+ padding:8px 10px;
+ border-radius:8px;
+ font-size:12px;
+ font-weight:800;
 }
-
-.empty {
-  text-align:center;
-  color:var(--muted);
-  padding:35px 10px;
-  line-height:1.8;
+.history-buttons .delete{background:#7f1d1d}
+.empty{
+ text-align:center;
+ color:var(--muted);
+ padding:35px 10px;
+ line-height:1.8;
 }
-
-.detail-image {
-  width:100%;
-  max-height:40dvh;
-  object-fit:contain;
-  background:#000;
-  border-radius:12px;
-  margin-top:12px;
+.detail-image{
+ width:100%;
+ max-height:40dvh;
+ object-fit:contain;
+ background:#000;
+ border-radius:12px;
+ margin-top:12px;
 }
-
-.detail-answer {
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  font-size:22px;
-  font-weight:800;
-  line-height:1.6;
-  margin-top:12px;
+.detail-answer{
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ font-size:22px;
+ font-weight:800;
+ line-height:1.6;
+ margin-top:12px;
 }
-
-.detail-date {
-  color:var(--muted);
-  font-size:12px;
+.detail-date{
+ color:var(--muted);
+ font-size:12px;
 }
-
-.detail-actions {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:15px;
+.detail-actions{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+ margin-top:15px;
 }
-
-.detail-actions button {
-  border:0;
-  border-radius:11px;
-  background:var(--blue);
-  color:#fff;
-  min-height:49px;
-  padding:9px;
-  font-weight:800;
-  font-size:13px;
+.detail-actions button{
+ border:0;
+ border-radius:11px;
+ background:var(--blue);
+ color:#fff;
+ min-height:49px;
+ padding:9px;
+ font-weight:800;
+ font-size:13px;
 }
-
-.detail-actions .combined {
-  grid-column:1/-1;
-  background:var(--green);
+.detail-actions .combined{
+ grid-column:1/-1;
+ background:var(--green);
 }
-
-@media(max-width:390px) {
-  .identity img { width:40px;height:40px; }
-  .identity h1 { font-size:17px; }
-  .identity p { font-size:9px; }
-  .top-btn { padding:0 6px;font-size:12px; }
-  .icon-btn { min-width:37px;font-size:20px; }
-  .mode { font-size:15px; }
+@media(max-width:390px){
+ .identity img{width:39px;height:39px}
+ .identity h1{font-size:17px}
+ .identity p{font-size:9px}
+ .top-btn{padding:0 6px;font-size:12px}
 }
 </style>
 </head>
@@ -495,1408 +449,1455 @@ video,#photo {
 <body>
 
 <header>
-  <div class="headline">
-    <div class="identity">
-      <img src="logo.png" alt="شعار لقطة AI">
-      <div>
-        <h1>لقطة AI</h1>
-        <p>صوّر السؤال وشاهد الإجابة</p>
-      </div>
-    </div>
-
-    <div class="top-actions">
-      <button
-        id="themeButton"
-        class="top-btn icon-btn"
-        onclick="toggleTheme()"
-        aria-label="تغيير المظهر"
-      >☀️</button>
-
-      <button class="top-btn" onclick="openHistory()">
-        📚 السجل
-      </button>
-
-      <button
-        class="top-btn icon-btn"
-        onclick="openSettings()"
-        aria-label="إدارة المفاتيح"
-      >🔑</button>
-    </div>
+ <div class="headline">
+  <div class="identity">
+   <img src="logo.png" alt="لقطة AI">
+   <div>
+    <h1>لقطة AI</h1>
+    <p>صوّر السؤال وشاهد الإجابة</p>
+   </div>
   </div>
-
-  <div class="modes">
-    <button id="auto" class="mode" onclick="setMode('auto')">
-      ⚡ أوتو
-    </button>
-    <button id="manual" class="mode" onclick="setMode('manual')">
-      ✋ يدوي
-    </button>
+  <div class="top-actions">
+   <button id="themeButton" class="top-btn icon-btn"
+    onclick="toggleTheme()">☀️</button>
+   <button class="top-btn" onclick="openHistory()">📚 السجل</button>
+   <button class="top-btn icon-btn" onclick="openSettings()">🔑</button>
   </div>
+ </div>
 
-  <div id="numbers" class="numbers">
-    <span>المفتاح</span>
-    <button class="number" data-n="0" onclick="chooseKey(0)">1</button>
-    <button class="number" data-n="1" onclick="chooseKey(1)">2</button>
-    <button class="number" data-n="2" onclick="chooseKey(2)">3</button>
-    <button class="number" data-n="3" onclick="chooseKey(3)">4</button>
-    <button class="number" data-n="4" onclick="chooseKey(4)">5</button>
+ <div class="modes">
+  <button id="auto" class="mode" onclick="setMode('auto')">
+   ⚡ أوتو
+  </button>
+  <button id="manual" class="mode" onclick="setMode('manual')">
+   ✋ يدوي
+  </button>
+ </div>
+
+ <div id="manualPanel" class="manual-panel">
+  <div class="provider-choices">
+   <button class="provider-choice" data-provider="gemini"
+    onclick="chooseProvider('gemini')">🔵 Gemini</button>
+   <button class="provider-choice" data-provider="groq"
+    onclick="chooseProvider('groq')">🟠 GroqCloud</button>
+   <button class="provider-choice" data-provider="openrouter"
+    onclick="chooseProvider('openrouter')">🟣 OpenRouter</button>
+   <button class="provider-choice" data-provider="github"
+    onclick="chooseProvider('github')">🟢 GitHub Models</button>
   </div>
+  <div id="keyNumbers" class="key-numbers"></div>
+  <div id="selectedLabel" class="selected-label"></div>
+ </div>
 </header>
 
 <main>
-  <div class="camera">
-    <video id="video" autoplay playsinline muted></video>
-    <img id="photo" alt="صورة السؤال الملتقط">
-    <div id="cameraNote" class="camera-note">
-      جاري تشغيل الكاميرا...
-    </div>
+ <div class="camera">
+  <video id="video" autoplay playsinline muted></video>
+  <img id="photo" alt="صورة السؤال">
+  <div id="cameraNote" class="camera-note">
+   جاري تشغيل الكاميرا...
   </div>
+ </div>
 
-  <button id="capture" onclick="mainAction()">
-    📸 التقاط وتحليل فوري
-  </button>
+ <button id="capture" onclick="mainAction()">
+  📸 التقاط وتحليل فوري
+ </button>
 
-  <section id="result" class="result" aria-live="polite">
-    <div id="status" class="status"></div>
-    <div id="answer" class="answer"></div>
-  </section>
+ <section id="result" class="result" aria-live="polite">
+  <div id="status" class="status"></div>
+  <div id="answer" class="answer"></div>
+ </section>
 </main>
 
 <!-- إعدادات المفاتيح -->
 <div id="settingsOverlay" class="overlay">
-  <div class="modal" role="dialog" aria-modal="true">
-    <h2>🔑 مفاتيح Gemini</h2>
-    <p>أضف مفاتيحك الخاصة. يمكنك حفظ خمسة مفاتيح.</p>
-    <div id="inputs"></div>
+ <div class="modal" role="dialog" aria-modal="true">
+  <h2>🔑 إدارة مفاتيح API</h2>
+  <p>مفاتيح Gemini الخمسة مستقلة عن مفاتيح الشركات الأخرى.</p>
 
-    <div class="modal-actions">
-      <button onclick="saveSettings()">حفظ</button>
-      <button class="secondary" onclick="closeSettings()">
-        إلغاء
-      </button>
-    </div>
+  <div class="section">
+   <div class="section-title">🔵 Google Gemini</div>
+   <div class="section-desc">
+    نفس المفاتيح الخمسة السابقة، وتبقى محفوظة.
+   </div>
+   <div id="geminiInputs"></div>
+   <div class="field">
+    <label>نموذج Gemini</label>
+    <input id="geminiModel" placeholder="gemini-2.5-flash">
+   </div>
   </div>
+
+  <div class="section">
+   <div class="section-title">🌐 الشركات الأخرى</div>
+   <div class="section-desc">
+    أضف مفتاح كل شركة واسم نموذج يدعم الصور.
+   </div>
+
+   <div class="field">
+    <label>🟠 مفتاح GroqCloud</label>
+    <input id="groqKey" type="password"
+     placeholder="gsk_..." autocomplete="off">
+   </div>
+   <div class="field">
+    <label>نموذج GroqCloud</label>
+    <input id="groqModel"
+     placeholder="meta-llama/llama-4-scout-17b-16e-instruct">
+   </div>
+
+   <div class="field">
+    <label>🟣 مفتاح OpenRouter</label>
+    <input id="openrouterKey" type="password"
+     placeholder="sk-or-..." autocomplete="off">
+   </div>
+   <div class="field">
+    <label>نموذج OpenRouter</label>
+    <input id="openrouterModel"
+     placeholder="google/gemini-2.5-flash">
+   </div>
+
+   <div class="field">
+    <label>🟢 مفتاح GitHub Models</label>
+    <input id="githubKey" type="password"
+     placeholder="GitHub token" autocomplete="off">
+   </div>
+   <div class="field">
+    <label>نموذج GitHub Models</label>
+    <input id="githubModel"
+     placeholder="openai/gpt-4.1-mini">
+   </div>
+  </div>
+
+  <p>
+   تنبيه: حفظ المفاتيح في المتصفح لا يوفر حماية كاملة.
+   لا تشارك مفاتيحك مع الآخرين.
+  </p>
+
+  <div class="modal-actions">
+   <button onclick="saveSettings()">💾 حفظ الكل</button>
+   <button class="secondary" onclick="closeSettings()">إلغاء</button>
+  </div>
+ </div>
 </div>
 
-<!-- سجل الأسئلة -->
+<!-- السجل -->
 <div id="historyOverlay" class="overlay">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="history-head">
-      <h2>📚 سجل البحث</h2>
-      <span id="historyCount" class="history-count"></span>
-    </div>
-
-    <p>الأسئلة السابقة مع صورها وإجاباتها محفوظة على هذا الجهاز.</p>
-
-    <input
-      id="historySearch"
-      class="search-input"
-      type="search"
-      placeholder="🔎 ابحث في الإجابات السابقة..."
-      oninput="renderHistory()"
-    >
-
-    <div id="historyList" class="history-list"></div>
-
-    <div class="modal-actions">
-      <button class="danger" onclick="clearHistory()">
-        🗑️ مسح السجل
-      </button>
-      <button class="secondary" onclick="closeHistory()">
-        إغلاق
-      </button>
-    </div>
+ <div class="modal" role="dialog" aria-modal="true">
+  <div class="history-head">
+   <h2>📚 سجل البحث</h2>
+   <span id="historyCount" class="history-count"></span>
   </div>
+  <p>صور الأسئلة وإجاباتها محفوظة على جهازك.</p>
+  <input id="historySearch" class="search-input"
+   type="search" placeholder="🔎 ابحث في الإجابات..."
+   oninput="renderHistory()">
+  <div id="historyList" class="history-list"></div>
+  <div class="modal-actions">
+   <button class="danger" onclick="clearHistory()">🗑️ مسح السجل</button>
+   <button class="secondary" onclick="closeHistory()">إغلاق</button>
+  </div>
+ </div>
 </div>
 
 <!-- تفاصيل السؤال -->
 <div id="detailOverlay" class="overlay">
-  <div class="modal" role="dialog" aria-modal="true">
-    <h2>📖 السؤال السابق</h2>
+ <div class="modal" role="dialog" aria-modal="true">
+  <h2>📖 السؤال السابق</h2>
+  <div id="detailDate" class="detail-date"></div>
+  <img id="detailImage" class="detail-image" alt="صورة السؤال">
+  <div id="detailAnswer" class="detail-answer"></div>
 
-    <div id="detailDate" class="detail-date"></div>
-
-    <img
-      id="detailImage"
-      class="detail-image"
-      alt="صورة السؤال"
-    >
-
-    <div id="detailAnswer" class="detail-answer"></div>
-
-    <!-- الأزرار الثلاثة الجديدة -->
-    <div class="detail-actions">
-      <button onclick="saveQuestionImage()">
-        ⬇️ حفظ الصورة
-      </button>
-
-      <button onclick="shareQuestion()">
-        📤 مشاركة
-      </button>
-
-      <button class="combined" onclick="saveCombinedImage()">
-        🖼️ حفظ السؤال والإجابة بصورة واحدة
-      </button>
-    </div>
-
-    <div class="modal-actions">
-      <button class="secondary" onclick="closeDetail()">
-        رجوع للسجل
-      </button>
-    </div>
+  <div class="detail-actions">
+   <button onclick="saveQuestionImage()">⬇️ حفظ الصورة</button>
+   <button onclick="shareQuestion()">📤 مشاركة</button>
+   <button class="combined" onclick="saveCombinedImage()">
+    🖼️ حفظ السؤال والإجابة بصورة واحدة
+   </button>
   </div>
+
+  <div class="modal-actions">
+   <button class="secondary" onclick="closeDetail()">
+    رجوع للسجل
+   </button>
+  </div>
+ </div>
 </div>
 
 <script>
 'use strict';
 
-const MODEL = 'gemini-3.8-flash';
 const $ = id => document.getElementById(id);
 
-const video = $('video');
-const photo = $('photo');
-const captureBtn = $('capture');
-const note = $('cameraNote');
-const result = $('result');
-const statusEl = $('status');
-const answerEl = $('answer');
+const PROVIDERS = {
+ gemini:{
+  name:'Gemini',
+  defaultModel:'gemini-2.5-flash'
+ },
+ groq:{
+  name:'GroqCloud',
+  defaultModel:'meta-llama/llama-4-scout-17b-16e-instruct'
+ },
+ openrouter:{
+  name:'OpenRouter',
+  defaultModel:'google/gemini-2.5-flash'
+ },
+ github:{
+  name:'GitHub Models',
+  defaultModel:'openai/gpt-4.1-mini'
+ }
+};
 
-let keys = Array(5).fill('');
-let selected = 0;
-let mode = localStorage.getItem('gemini_mode') === 'manual'
-  ? 'manual' : 'auto';
+const video=$('video');
+const photo=$('photo');
+const captureBtn=$('capture');
+const note=$('cameraNote');
+const result=$('result');
+const statusEl=$('status');
+const answerEl=$('answer');
 
-let captured = false;
-let controller = null;
-let requestId = 0;
-let historyCache = [];
-let currentDetail = null;
+let geminiKeys=Array(5).fill('');
+let otherKeys={groq:'',openrouter:'',github:''};
+let models={};
+let mode='auto';
+let selectedProvider='gemini';
+let selectedGemini=0;
+
+let captured=false;
+let controller=null;
+let requestId=0;
+let historyCache=[];
+let currentDetail=null;
+
+/* تحميل الإعدادات */
+function loadSettings(){
+ try{
+  const saved=JSON.parse(
+   localStorage.getItem('gemini_keys')||'[]'
+  );
+  if(Array.isArray(saved)){
+   saved.slice(0,5).forEach((v,i)=>{
+    geminiKeys[i]=typeof v==='string'?v.trim():'';
+   });
+  }
+ }catch(e){}
+
+ if(!geminiKeys.some(Boolean)){
+  const old=localStorage.getItem('gemini_key');
+  if(old)geminiKeys[0]=old.trim();
+ }
+
+ try{
+  const saved=JSON.parse(
+   localStorage.getItem('laqta_other_keys')||'{}'
+  );
+  for(const p of ['groq','openrouter','github']){
+   otherKeys[p]=typeof saved[p]==='string'
+    ?saved[p].trim():'';
+  }
+ }catch(e){}
+
+ try{
+  models=JSON.parse(
+   localStorage.getItem('laqta_models')||'{}'
+  );
+ }catch(e){
+  models={};
+ }
+
+ for(const p of Object.keys(PROVIDERS)){
+  if(typeof models[p]!=='string'||!models[p].trim()){
+   models[p]=PROVIDERS[p].defaultModel;
+  }
+ }
+
+ mode=localStorage.getItem('gemini_mode')==='manual'
+  ?'manual':'auto';
+
+ const savedIndex=Number(
+  localStorage.getItem('selected_gemini_key')||0
+ );
+
+ selectedGemini=Number.isInteger(savedIndex)&&
+ savedIndex>=0&&savedIndex<5?savedIndex:0;
+
+ const provider=localStorage.getItem('laqta_selected_provider');
+ if(PROVIDERS[provider])selectedProvider=provider;
+
+ if(!geminiKeys[selectedGemini]){
+  const first=geminiKeys.findIndex(Boolean);
+  if(first>=0)selectedGemini=first;
+ }
+}
+
+function hasKey(provider){
+ return provider==='gemini'
+  ?geminiKeys.some(Boolean)
+  :!!otherKeys[provider];
+}
+
+function renderControls(){
+ $('auto').classList.toggle('active',mode==='auto');
+ $('manual').classList.toggle('active',mode==='manual');
+ $('manualPanel').classList.toggle(
+  'visible',mode==='manual'
+ );
+
+ document.querySelectorAll('.provider-choice').forEach(b=>{
+  const p=b.dataset.provider;
+  b.classList.toggle('active',selectedProvider===p);
+  b.disabled=!hasKey(p);
+ });
+
+ const numbers=$('keyNumbers');
+ numbers.replaceChildren();
+
+ if(selectedProvider==='gemini'){
+  for(let i=0;i<5;i++){
+   const b=document.createElement('button');
+   b.className='key-number';
+   b.textContent=i+1;
+   b.disabled=!geminiKeys[i];
+   b.classList.toggle(
+    'active',i===selectedGemini&&!!geminiKeys[i]
+   );
+   b.onclick=()=>chooseGeminiKey(i);
+   numbers.append(b);
+  }
+  numbers.style.display='flex';
+ }else{
+  numbers.style.display='none';
+ }
+
+ $('selectedLabel').textContent=
+  'الخدمة المختارة: '+PROVIDERS[selectedProvider].name+
+  (selectedProvider==='gemini'
+   ?' — المفتاح '+(selectedGemini+1):'');
+}
+
+function setMode(next){
+ if(mode===next)return;
+ stopRequest();
+ mode=next;
+ localStorage.setItem('gemini_mode',mode);
+ renderControls();
+
+ if(captured){
+  show('تم تغيير الوضع','التقط سؤالاً جديداً.');
+ }
+}
+
+function chooseProvider(provider){
+ if(!hasKey(provider))return;
+ stopRequest();
+ selectedProvider=provider;
+
+ if(provider==='gemini'&&!geminiKeys[selectedGemini]){
+  selectedGemini=geminiKeys.findIndex(Boolean);
+ }
+
+ localStorage.setItem('laqta_selected_provider',provider);
+ renderControls();
+
+ if(captured){
+  show('تم اختيار '+PROVIDERS[provider].name,
+   'التقط سؤالاً جديداً.');
+ }
+}
+
+function chooseGeminiKey(i){
+ if(!geminiKeys[i])return;
+ stopRequest();
+ selectedGemini=i;
+ localStorage.setItem('selected_gemini_key',String(i));
+ renderControls();
+
+ if(captured){
+  show('تم اختيار المفتاح '+(i+1),
+   'التقط سؤالاً جديداً.');
+ }
+}
+
+function openSettings(){
+ const holder=$('geminiInputs');
+ holder.replaceChildren();
+
+ for(let i=0;i<5;i++){
+  const wrap=document.createElement('div');
+  wrap.className='key-row';
+
+  const label=document.createElement('label');
+  label.textContent='مفتاح Gemini رقم '+(i+1);
+  label.htmlFor='gkey'+i;
+
+  const input=document.createElement('input');
+  input.id='gkey'+i;
+  input.type='password';
+  input.autocomplete='off';
+  input.placeholder='AIza...';
+  input.value=geminiKeys[i];
+
+  wrap.append(label,input);
+  holder.append(wrap);
+ }
+
+ $('geminiModel').value=models.gemini;
+ for(const p of ['groq','openrouter','github']){
+  $(p+'Key').value=otherKeys[p];
+  $(p+'Model').value=models[p];
+ }
+
+ $('settingsOverlay').classList.add('open');
+}
+
+function closeSettings(){
+ $('settingsOverlay').classList.remove('open');
+}
+
+function saveSettings(){
+ stopRequest();
+
+ geminiKeys=Array.from(
+  {length:5},
+  (_,i)=>$('gkey'+i).value.trim()
+ );
+
+ for(const p of ['groq','openrouter','github']){
+  otherKeys[p]=$(p+'Key').value.trim();
+ }
+
+ for(const p of Object.keys(PROVIDERS)){
+  models[p]=$(p+'Model').value.trim()||
+   PROVIDERS[p].defaultModel;
+ }
+
+ localStorage.setItem(
+  'gemini_keys',JSON.stringify(geminiKeys)
+ );
+ localStorage.setItem(
+  'laqta_other_keys',JSON.stringify(otherKeys)
+ );
+ localStorage.setItem(
+  'laqta_models',JSON.stringify(models)
+ );
+
+ if(!geminiKeys[selectedGemini]){
+  const first=geminiKeys.findIndex(Boolean);
+  selectedGemini=first>=0?first:0;
+ }
+
+ if(!hasKey(selectedProvider)){
+  const available=Object.keys(PROVIDERS).find(hasKey);
+  if(available)selectedProvider=available;
+ }
+
+ localStorage.setItem(
+  'selected_gemini_key',String(selectedGemini)
+ );
+ localStorage.setItem(
+  'laqta_selected_provider',selectedProvider
+ );
+
+ closeSettings();
+ renderControls();
+
+ show('تم حفظ الإعدادات',
+  Object.keys(PROVIDERS).some(hasKey)
+   ?'المفاتيح جاهزة. وجّه الكاميرا للسؤال.'
+   :'أضف مفتاح API واحداً على الأقل.');
+}
 
 /* المظهر */
-function updateThemeButton() {
-  const light =
-    document.documentElement.dataset.theme === 'light';
-
-  $('themeButton').textContent = light ? '🌙' : '☀️';
-
-  $('themeButton').title = light
-    ? 'الوضع الداكن'
-    : 'الوضع الفاتح';
-
-  $('themeColor').content = light
-    ? '#f3f6fc'
-    : '#080c14';
+function updateThemeButton(){
+ const light=document.documentElement.dataset.theme==='light';
+ $('themeButton').textContent=light?'🌙':'☀️';
+ $('themeColor').content=light?'#f3f6fc':'#080c14';
 }
 
-function toggleTheme() {
-  const current =
-    document.documentElement.dataset.theme;
-
-  const next = current === 'light' ? 'dark' : 'light';
-
-  document.documentElement.dataset.theme = next;
-
-  try {
-    localStorage.setItem('laqta_theme',next);
-  } catch(e) {}
-
-  updateThemeButton();
+function toggleTheme(){
+ const next=document.documentElement.dataset.theme==='light'
+  ?'dark':'light';
+ document.documentElement.dataset.theme=next;
+ localStorage.setItem('laqta_theme',next);
+ updateThemeButton();
 }
 
-/* قاعدة بيانات السجل */
-const DB_NAME = 'LaqtaAIHistory';
-const STORE_NAME = 'questions';
+function show(status,text){
+ result.style.display='block';
+ statusEl.textContent=status;
+ answerEl.textContent=text||'';
+}
 
-let dbPromise = null;
+function stopRequest(){
+ requestId++;
+ if(controller){
+  controller.abort();
+  controller=null;
+ }
+}
 
-function openDatabase() {
-  if (!window.indexedDB) {
-    return Promise.reject(
-      new Error('المتصفح لا يدعم حفظ السجل')
+/* الكاميرا */
+async function startCamera(){
+ let stream;
+
+ try{
+  if(!navigator.mediaDevices?.getUserMedia){
+   throw new Error('المتصفح لا يدعم تشغيل الكاميرا.');
+  }
+
+  stream=await navigator.mediaDevices.getUserMedia({
+   audio:false,
+   video:{facingMode:{ideal:'environment'}}
+  });
+
+  try{
+   const devices=(await navigator.mediaDevices
+    .enumerateDevices()).filter(
+     d=>d.kind==='videoinput'
     );
-  }
 
-  if (dbPromise) return dbPromise;
+   const rear=devices.filter(
+    d=>/back|rear|environment|خلف/i.test(d.label)
+   );
 
-  dbPromise = new Promise((resolve,reject) => {
-    const request = indexedDB.open(DB_NAME,1);
+   const preferred=
+    rear.find(d=>/^(back|rear) camera$/i.test(
+     d.label.trim()
+    ))||
+    rear.find(d=>
+     /wide/i.test(d.label)&&
+     !/ultra|dual|triple|tele|macro/i.test(d.label)
+    )||
+    rear.find(d=>
+     !/ultra|tele|dual|triple|macro|0\.5|2x|3x/i
+      .test(d.label)
+    );
 
-    request.onupgradeneeded = () => {
-      const db = request.result;
+   if(preferred?.deviceId&&
+    stream.getVideoTracks()[0]?.getSettings().deviceId
+     !==preferred.deviceId){
+    try{
+     const s=await navigator.mediaDevices.getUserMedia({
+      audio:false,
+      video:{deviceId:{exact:preferred.deviceId}}
+     });
+     stream.getTracks().forEach(t=>t.stop());
+     stream=s;
+    }catch(e){}
+   }
+  }catch(e){}
 
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(
-          STORE_NAME,
-          {keyPath:'id',autoIncrement:true}
-        );
+  try{
+   const track=stream.getVideoTracks()[0];
+   const caps=track.getCapabilities?.();
+   if(caps?.zoom){
+    const z=Math.max(caps.zoom.min,
+     Math.min(1,caps.zoom.max));
+    await track.applyConstraints({advanced:[{zoom:z}]});
+   }
+  }catch(e){}
 
-        store.createIndex('createdAt','createdAt');
-      }
-    };
+  video.srcObject=stream;
+  await video.play();
+  note.textContent='وجّه الكاميرا نحو السؤال';
 
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  }).catch(e => {
-    dbPromise = null;
-    throw e;
-  });
-
-  return dbPromise;
+ }catch(e){
+  if(stream)stream.getTracks().forEach(t=>t.stop());
+  note.textContent='الكاميرا لم تعمل';
+  show('تعذر تشغيل الكاميرا',
+   e.name==='NotAllowedError'
+    ?'اسمح للموقع باستخدام الكاميرا.'
+    :e.message);
+ }
 }
 
-async function saveHistory(image,answer) {
-  const db = await openDatabase();
+function mainAction(){
+ if(captured){
+  resetCapture();
+  return;
+ }
 
-  return new Promise((resolve,reject) => {
-    const tx = db.transaction(STORE_NAME,'readwrite');
+ if(!video.videoWidth){
+  show('الكاميرا غير جاهزة',
+   'تحقق من إذن الكاميرا.');
+  return;
+ }
 
-    tx.objectStore(STORE_NAME).add({
-      image,
-      answer,
-      createdAt:Date.now()
-    });
+ stopRequest();
 
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-    tx.onabort = () => reject(tx.error);
-  });
+ const canvas=document.createElement('canvas');
+ const scale=Math.min(
+  1,1280/Math.max(video.videoWidth,video.videoHeight)
+ );
+
+ canvas.width=Math.round(video.videoWidth*scale);
+ canvas.height=Math.round(video.videoHeight*scale);
+ canvas.getContext('2d').drawImage(
+  video,0,0,canvas.width,canvas.height
+ );
+
+ const image=canvas.toDataURL('image/jpeg',.75);
+
+ photo.src=image;
+ photo.style.display='block';
+ video.style.display='none';
+ note.style.display='none';
+ captured=true;
+
+ captureBtn.classList.add('new');
+ captureBtn.textContent='🔄 التقاط سؤال جديد';
+
+ analyze(image);
 }
 
-async function getHistory() {
-  const db = await openDatabase();
-
-  return new Promise((resolve,reject) => {
-    const tx = db.transaction(STORE_NAME,'readonly');
-    const req = tx.objectStore(STORE_NAME).getAll();
-
-    req.onsuccess = () => {
-      const items = req.result || [];
-
-      items.sort((a,b) => b.createdAt-a.createdAt);
-      resolve(items);
-    };
-
-    req.onerror = () => reject(req.error);
-  });
+function resetCapture(){
+ stopRequest();
+ captured=false;
+ photo.style.display='none';
+ photo.removeAttribute('src');
+ video.style.display='block';
+ note.style.display='block';
+ note.textContent='وجّه الكاميرا نحو السؤال';
+ captureBtn.classList.remove('new');
+ captureBtn.textContent='📸 التقاط وتحليل فوري';
+ result.style.display='none';
 }
 
-async function deleteHistoryItem(id) {
-  const db = await openDatabase();
+/* تحليل الصور */
+const PROMPT=
+ 'اقرأ السؤال والخيارات الظاهرة في الصورة. '+
+ 'أعط حرف الخيار الصحيح ونص الإجابة فقط دون شرح. '+
+ 'إذا لم يكن السؤال واضحاً فقل إن الصورة غير واضحة ولا تخمّن.';
 
-  return new Promise((resolve,reject) => {
-    const tx = db.transaction(STORE_NAME,'readwrite');
-
-    tx.objectStore(STORE_NAME).delete(id);
-
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-    tx.onabort = () => reject(tx.error);
-  });
+function makeError(status,message){
+ const e=new Error(message||'HTTP '+status);
+ e.status=status;
+ return e;
 }
 
-async function deleteAllHistory() {
-  const db = await openDatabase();
+async function parseResponse(response){
+ const data=await response.json().catch(()=>({}));
 
-  return new Promise((resolve,reject) => {
-    const tx = db.transaction(STORE_NAME,'readwrite');
-
-    tx.objectStore(STORE_NAME).clear();
-
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-    tx.onabort = () => reject(tx.error);
-  });
-}
-
-function formatDate(timestamp) {
-  return new Date(timestamp).toLocaleString('ar-SA',{
-    year:'numeric',
-    month:'short',
-    day:'numeric',
-    hour:'numeric',
-    minute:'2-digit'
-  });
-}
-
-/* فتح السجل */
-async function openHistory() {
-  $('historyOverlay').classList.add('open');
-  $('historySearch').value = '';
-  $('historyList').textContent = 'جاري تحميل السجل...';
-
-  try {
-    historyCache = await getHistory();
-    renderHistory();
-  } catch(e) {
-    $('historyList').textContent =
-      'تعذر فتح السجل: '+e.message;
-  }
-}
-
-function closeHistory() {
-  $('historyOverlay').classList.remove('open');
-}
-
-function renderHistory() {
-  const list = $('historyList');
-  const search =
-    $('historySearch').value.trim().toLowerCase();
-
-  list.replaceChildren();
-
-  $('historyCount').textContent =
-    historyCache.length+' سؤال';
-
-  const filtered = historyCache.filter(item =>
-    item.answer.toLowerCase().includes(search) ||
-    formatDate(item.createdAt).includes(search)
+ if(!response.ok){
+  throw makeError(
+   response.status,
+   data.error?.message||data.message||
+   'HTTP '+response.status
   );
+ }
 
-  if (!filtered.length) {
-    const empty = document.createElement('div');
-    empty.className = 'empty';
+ return data;
+}
 
-    empty.textContent = search
-      ? 'ما لقينا نتيجة مطابقة.'
-      : 'السجل فارغ. صوّر أول سؤال وبتلقاه هنا.';
+/* Google Gemini */
+async function askGemini(key,image,signal){
+ const url=
+  'https://generativelanguage.googleapis.com/v1beta/models/'+
+  encodeURIComponent(models.gemini)+
+  ':generateContent?key='+encodeURIComponent(key);
 
-    list.append(empty);
+ const response=await fetch(url,{
+  method:'POST',
+  signal,
+  headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({
+   contents:[{
+    parts:[
+     {text:PROMPT},
+     {inline_data:{
+      mime_type:'image/jpeg',
+      data:image.split(',')[1]
+     }}
+    ]
+   }],
+   generationConfig:{
+    temperature:0,
+    maxOutputTokens:512
+   }
+  })
+ });
+
+ const data=await parseResponse(response);
+
+ const text=data.candidates?.[0]?.content?.parts
+  ?.filter(p=>typeof p.text==='string')
+  .map(p=>p.text).join('\n');
+
+ if(!text?.trim()){
+  throw new Error('لم تصل إجابة نصية من Gemini.');
+ }
+
+ return text.trim();
+}
+
+/* واجهة OpenAI المتوافقة:
+   GroqCloud وOpenRouter وGitHub Models */
+async function askCompatible(provider,key,image,signal){
+ let url;
+ let headers={
+  'Content-Type':'application/json',
+  'Authorization':'Bearer '+key
+ };
+
+ if(provider==='groq'){
+  url='https://api.groq.com/openai/v1/chat/completions';
+ }else if(provider==='openrouter'){
+  url='https://openrouter.ai/api/v1/chat/completions';
+ }else if(provider==='github'){
+  url='https://models.github.ai/inference/chat/completions';
+ }else{
+  throw new Error('شركة غير مدعومة.');
+ }
+
+ const body={
+  model:models[provider],
+  messages:[{
+   role:'user',
+   content:[
+    {type:'text',text:PROMPT},
+    {type:'image_url',image_url:{url:image}}
+   ]
+  }],
+  max_tokens:512,
+  temperature:0
+ };
+
+ const response=await fetch(url,{
+  method:'POST',
+  signal,
+  headers,
+  body:JSON.stringify(body)
+ });
+
+ const data=await parseResponse(response);
+ const content=data.choices?.[0]?.message?.content;
+
+ const text=typeof content==='string'
+  ?content
+  :Array.isArray(content)
+   ?content.filter(x=>x.type==='text')
+    .map(x=>x.text).join('\n')
+   :'';
+
+ if(!text?.trim()){
+  throw new Error('لم تصل إجابة نصية من الخدمة.');
+ }
+
+ return text.trim();
+}
+
+async function askProvider(provider,key,image,signal){
+ if(provider==='gemini'){
+  return askGemini(key,image,signal);
+ }
+ return askCompatible(provider,key,image,signal);
+}
+
+/* مهلة الطلب */
+async function askWithTimeout(provider,key,image,signal){
+ const local=new AbortController();
+
+ const abort=()=>local.abort();
+ signal.addEventListener('abort',abort,{once:true});
+
+ if(signal.aborted)local.abort();
+
+ const timer=setTimeout(()=>local.abort(),18000);
+
+ try{
+  return await askProvider(
+   provider,key,image,local.signal
+  );
+ }catch(e){
+  if(
+   e.name==='AbortError'&&!signal.aborted
+  ){
+   throw makeError(408,'انتهت مهلة انتظار الخدمة.');
+  }
+  throw e;
+ }finally{
+  clearTimeout(timer);
+  signal.removeEventListener('abort',abort);
+ }
+}
+
+/* ترتيب المفاتيح */
+function getAutoOrder(){
+ const order=[];
+
+ // يبدأ بالمفتاح المختار من Gemini
+ if(geminiKeys[selectedGemini]){
+  order.push({
+   provider:'gemini',
+   index:selectedGemini,
+   key:geminiKeys[selectedGemini]
+  });
+ }
+
+ // بقية مفاتيح Gemini
+ geminiKeys.forEach((key,index)=>{
+  if(key&&index!==selectedGemini){
+   order.push({provider:'gemini',index,key});
+  }
+ });
+
+ // الشركات الأخرى
+ for(const provider of ['groq','openrouter','github']){
+  if(otherKeys[provider]){
+   order.push({
+    provider,
+    index:0,
+    key:otherKeys[provider]
+   });
+  }
+ }
+
+ return order;
+}
+
+function getManualOrder(){
+ if(selectedProvider==='gemini'){
+  return geminiKeys[selectedGemini]?[{
+   provider:'gemini',
+   index:selectedGemini,
+   key:geminiKeys[selectedGemini]
+  }]:[];
+ }
+
+ return otherKeys[selectedProvider]?[{
+  provider:selectedProvider,
+  index:0,
+  key:otherKeys[selectedProvider]
+ }]:[];
+}
+
+/* الانتقال في الوضع الأوتوماتيكي */
+function canFallback(e){
+ // أخطاء المصادقة والحصة والنموذج والخادم والاتصال
+ return (
+  [400,401,403,404,408,429,500,502,503,504]
+   .includes(e.status) ||
+  e instanceof TypeError
+ );
+}
+
+function errorText(e){
+ if(e.status===429){
+  return 'وصلت الخدمة إلى حد الطلبات أو الحصة المتاحة.';
+ }
+ if(e.status===401||e.status===403){
+  return 'المفتاح غير صالح أو لا يملك الصلاحية.';
+ }
+ if(e.status===404){
+  return 'اسم النموذج غير متاح. راجعه من إعدادات المفاتيح.';
+ }
+ if(e.status===400){
+  return 'الطلب غير مقبول. تحقق من النموذج ودعم الصور.';
+ }
+ if(e.status===408){
+  return 'انتهت مهلة انتظار الخدمة.';
+ }
+ if([500,502,503,504].includes(e.status)){
+  return 'الخدمة مشغولة أو غير متاحة مؤقتاً.';
+ }
+ if(e instanceof TypeError){
+  return 'تعذر الاتصال بالخدمة. قد يكون السبب الإنترنت أو قيود المتصفح.';
+ }
+ return e.message||'حدث خطأ غير معروف.';
+}
+
+async function analyze(image){
+ const order=mode==='auto'
+  ?getAutoOrder():getManualOrder();
+
+ if(!order.length){
+  show('لا توجد مفاتيح',
+   'اضغط 🔑 وأضف مفتاحاً للخدمة المطلوبة.');
+  return;
+ }
+
+ stopRequest();
+ const id=requestId;
+ controller=new AbortController();
+ const signal=controller.signal;
+ let lastError=null;
+
+ try{
+  for(const item of order){
+   if(signal.aborted||id!==requestId)return;
+
+   const providerName=PROVIDERS[item.provider].name;
+   const keyName=item.provider==='gemini'
+    ?' — المفتاح '+(item.index+1):'';
+
+   show(
+    'جاري التحليل بواسطة '+providerName+keyName+'...',
+    ''
+   );
+
+   try{
+    const text=await askWithTimeout(
+     item.provider,item.key,image,signal
+    );
+
+    if(id!==requestId||signal.aborted)return;
+
+    // حفظ آخر مفتاح Gemini ناجح
+    if(item.provider==='gemini'){
+     selectedGemini=item.index;
+     localStorage.setItem(
+      'selected_gemini_key',
+      String(selectedGemini)
+     );
+    }
+
+    renderControls();
+
+    show(
+     'تم التحليل بواسطة '+providerName+keyName,
+     text
+    );
+
+    try{
+     await saveHistory(image,text);
+     if(id===requestId){
+      statusEl.textContent=
+       'تم التحليل والحفظ في السجل — '+providerName;
+     }
+    }catch(e){
+     if(id===requestId){
+      statusEl.textContent=
+       'تم التحليل — تعذر حفظ السجل';
+     }
+     console.error(e);
+    }
+
     return;
-  }
 
-  filtered.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'history-item';
+   }catch(e){
+    if(signal.aborted||id!==requestId)return;
 
-    const img = document.createElement('img');
-    img.className = 'history-thumb';
-    img.src = item.image;
-    img.loading = 'lazy';
+    lastError=e;
 
-    const info = document.createElement('div');
-    info.className = 'history-info';
-
-    const answer = document.createElement('div');
-    answer.className = 'history-answer';
-    answer.textContent = item.answer;
-
-    const date = document.createElement('div');
-    date.className = 'history-date';
-    date.textContent = formatDate(item.createdAt);
-
-    const actions = document.createElement('div');
-    actions.className = 'history-buttons';
-
-    const openBtn = document.createElement('button');
-    openBtn.textContent = '👁️ عرض';
-    openBtn.onclick = () => showHistoryDetail(item.id);
-
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'delete';
-    deleteBtn.textContent = '🗑️ حذف';
-    deleteBtn.onclick = () => removeHistoryItem(item.id);
-
-    actions.append(openBtn,deleteBtn);
-    info.append(answer,date,actions);
-    card.append(img,info);
-    list.append(card);
-  });
-}
-
-function showHistoryDetail(id) {
-  const item = historyCache.find(x => x.id === id);
-  if (!item) return;
-
-  currentDetail = item;
-
-  $('detailImage').src = item.image;
-  $('detailAnswer').textContent = item.answer;
-  $('detailDate').textContent = formatDate(item.createdAt);
-
-  $('detailOverlay').classList.add('open');
-}
-
-function closeDetail() {
-  $('detailOverlay').classList.remove('open');
-  $('detailImage').removeAttribute('src');
-  currentDetail = null;
-}
-
-async function removeHistoryItem(id) {
-  if (!confirm('تبي تحذف هذا السؤال؟')) return;
-
-  try {
-    await deleteHistoryItem(id);
-
-    historyCache = historyCache.filter(
-      item => item.id !== id
-    );
-
-    renderHistory();
-  } catch(e) {
-    alert('تعذر الحذف: '+e.message);
-  }
-}
-
-async function clearHistory() {
-  if (!historyCache.length) return;
-
-  if (!confirm(
-    'متأكد تبي تمسح جميع الصور والإجابات؟'
-  )) return;
-
-  try {
-    await deleteAllHistory();
-    historyCache = [];
-    renderHistory();
-  } catch(e) {
-    alert('تعذر مسح السجل: '+e.message);
-  }
-}
-
-/* ======================================
-   حفظ الصور والمشاركة - الميزات الجديدة
-   ====================================== */
-
-/* تحويل صورة محفوظة إلى ملف */
-async function imageToFile(dataUrl,filename) {
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-
-  return new File(
-    [blob],
-    filename,
-    {type:'image/jpeg'}
-  );
-}
-
-/* تنزيل ملف */
-function downloadFile(blob,filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-
-  a.href = url;
-  a.download = filename;
-
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-
-  setTimeout(() => URL.revokeObjectURL(url),60000);
-}
-
-/* مشاركة ملف عبر الآيفون أو تنزيله */
-async function shareOrDownload(file,text) {
-  try {
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({files:[file]})
-    ) {
-      await navigator.share({
-        files:[file],
-        text:text || ''
-      });
-      return;
-    }
-  } catch(e) {
-    if (e.name === 'AbortError') return;
-  }
-
-  downloadFile(file,file.name);
-}
-
-/* 1 - حفظ صورة السؤال الأصلية */
-async function saveQuestionImage() {
-  if (!currentDetail) return;
-
-  try {
-    const file = await imageToFile(
-      currentDetail.image,
-      'laqta-question-'+currentDetail.id+'.jpg'
-    );
-
-    await shareOrDownload(file,'');
-
-  } catch(e) {
-    alert('تعذر حفظ الصورة: '+e.message);
-  }
-}
-
-/* 2 - مشاركة السؤال والإجابة */
-async function shareQuestion() {
-  if (!currentDetail) return;
-
-  try {
-    const item = currentDetail;
-
-    const file = await imageToFile(
-      item.image,
-      'laqta-question-'+item.id+'.jpg'
-    );
-
-    const text =
-      'السؤال والإجابة من لقطة AI\n\n' +
-      item.answer;
-
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare({files:[file]})
-    ) {
-      await navigator.share({
-        files:[file],
-        text
-      });
-    } else if (navigator.share) {
-      await navigator.share({text});
-    } else {
-      await navigator.clipboard.writeText(text);
-      alert('تم نسخ الإجابة. يمكنك مشاركتها الآن.');
+    if(mode==='manual'||!canFallback(e)){
+     throw e;
     }
 
-  } catch(e) {
-    if (e.name !== 'AbortError') {
-      alert('تعذرت المشاركة: '+e.message);
-    }
-  }
-}
-
-/* تقسيم النص إلى أسطر داخل الصورة */
-function wrapText(ctx,text,maxWidth) {
-  const lines = [];
-
-  for (const paragraph of text.split('\n')) {
-    if (!paragraph.trim()) {
-      lines.push('');
-      continue;
-    }
-
-    const words = paragraph.split(/\s+/);
-    let line = '';
-
-    for (const word of words) {
-      const candidate = line ? line+' '+word : word;
-
-      if (
-        ctx.measureText(candidate).width <= maxWidth
-      ) {
-        line = candidate;
-      } else {
-        if (line) lines.push(line);
-
-        if (ctx.measureText(word).width <= maxWidth) {
-          line = word;
-        } else {
-          let part = '';
-
-          for (const char of word) {
-            if (
-              part &&
-              ctx.measureText(part+char).width > maxWidth
-            ) {
-              lines.push(part);
-              part = char;
-            } else {
-              part += char;
-            }
-          }
-
-          line = part;
-        }
-      }
-    }
-
-    if (line) lines.push(line);
+    // ينتقل للمفتاح أو الشركة التالية
+   }
   }
 
-  return lines;
-}
-
-/* إنشاء صورة السؤال والإجابة */
-async function createCombinedImage(item) {
-  const original = new Image();
-  original.src = item.image;
-
-  await original.decode();
-
-  const width = 1080;
-  const margin = 55;
-  const contentWidth = width-margin*2;
-
-  const imageScale = Math.min(
-    contentWidth/original.naturalWidth,
-    1250/original.naturalHeight
-  );
-
-  const imageWidth = Math.round(
-    original.naturalWidth*imageScale
-  );
-
-  const imageHeight = Math.round(
-    original.naturalHeight*imageScale
-  );
-
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  ctx.font = 'bold 39px system-ui, sans-serif';
-  ctx.direction = 'rtl';
-
-  const lines = wrapText(
-    ctx,
-    item.answer,
-    contentWidth-40
-  );
-
-  const lineHeight = 63;
-
-  const answerHeight = Math.max(
-    125,
-    lines.length*lineHeight+65
-  );
-
-  const top = 140;
-  const imageTop = 175;
-  const answerTop = imageTop+imageHeight+45;
-
-  canvas.width = width;
-  canvas.height = Math.ceil(
-    answerTop+answerHeight+105
-  );
-
-  /* الخلفية */
-  ctx.fillStyle = '#f4f7fc';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  /* العنوان */
-  ctx.fillStyle = '#172b48';
-  ctx.textAlign = 'right';
-  ctx.direction = 'rtl';
-  ctx.font = 'bold 49px system-ui, sans-serif';
-  ctx.fillText('لقطة AI',width-margin,82);
-
-  ctx.fillStyle = '#64748b';
-  ctx.font = '26px system-ui, sans-serif';
-  ctx.fillText(
-    formatDate(item.createdAt),
-    width-margin,
-    125
-  );
-
-  /* خلفية صورة السؤال */
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(
-    margin-8,
-    imageTop-8,
-    contentWidth+16,
-    imageHeight+16
-  );
-
-  ctx.drawImage(
-    original,
-    (width-imageWidth)/2,
-    imageTop,
-    imageWidth,
-    imageHeight
-  );
-
-  /* مربع الإجابة */
-  ctx.fillStyle = '#e4f4ed';
-  ctx.fillRect(
-    margin,
-    answerTop,
-    contentWidth,
-    answerHeight
-  );
-
-  ctx.fillStyle = '#047857';
-  ctx.font = 'bold 31px system-ui, sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillText(
-    'الإجابة',
-    width-margin-20,
-    answerTop+46
-  );
-
-  ctx.fillStyle = '#12263a';
-  ctx.font = 'bold 39px system-ui, sans-serif';
-
-  lines.forEach((line,i) => {
-    ctx.fillText(
-      line,
-      width-margin-20,
-      answerTop+105+i*lineHeight
-    );
-  });
-
-  /* التوقيع */
-  ctx.fillStyle = '#64748b';
-  ctx.font = '25px system-ui, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(
-    'تم إنشاؤها بواسطة لقطة AI',
-    width/2,
-    canvas.height-38
-  );
-
-  const blob = await new Promise((resolve,reject) => {
-    canvas.toBlob(
-      b => b ? resolve(b) : reject(
-        new Error('تعذر إنشاء الصورة')
-      ),
-      'image/jpeg',
-      .92
-    );
-  });
-
-  return new File(
-    [blob],
-    'laqta-answer-'+item.id+'.jpg',
-    {type:'image/jpeg'}
-  );
-}
-
-/* 3 - حفظ السؤال والإجابة بصورة واحدة */
-async function saveCombinedImage() {
-  if (!currentDetail) return;
-
-  try {
-    const file = await createCombinedImage(
-      currentDetail
-    );
-
-    await shareOrDownload(file,'');
-
-  } catch(e) {
-    alert('تعذر إنشاء الصورة: '+e.message);
-  }
-}
-
-/* ======================================
-   المفاتيح والأوضاع
-   ====================================== */
-
-function load() {
-  updateThemeButton();
-
-  try {
-    const saved = JSON.parse(
-      localStorage.getItem('gemini_keys') || '[]'
-    );
-
-    if (Array.isArray(saved)) {
-      saved.slice(0,5).forEach((v,i) => {
-        keys[i] = typeof v === 'string'
-          ? v.trim() : '';
-      });
-    }
-  } catch(e) {}
-
-  if (!keys.some(Boolean)) {
-    const old = localStorage.getItem('gemini_key');
-    if (old) keys[0] = old.trim();
-  }
-
-  const savedIndex = Number(
-    localStorage.getItem('selected_gemini_key') || 0
-  );
-
-  selected =
-    Number.isInteger(savedIndex) &&
-    savedIndex >= 0 &&
-    savedIndex < 5
-      ? savedIndex : 0;
-
-  if (!keys[selected]) {
-    const first = keys.findIndex(Boolean);
-    if (first >= 0) selected = first;
-  }
-
-  render();
-  startCamera();
-
-  if (!keys.some(Boolean)) {
-    show(
-      'مرحباً بك في لقطة AI',
-      'اضغط 🔑 وأضف مفتاح Gemini للبدء.'
-    );
-  }
-}
-
-function show(status,text) {
-  result.style.display = 'block';
-  statusEl.textContent = status;
-  answerEl.textContent = text || '';
-}
-
-function stopRequest() {
-  requestId++;
-
-  if (controller) {
-    controller.abort();
-    controller = null;
-  }
-}
-
-function render() {
-  $('auto').classList.toggle('active',mode === 'auto');
-  $('manual').classList.toggle('active',mode === 'manual');
-
-  $('numbers').classList.toggle(
-    'visible',
-    mode === 'manual'
-  );
-
-  document.querySelectorAll('.number').forEach(b => {
-    const n = Number(b.dataset.n);
-
-    b.disabled = !keys[n];
-
-    b.classList.toggle(
-      'active',
-      n === selected && !!keys[n]
-    );
-  });
-}
-
-function setMode(value) {
-  if (mode === value) return;
-
-  stopRequest();
-  mode = value;
-
-  localStorage.setItem('gemini_mode',mode);
-  render();
-
-  if (captured) {
-    show(
-      'تم تغيير الوضع',
-      'التقط سؤالاً جديداً للمتابعة.'
-    );
-  }
-}
-
-function chooseKey(n) {
-  if (!keys[n]) return;
-
-  stopRequest();
-  selected = n;
-
-  localStorage.setItem(
-    'selected_gemini_key',
-    String(n)
-  );
-
-  render();
-
-  if (captured) {
-    show(
-      'المفتاح رقم '+(n+1)+' محدد',
-      'التقط سؤالاً جديداً للمتابعة.'
-    );
-  }
-}
-
-function openSettings() {
-  const inputs = $('inputs');
-  inputs.replaceChildren();
-
-  for (let i=0;i<5;i++) {
-    const wrap = document.createElement('div');
-    wrap.className = 'field';
-
-    const label = document.createElement('label');
-    label.textContent = 'المفتاح رقم '+(i+1);
-    label.htmlFor = 'key'+i;
-
-    const input = document.createElement('input');
-    input.id = 'key'+i;
-    input.type = 'password';
-    input.autocomplete = 'off';
-    input.placeholder = 'AIza...';
-    input.value = keys[i];
-
-    wrap.append(label,input);
-    inputs.append(wrap);
-  }
-
-  $('settingsOverlay').classList.add('open');
-}
-
-function closeSettings() {
-  $('settingsOverlay').classList.remove('open');
-}
-
-function saveSettings() {
-  stopRequest();
-
-  keys = Array.from(
-    {length:5},
-    (_,i) => $('key'+i).value.trim()
-  );
-
-  localStorage.setItem(
-    'gemini_keys',
-    JSON.stringify(keys)
-  );
-
-  localStorage.removeItem('gemini_key');
-
-  if (!keys[selected]) {
-    const first = keys.findIndex(Boolean);
-    selected = first < 0 ? 0 : first;
-  }
-
-  localStorage.setItem(
-    'selected_gemini_key',
-    String(selected)
-  );
-
-  closeSettings();
-  render();
+  throw lastError||
+   new Error('تعذر استخدام جميع الخدمات.');
+
+ }catch(e){
+  if(id!==requestId||signal.aborted)return;
 
   show(
-    'تم حفظ المفاتيح',
-    keys.some(Boolean)
-      ? 'وجّه الكاميرا للسؤال واضغط التقاط.'
-      : 'أضف مفتاحاً واحداً على الأقل.'
+   'تعذر تحليل السؤال',
+   errorText(e)
   );
+
+ }finally{
+  if(id===requestId)controller=null;
+ }
 }
 
-[
-  'settingsOverlay',
-  'historyOverlay',
-  'detailOverlay'
-].forEach(id => {
-  $(id).addEventListener('click',e => {
-    if (e.target !== $(id)) return;
+/* قاعدة بيانات السجل - نفس الاسم السابق */
+const DB_NAME='LaqtaAIHistory';
+const STORE_NAME='questions';
+let dbPromise=null;
 
-    if (id === 'settingsOverlay') closeSettings();
-    if (id === 'historyOverlay') closeHistory();
-    if (id === 'detailOverlay') closeDetail();
+function openDatabase(){
+ if(!window.indexedDB){
+  return Promise.reject(
+   new Error('المتصفح لا يدعم حفظ السجل')
+  );
+ }
+
+ if(dbPromise)return dbPromise;
+
+ dbPromise=new Promise((resolve,reject)=>{
+  const req=indexedDB.open(DB_NAME,1);
+
+  req.onupgradeneeded=()=>{
+   const db=req.result;
+   if(!db.objectStoreNames.contains(STORE_NAME)){
+    const store=db.createObjectStore(
+     STORE_NAME,{keyPath:'id',autoIncrement:true}
+    );
+    store.createIndex('createdAt','createdAt');
+   }
+  };
+
+  req.onsuccess=()=>resolve(req.result);
+  req.onerror=()=>reject(req.error);
+ }).catch(e=>{
+  dbPromise=null;
+  throw e;
+ });
+
+ return dbPromise;
+}
+
+async function saveHistory(image,answer){
+ const db=await openDatabase();
+
+ return new Promise((resolve,reject)=>{
+  const tx=db.transaction(STORE_NAME,'readwrite');
+  tx.objectStore(STORE_NAME).add({
+   image,answer,createdAt:Date.now()
   });
+  tx.oncomplete=resolve;
+  tx.onerror=()=>reject(tx.error);
+  tx.onabort=()=>reject(tx.error);
+ });
+}
+
+async function getHistory(){
+ const db=await openDatabase();
+
+ return new Promise((resolve,reject)=>{
+  const req=db.transaction(
+   STORE_NAME,'readonly'
+  ).objectStore(STORE_NAME).getAll();
+
+  req.onsuccess=()=>{
+   resolve((req.result||[]).sort(
+    (a,b)=>b.createdAt-a.createdAt
+   ));
+  };
+  req.onerror=()=>reject(req.error);
+ });
+}
+
+async function deleteHistoryItem(id){
+ const db=await openDatabase();
+ return new Promise((resolve,reject)=>{
+  const tx=db.transaction(STORE_NAME,'readwrite');
+  tx.objectStore(STORE_NAME).delete(id);
+  tx.oncomplete=resolve;
+  tx.onerror=()=>reject(tx.error);
+ });
+}
+
+async function deleteAllHistory(){
+ const db=await openDatabase();
+ return new Promise((resolve,reject)=>{
+  const tx=db.transaction(STORE_NAME,'readwrite');
+  tx.objectStore(STORE_NAME).clear();
+  tx.oncomplete=resolve;
+  tx.onerror=()=>reject(tx.error);
+ });
+}
+
+function formatDate(timestamp){
+ return new Date(timestamp).toLocaleString('ar-SA',{
+  year:'numeric',
+  month:'short',
+  day:'numeric',
+  hour:'numeric',
+  minute:'2-digit'
+ });
+}
+
+async function openHistory(){
+ $('historyOverlay').classList.add('open');
+ $('historySearch').value='';
+ $('historyList').textContent='جاري تحميل السجل...';
+
+ try{
+  historyCache=await getHistory();
+  renderHistory();
+ }catch(e){
+  $('historyList').textContent=
+   'تعذر فتح السجل: '+e.message;
+ }
+}
+
+function closeHistory(){
+ $('historyOverlay').classList.remove('open');
+}
+
+function renderHistory(){
+ const list=$('historyList');
+ const search=$('historySearch').value
+  .trim().toLowerCase();
+
+ list.replaceChildren();
+
+ $('historyCount').textContent=
+  historyCache.length+' سؤال';
+
+ const filtered=historyCache.filter(item=>
+  item.answer.toLowerCase().includes(search)||
+  formatDate(item.createdAt).includes(search)
+ );
+
+ if(!filtered.length){
+  const div=document.createElement('div');
+  div.className='empty';
+  div.textContent=search
+   ?'ما لقينا نتيجة مطابقة.'
+   :'السجل فارغ. صوّر أول سؤال وبتلقاه هنا.';
+  list.append(div);
+  return;
+ }
+
+ filtered.forEach(item=>{
+  const card=document.createElement('div');
+  card.className='history-item';
+
+  const img=document.createElement('img');
+  img.className='history-thumb';
+  img.src=item.image;
+  img.loading='lazy';
+
+  const info=document.createElement('div');
+  info.className='history-info';
+
+  const answer=document.createElement('div');
+  answer.className='history-answer';
+  answer.textContent=item.answer;
+
+  const date=document.createElement('div');
+  date.className='history-date';
+  date.textContent=formatDate(item.createdAt);
+
+  const actions=document.createElement('div');
+  actions.className='history-buttons';
+
+  const open=document.createElement('button');
+  open.textContent='👁️ عرض';
+  open.onclick=()=>showHistoryDetail(item.id);
+
+  const del=document.createElement('button');
+  del.className='delete';
+  del.textContent='🗑️ حذف';
+  del.onclick=()=>removeHistoryItem(item.id);
+
+  actions.append(open,del);
+  info.append(answer,date,actions);
+  card.append(img,info);
+  list.append(card);
+ });
+}
+
+function showHistoryDetail(id){
+ const item=historyCache.find(x=>x.id===id);
+ if(!item)return;
+
+ currentDetail=item;
+ $('detailImage').src=item.image;
+ $('detailAnswer').textContent=item.answer;
+ $('detailDate').textContent=formatDate(item.createdAt);
+ $('detailOverlay').classList.add('open');
+}
+
+function closeDetail(){
+ $('detailOverlay').classList.remove('open');
+ $('detailImage').removeAttribute('src');
+ currentDetail=null;
+}
+
+async function removeHistoryItem(id){
+ if(!confirm('تبي تحذف هذا السؤال؟'))return;
+
+ try{
+  await deleteHistoryItem(id);
+  historyCache=historyCache.filter(x=>x.id!==id);
+  renderHistory();
+ }catch(e){
+  alert('تعذر الحذف: '+e.message);
+ }
+}
+
+async function clearHistory(){
+ if(!historyCache.length)return;
+ if(!confirm('متأكد تبي تمسح جميع الصور والإجابات؟'))return;
+
+ try{
+  await deleteAllHistory();
+  historyCache=[];
+  renderHistory();
+ }catch(e){
+  alert('تعذر مسح السجل: '+e.message);
+ }
+}
+
+/* حفظ ومشاركة الصور */
+async function imageToFile(dataUrl,filename){
+ const response=await fetch(dataUrl);
+ const blob=await response.blob();
+ return new File([blob],filename,{type:'image/jpeg'});
+}
+
+function downloadFile(blob,filename){
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;
+ a.download=filename;
+ document.body.append(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+
+async function shareOrDownload(file,text){
+ try{
+  if(navigator.share&&navigator.canShare&&
+   navigator.canShare({files:[file]})){
+   await navigator.share({
+    files:[file],
+    text:text||''
+   });
+   return;
+  }
+ }catch(e){
+  if(e.name==='AbortError')return;
+ }
+ downloadFile(file,file.name);
+}
+
+async function saveQuestionImage(){
+ if(!currentDetail)return;
+
+ try{
+  const file=await imageToFile(
+   currentDetail.image,
+   'laqta-question-'+currentDetail.id+'.jpg'
+  );
+  await shareOrDownload(file,'');
+ }catch(e){
+  alert('تعذر حفظ الصورة: '+e.message);
+ }
+}
+
+async function shareQuestion(){
+ if(!currentDetail)return;
+
+ try{
+  const item=currentDetail;
+  const file=await imageToFile(
+   item.image,
+   'laqta-question-'+item.id+'.jpg'
+  );
+
+  const text='السؤال والإجابة من لقطة AI\n\n'+
+   item.answer;
+
+  if(navigator.share&&navigator.canShare&&
+   navigator.canShare({files:[file]})){
+   await navigator.share({files:[file],text});
+  }else if(navigator.share){
+   await navigator.share({text});
+  }else if(navigator.clipboard){
+   await navigator.clipboard.writeText(text);
+   alert('تم نسخ الإجابة.');
+  }else{
+   downloadFile(file,file.name);
+  }
+ }catch(e){
+  if(e.name!=='AbortError'){
+   alert('تعذرت المشاركة: '+e.message);
+  }
+ }
+}
+
+function wrapText(ctx,text,maxWidth){
+ const lines=[];
+
+ for(const paragraph of text.split('\n')){
+  if(!paragraph.trim()){
+   lines.push('');
+   continue;
+  }
+
+  const words=paragraph.split(/\s+/);
+  let line='';
+
+  for(const word of words){
+   const candidate=line?line+' '+word:word;
+
+   if(ctx.measureText(candidate).width<=maxWidth){
+    line=candidate;
+   }else{
+    if(line)lines.push(line);
+
+    if(ctx.measureText(word).width<=maxWidth){
+     line=word;
+    }else{
+     let part='';
+     for(const char of word){
+      if(part&&ctx.measureText(part+char).width>maxWidth){
+       lines.push(part);
+       part=char;
+      }else{
+       part+=char;
+      }
+     }
+     line=part;
+    }
+   }
+  }
+  if(line)lines.push(line);
+ }
+
+ return lines;
+}
+
+async function createCombinedImage(item){
+ const original=new Image();
+ original.src=item.image;
+ await original.decode();
+
+ const width=1080;
+ const margin=55;
+ const contentWidth=width-margin*2;
+
+ const scale=Math.min(
+  contentWidth/original.naturalWidth,
+  1250/original.naturalHeight
+ );
+
+ const imageWidth=Math.round(
+  original.naturalWidth*scale
+ );
+ const imageHeight=Math.round(
+  original.naturalHeight*scale
+ );
+
+ const canvas=document.createElement('canvas');
+ const ctx=canvas.getContext('2d');
+
+ ctx.font='bold 39px system-ui,sans-serif';
+ ctx.direction='rtl';
+
+ const lines=wrapText(
+  ctx,item.answer,contentWidth-40
+ );
+
+ const lineHeight=63;
+ const answerHeight=Math.max(
+  125,lines.length*lineHeight+110
+ );
+
+ const imageTop=175;
+ const answerTop=imageTop+imageHeight+45;
+
+ canvas.width=width;
+ canvas.height=Math.ceil(
+  answerTop+answerHeight+105
+ );
+
+ ctx.fillStyle='#f4f7fc';
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ ctx.fillStyle='#172b48';
+ ctx.textAlign='right';
+ ctx.direction='rtl';
+ ctx.font='bold 49px system-ui,sans-serif';
+ ctx.fillText('لقطة AI',width-margin,82);
+
+ ctx.fillStyle='#64748b';
+ ctx.font='26px system-ui,sans-serif';
+ ctx.fillText(
+  formatDate(item.createdAt),width-margin,125
+ );
+
+ ctx.fillStyle='#fff';
+ ctx.fillRect(
+  margin-8,imageTop-8,
+  contentWidth+16,imageHeight+16
+ );
+
+ ctx.drawImage(
+  original,(width-imageWidth)/2,
+  imageTop,imageWidth,imageHeight
+ );
+
+ ctx.fillStyle='#e4f4ed';
+ ctx.fillRect(
+  margin,answerTop,contentWidth,answerHeight
+ );
+
+ ctx.fillStyle='#047857';
+ ctx.font='bold 31px system-ui,sans-serif';
+ ctx.textAlign='right';
+ ctx.fillText(
+  'الإجابة',width-margin-20,answerTop+46
+ );
+
+ ctx.fillStyle='#12263a';
+ ctx.font='bold 39px system-ui,sans-serif';
+
+ lines.forEach((line,i)=>{
+  ctx.fillText(
+   line,width-margin-20,
+   answerTop+105+i*lineHeight
+  );
+ });
+
+ ctx.fillStyle='#64748b';
+ ctx.font='25px system-ui,sans-serif';
+ ctx.textAlign='center';
+ ctx.fillText(
+  'تم إنشاؤها بواسطة لقطة AI',
+  width/2,canvas.height-38
+ );
+
+ const blob=await new Promise((resolve,reject)=>{
+  canvas.toBlob(
+   b=>b?resolve(b):reject(
+    new Error('تعذر إنشاء الصورة')
+   ),
+   'image/jpeg',.92
+  );
+ });
+
+ return new File(
+  [blob],
+  'laqta-answer-'+item.id+'.jpg',
+  {type:'image/jpeg'}
+ );
+}
+
+async function saveCombinedImage(){
+ if(!currentDetail)return;
+
+ try{
+  const file=await createCombinedImage(currentDetail);
+  await shareOrDownload(file,'');
+ }catch(e){
+  alert('تعذر إنشاء الصورة: '+e.message);
+ }
+}
+
+/* إغلاق النوافذ */
+[
+ 'settingsOverlay',
+ 'historyOverlay',
+ 'detailOverlay'
+].forEach(id=>{
+ $(id).addEventListener('click',e=>{
+  if(e.target!==$(id))return;
+
+  if(id==='settingsOverlay')closeSettings();
+  if(id==='historyOverlay')closeHistory();
+  if(id==='detailOverlay')closeDetail();
+ });
 });
 
-/* الكاميرا الخلفية العادية قدر الإمكان */
-async function startCamera() {
-  let stream;
+/* تشغيل التطبيق */
+loadSettings();
+updateThemeButton();
+renderControls();
+startCamera();
 
-  try {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      throw new Error(
-        'افتح الموقع عبر HTTPS في متصفح يدعم الكاميرا'
-      );
-    }
-
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio:false,
-      video:{
-        facingMode:{ideal:'environment'}
-      }
-    });
-
-    try {
-      const devices = (
-        await navigator.mediaDevices.enumerateDevices()
-      ).filter(d => d.kind === 'videoinput');
-
-      const rear = devices.filter(d =>
-        /back|rear|environment|خلف/i.test(d.label)
-      );
-
-      const ordinary =
-        rear.find(d =>
-          /^(back|rear) camera$/i.test(d.label.trim())
-        ) ||
-        rear.find(d =>
-          /wide/i.test(d.label) &&
-          !/ultra|dual|triple|tele|macro/i.test(d.label)
-        ) ||
-        rear.find(d =>
-          !/ultra|tele|dual|triple|macro|0\.5|2x|3x|5x/i.test(d.label)
-        );
-
-      if (
-        ordinary &&
-        ordinary.deviceId &&
-        stream.getVideoTracks()[0]?.getSettings().deviceId
-          !== ordinary.deviceId
-      ) {
-        try {
-          const preferred =
-            await navigator.mediaDevices.getUserMedia({
-              audio:false,
-              video:{
-                deviceId:{exact:ordinary.deviceId}
-              }
-            });
-
-          stream.getTracks().forEach(t => t.stop());
-          stream = preferred;
-        } catch(e) {}
-      }
-    } catch(e) {}
-
-    const track = stream.getVideoTracks()[0];
-
-    try {
-      const caps = track.getCapabilities?.();
-
-      if (
-        caps?.zoom &&
-        typeof track.applyConstraints === 'function'
-      ) {
-        const target = Math.max(
-          caps.zoom.min,
-          Math.min(1,caps.zoom.max)
-        );
-
-        await track.applyConstraints({
-          advanced:[{zoom:target}]
-        });
-      }
-    } catch(e) {}
-
-    video.srcObject = stream;
-    await video.play();
-
-    note.textContent = 'وجّه الكاميرا نحو السؤال';
-
-  } catch(e) {
-    if (stream) {
-      stream.getTracks().forEach(t => t.stop());
-    }
-
-    note.textContent = 'الكاميرا لم تعمل';
-
-    show(
-      'تعذر تشغيل الكاميرا',
-      e.name === 'NotAllowedError'
-        ? 'اسمح للموقع باستخدام الكاميرا.'
-        : e.message
-    );
-  }
+if(!Object.keys(PROVIDERS).some(hasKey)){
+ show(
+  'مرحباً بك في لقطة AI',
+  'اضغط 🔑 وأضف مفاتيح الذكاء الاصطناعي.'
+ );
 }
-
-/* التقاط السؤال */
-function mainAction() {
-  if (captured) {
-    reset();
-    return;
-  }
-
-  if (!video.videoWidth) {
-    show(
-      'الكاميرا غير جاهزة',
-      'تحقق من إذن الكاميرا وحدّث الصفحة.'
-    );
-    return;
-  }
-
-  stopRequest();
-
-  const canvas = document.createElement('canvas');
-
-  const scale = Math.min(
-    1,
-    1280/Math.max(
-      video.videoWidth,
-      video.videoHeight
-    )
-  );
-
-  canvas.width = Math.round(
-    video.videoWidth*scale
-  );
-
-  canvas.height = Math.round(
-    video.videoHeight*scale
-  );
-
-  canvas.getContext('2d').drawImage(
-    video,0,0,canvas.width,canvas.height
-  );
-
-  const image = canvas.toDataURL('image/jpeg',.75);
-
-  photo.src = image;
-  photo.style.display = 'block';
-  video.style.display = 'none';
-  note.style.display = 'none';
-
-  captured = true;
-
-  captureBtn.classList.add('new');
-  captureBtn.textContent = '🔄 التقاط سؤال جديد';
-
-  analyze(image);
-}
-
-function reset() {
-  stopRequest();
-  captured = false;
-
-  photo.style.display = 'none';
-  photo.removeAttribute('src');
-
-  video.style.display = 'block';
-  note.style.display = 'block';
-  note.textContent = 'وجّه الكاميرا نحو السؤال';
-
-  captureBtn.classList.remove('new');
-  captureBtn.textContent = '📸 التقاط وتحليل فوري';
-
-  result.style.display = 'none';
-}
-
-/* Gemini */
-function isKeyError(e) {
-  return e.status === 401 || (
-    e.status === 403 &&
-    /api.key|invalid.key|key.not.valid|api_key/i.test(e.message) &&
-    !/quota|rate.limit|safety/i.test(e.message)
-  );
-}
-
-function errorText(e) {
-  if (e.status === 429) {
-    return 'وصلت إلى حد الطلبات أو انتهت حصة الاستخدام.';
-  }
-
-  if (e.status === 400 || e.status === 404) {
-    return 'النموذج غير متاح أو الطلب غير مقبول. راجع اسم نموذج Gemini.';
-  }
-
-  if (e.status === 401 || e.status === 403) {
-    return 'مفتاح API غير صالح أو ليس لديه الصلاحية.';
-  }
-
-  if ([500,502,503,504].includes(e.status)) {
-    return 'خدمة Gemini مشغولة مؤقتاً.';
-  }
-
-  if (e instanceof TypeError) {
-    return 'تعذر الاتصال. تحقق من الإنترنت.';
-  }
-
-  return e.message || 'حدث خطأ غير معروف.';
-}
-
-async function ask(key,image,signal) {
-  const url =
-    'https://generativelanguage.googleapis.com/v1beta/models/' +
-    encodeURIComponent(MODEL) +
-    ':generateContent?key=' +
-    encodeURIComponent(key);
-
-  const response = await fetch(url,{
-    method:'POST',
-    signal,
-    headers:{
-      'Content-Type':'application/json'
-    },
-    body:JSON.stringify({
-      contents:[{
-        parts:[
-          {
-            text:
-              'اقرأ السؤال والخيارات في الصورة. ' +
-              'أعط حرف الخيار الصحيح ونص الإجابة فقط دون شرح. ' +
-              'إذا لم تستطع قراءة السؤال فقل إن الصورة غير واضحة ولا تخمّن.'
-          },
-          {
-            inline_data:{
-              mime_type:'image/jpeg',
-              data:image.split(',')[1]
-            }
-          }
-        ]
-      }],
-      generationConfig:{
-        temperature:0,
-        maxOutputTokens:256
-      }
-    })
-  });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    const e = new Error(
-      data.error?.message || 'HTTP '+response.status
-    );
-
-    e.status = response.status;
-    throw e;
-  }
-
-  const candidate = data.candidates?.[0];
-
-  const text = candidate?.content?.parts
-    ?.filter(x => typeof x.text === 'string')
-    .map(x => x.text)
-    .join('\n');
-
-  if (!text?.trim()) {
-    throw new Error(
-      'لم تصل إجابة نصية. حاول بصورة أوضح.'
-    );
-  }
-
-  return text.replace(/\*\*/g,'').trim();
-}
-
-async function analyze(image) {
-  if (!keys.some(Boolean)) {
-    show(
-      'لا يوجد مفتاح',
-      'اضغط 🔑 وأضف مفتاح Gemini.'
-    );
-    return;
-  }
-
-  if (!keys[selected]) {
-    show(
-      'اختر مفتاحاً',
-      'اختر مفتاحاً محفوظاً.'
-    );
-    return;
-  }
-
-  stopRequest();
-
-  const id = requestId;
-  controller = new AbortController();
-  const signal = controller.signal;
-
-  const order = mode === 'manual'
-    ? [selected]
-    : [
-        selected,
-        ...keys.map((_,i) => i).filter(
-          i => i !== selected && keys[i]
-        )
-      ];
-
-  try {
-    for (const index of order) {
-      show(
-        'جاري التحليل بالمفتاح '+(index+1)+'...',
-        ''
-      );
-
-      let last;
-
-      for (let attempt=0;attempt<2;attempt++) {
-        try {
-          const text = await ask(
-            keys[index],
-            image,
-            signal
-          );
-
-          if (id !== requestId) return;
-
-          selected = index;
-
-          localStorage.setItem(
-            'selected_gemini_key',
-            String(index)
-          );
-
-          render();
-
-          show(
-            'تم التحليل — المفتاح '+(index+1),
-            text
-          );
-
-          try {
-            await saveHistory(image,text);
-
-            if (id === requestId) {
-              statusEl.textContent =
-                'تم التحليل والحفظ في السجل — المفتاح ' +
-                (index+1);
-            }
-          } catch(e) {
-            if (id === requestId) {
-              statusEl.textContent =
-                'تم التحليل — تعذر حفظ السجل';
-            }
-
-            console.error(e);
-          }
-
-          return;
-
-        } catch(e) {
-          if (id !== requestId || signal.aborted) {
-            return;
-          }
-
-          last = e;
-
-          if (
-            (
-              e instanceof TypeError ||
-              [500,502,503,504].includes(e.status)
-            ) &&
-            attempt === 0
-          ) {
-            await new Promise((resolve,reject) => {
-              const timer = setTimeout(resolve,1000);
-
-              signal.addEventListener(
-                'abort',
-                () => {
-                  clearTimeout(timer);
-                  reject(
-                    new DOMException('Aborted','AbortError')
-                  );
-                },
-                {once:true}
-              );
-            });
-
-            continue;
-          }
-
-          break;
-        }
-      }
-
-      if (mode === 'auto' && isKeyError(last)) {
-        continue;
-      }
-
-      throw last;
-    }
-
-    throw new Error(
-      'لم يتوفر مفتاح صالح للاستخدام.'
-    );
-
-  } catch(e) {
-    if (
-      id !== requestId ||
-      e.name === 'AbortError'
-    ) return;
-
-    show(
-      'تعذر تحليل السؤال',
-      errorText(e)
-    );
-
-  } finally {
-    if (id === requestId) {
-      controller = null;
-    }
-  }
-}
-
-load();
 </script>
 </body>
 </html>
