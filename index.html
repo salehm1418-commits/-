@@ -551,8 +551,6 @@ function normalizeKeys(value){
     ?value.map(x=>String(x||'').trim())
     :[];
 
-  // إزالة الخانات الفارغة الإضافية فقط
-  // مع إبقاء المفتاح الأول حتى لو كان فاضيًا
   if(!result.length)return [''];
 
   return [
@@ -769,7 +767,6 @@ function readEditingInputs(){
       '[data-key-input="'+p.id+'"]'
     );
 
-    // لا نمسح قيم الشركة المطوية
     if(!expandedSections[p.id])continue;
 
     editingKeys[p.id]=Array.from(
@@ -798,7 +795,6 @@ function createKeyItem(providerId,index,value){
   head.append(label);
 
   if(index===0){
-    // المفتاح الأول لا يوجد له زر حذف
     const badge=document.createElement('span');
     badge.className='mainKeyBadge';
     badge.textContent='🔒 ثابت';
@@ -811,7 +807,6 @@ function createKeyItem(providerId,index,value){
     remove.onclick=()=>{
       readEditingInputs();
 
-      // حماية إضافية: ممنوع حذف المفتاح الأول
       if(index===0)return;
 
       editingKeys[providerId].splice(index,1);
@@ -822,7 +817,10 @@ function createKeyItem(providerId,index,value){
   }
 
   const input=document.createElement('input');
-  input.type='password';
+
+  // التعديل: إظهار مفتاح API بدل إخفائه بنجوم
+  input.type='text';
+
   input.className='keyInput';
   input.autocomplete='off';
   input.placeholder='ألصق مفتاح API هنا';
@@ -1001,7 +999,6 @@ $('saveSettings').onclick=()=>{
   saveJSON('laqta_all_models',models);
   saveJSON('laqta_selected_keys',selectedKeys);
 
-  // حفظ التوافق مع الإصدار السابق
   saveJSON('gemini_keys',providerKeys.gemini);
 
   saveJSON('laqta_three_keys',{
