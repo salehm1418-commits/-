@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -235,15 +234,22 @@ header{
   display:block;
   margin-bottom:7px;
 }
-.field input,.keyInput{
+.field input,.keyInput,.modelSelect{
   width:100%;
   background:var(--bg);
   color:var(--text);
   border:1px solid var(--line);
   border-radius:12px;
   padding:13px;
+}
+.keyInput{
   direction:ltr;
   text-align:left;
+}
+.modelSelect{
+  direction:ltr;
+  text-align:left;
+  cursor:pointer;
 }
 .fixed{
   background:var(--card2);
@@ -508,14 +514,23 @@ header{
 <script>
 'use strict';
 
-const GEMINI_MODEL='gemini-3.8-flash';
+/* ================================
+   موديلات Gemini
+================================ */
+
+const GEMINI_MODELS=[
+  'gemini-2.5-flash',
+  'gemini-3.8-flash'
+];
+
+const DEFAULT_GEMINI_MODEL='gemini-3.8-flash';
 
 const PROVIDERS=[
   {
     id:'gemini',
     name:'Gemini',
     icon:'🔵',
-    defaultModel:GEMINI_MODEL
+    defaultModel:DEFAULT_GEMINI_MODEL
   },
   {
     id:'openrouter',
@@ -583,25 +598,26 @@ let providerKeys={
   )
 };
 
+/* قراءة الموديل المحفوظ */
+const savedModels=getJSON('laqta_all_models',null);
+
 let models={
-  gemini:GEMINI_MODEL,
+  gemini:
+    savedModels?.gemini&&GEMINI_MODELS.includes(savedModels.gemini)
+      ?savedModels.gemini
+      :DEFAULT_GEMINI_MODEL,
+
   openrouter:
+    savedModels?.openrouter||
     oldModels.openrouter||
     legacyModels.openrouter||
     'google/gemini-2.5-flash',
+
   openai:
+    savedModels?.openai||
     oldModels.openai||
     'gpt-4.1-mini'
 };
-
-const savedModels=getJSON('laqta_all_models',null);
-
-if(savedModels){
-  models.openrouter=
-    savedModels.openrouter||models.openrouter;
-  models.openai=
-    savedModels.openai||models.openai;
-}
 
 let mode=localStorage.getItem('laqta_mode')==='manual'
   ?'manual':'auto';
@@ -734,7 +750,10 @@ function updateMode(){
 
   $('providerHint').textContent=
     'الخدمة المختارة: '+info.name+
-    ' — المفتاح '+(selectedKeys[provider]+1);
+    ' — المفتاح '+(selectedKeys[provider]+1)+
+    (provider==='gemini'
+      ?' — '+models.gemini
+      :'');
 }
 
 $('autoBtn').onclick=()=>{
@@ -818,9 +837,7 @@ function createKeyItem(providerId,index,value){
 
   const input=document.createElement('input');
 
-  // التعديل: إظهار مفتاح API بدل إخفائه بنجوم
   input.type='text';
-
   input.className='keyInput';
   input.autocomplete='off';
   input.placeholder='ألصق مفتاح API هنا';
@@ -882,23 +899,45 @@ function renderProviderSettings(){
     modelField.className='field';
 
     const modelLabel=document.createElement('label');
-    modelLabel.textContent='النموذج';
+    modelLabel.textContent='الموديل المستخدم';
     modelField.append(modelLabel);
 
     if(p.id==='gemini'){
-      const fixed=document.createElement('div');
-      fixed.className='fixed';
-      fixed.textContent=GEMINI_MODEL;
 
-      const warning=document.createElement('p');
-      warning.className='small';
-      warning.textContent=
-        'اسم هذا النموذج غير مؤكد في Gemini API، وقد يسبب خطأ 404.';
+      // قائمة موديلات Gemini
+      const modelSelect=document.createElement('select');
+      modelSelect.className='modelSelect';
 
-      modelField.append(fixed,warning);
+      GEMINI_MODELS.forEach(model=>{
+        const option=document.createElement('option');
+        option.value=model;
+        option.textContent=model;
+
+        if(models.gemini===model){
+          option.selected=true;
+        }
+
+        modelSelect.append(option);
+      });
+
+      modelSelect.onchange=()=>{
+        models.gemini=modelSelect.value;
+      };
+
+      modelField.append(modelSelect);
+
+      const note=document.createElement('p');
+      note.className='small';
+      note.textContent=
+        'اختر الموديل الذي تريده. سيتم استخدام اختيارك في التحليل التلقائي واليدوي وحفظه بعد الضغط على حفظ الكل.';
+
+      modelField.append(note);
+
     }else{
+
       const modelInput=document.createElement('input');
       modelInput.type='text';
+      modelInput.className='modelSelect';
       modelInput.value=models[p.id];
       modelInput.autocomplete='off';
 
@@ -987,6 +1026,10 @@ $('saveSettings').onclick=()=>{
     }
   }
 
+  if(!GEMINI_MODELS.includes(models.gemini)){
+    models.gemini=DEFAULT_GEMINI_MODEL;
+  }
+
   models.openrouter=
     models.openrouter.trim()||
     'google/gemini-2.5-flash';
@@ -1019,7 +1062,9 @@ $('saveSettings').onclick=()=>{
   hideModal('settingsModal');
   updateMode();
 
-  status('تم حفظ جميع المفاتيح والإعدادات ✅');
+  status(
+    'تم حفظ الإعدادات والموديل: '+models.gemini+' ✅'
+  );
 };
 
 document.querySelectorAll('[data-close]').forEach(b=>{
@@ -1213,9 +1258,12 @@ async function fetchJSON(url,options,ms=20000){
 async function askGemini(key,image){
   const base64=image.split(',')[1];
 
+  // استخدام الموديل المحدد من الإعدادات
+  const selectedModel=models.gemini;
+
   const url=
     'https://generativelanguage.googleapis.com/v1beta/models/'+
-    encodeURIComponent(GEMINI_MODEL)+
+    encodeURIComponent(selectedModel)+
     ':generateContent?key='+
     encodeURIComponent(key);
 
@@ -1370,6 +1418,9 @@ async function analyze(image){
 
       status(
         '⏳ جارٍ التحليل عبر '+job.name+
+        (job.kind==='gemini'
+          ?' — '+models.gemini
+          :'')+
         ' — مفتاح '+(job.index+1)
       );
 
@@ -1383,8 +1434,12 @@ async function analyze(image){
         if(myId!==requestId)return;
 
         setAnswer(answer);
+
         status(
           'تم التحليل عبر '+job.name+
+          (job.kind==='gemini'
+            ?' — '+models.gemini
+            :'')+
           ' — مفتاح '+(job.index+1)+' ✓'
         );
 
@@ -1393,6 +1448,9 @@ async function analyze(image){
             image,
             answer,
             provider:job.name+
+              (job.kind==='gemini'
+                ?' — '+models.gemini
+                :'')+
               ' — مفتاح '+(job.index+1),
             createdAt:Date.now()
           });
@@ -1864,6 +1922,7 @@ $('shareCombined').onclick=async()=>{
 updateTheme();
 updateMode();
 startCamera();
+
 </script>
 </body>
 </html>
